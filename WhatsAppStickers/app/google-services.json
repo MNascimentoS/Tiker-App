@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "197118949774",
+    "firebase_url": "https://ticker-7862a.firebaseio.com",
+    "project_id": "ticker-7862a",
+    "storage_bucket": "ticker-7862a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:197118949774:android:f1c4c26ef061e65f7fccdf",
+        "android_client_info": {
+          "package_name": "br.com.tiker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "197118949774-vqc0mdpfsq626opf5kcverg9n0koo2hu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBK6vvfoCRBdE6PYGKqqDF5j4EOAKq4TsI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "197118949774-vqc0mdpfsq626opf5kcverg9n0koo2hu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

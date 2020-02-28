@@ -4,8 +4,8 @@
              xmlns:app="http://schemas.android.com/apk/res-auto"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context=".activities.MyStickersFragment">
-    <android.support.constraint.ConstraintLayout
+             tools:context="br.com.tiker.old.activities.MyStickersFragment">
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -52,7 +52,7 @@
                 android:text="There is no sticker packs available.\nLet's create some awesome stickers."
                 android:textAlignment="center" />
         </LinearLayout>
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
@@ -67,7 +67,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:focusable="true"/>
 
-        <android.support.v4.widget.SwipeRefreshLayout
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/refresh_my_stickers_swiper"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
@@ -76,7 +76,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView3">
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/stickers_recycler_list"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -85,7 +85,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:listitem="@layout/sticker_packs_list_item" />
-        </android.support.v4.widget.SwipeRefreshLayout>
-    </android.support.constraint.ConstraintLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

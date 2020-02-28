@@ -6,7 +6,7 @@
     android:background="@color/infoPageBackgroundColor"
     android:orientation="vertical"
     android:paddingTop="8dp"
-    tools:context="com.unusualapps.tiker.whatsapp_api.StickerPackInfoActivity">
+    tools:context="br.com.tiker.old.whatsapp_api.StickerPackInfoActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

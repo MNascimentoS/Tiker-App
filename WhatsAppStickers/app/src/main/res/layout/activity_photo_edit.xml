@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:background="#ffffff">
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/photo_edit_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
                 android:layout_marginRight="10dp"
                 android:background="@drawable/ic_round_check_24px" />
 
-        </android.support.v7.widget.Toolbar>
+        </androidx.appcompat.widget.Toolbar>
 
     </FrameLayout>
 
@@ -132,7 +132,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.unusualapps.tiker.backgroundRemover.DrawView
+            <br.com.tiker.old.backgroundRemover.DrawView
                 android:id="@+id/drawView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />

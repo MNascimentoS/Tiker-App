@@ -3,10 +3,10 @@
              xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context=".activities.CreateFragment">
-    <android.support.constraint.ConstraintLayout android:layout_width="match_parent"
+             tools:context="br.com.tiker.old.activities.CreateFragment">
+    <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
                                                  android:layout_height="match_parent">
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="0dp"
                 android:id="@+id/stickers_created_grid"
                 app:layout_constraintStart_toStartOf="parent"
@@ -46,7 +46,7 @@
                 android:text="There is no stickers available.\nLet's create some awesome stickers."
                 android:textAlignment="center" />
         </LinearLayout>
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
@@ -70,7 +70,7 @@
                 android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="8dp"
         />
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </FrameLayout>
