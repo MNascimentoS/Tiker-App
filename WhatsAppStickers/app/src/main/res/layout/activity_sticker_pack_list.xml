@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.unusualapps.whatsappstickers.whatsapp_api.StickerPackListActivity"
+    tools:context="com.unusualapps.tiker.whatsapp_api.StickerPackListActivity"
     tools:showIn="@layout/activity_sticker_pack_list">
 
     <TextView

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
-          package="com.unusualapps.whatsappstickers">
+          package="com.unusualapps.tiker">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
@@ -18,36 +18,47 @@
             android:supportsRtl="true"
             android:screenOrientation="portrait"
             android:theme="@style/MyBaseTheme">
-        <activity android:name=".activities.AddToStickerPackActivity" android:label="Add to sticker pack">
+        <activity android:name="com.unusualapps.tiker.activities.AddToStickerPackActivity" android:label="Add to sticker pack">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".activities.MainActivity"/>
+                    android:value="com.unusualapps.tiker.activities.EntryActivity"/>
         </activity>
-        <activity
-                android:name=".activities.MainActivity">
+        
+        <activity android:name="com.unusualapps.tiker.activities.EntryActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/*" />
+            </intent-filter>
         </activity>
+
         <activity
-                android:name=".backgroundRemover.CutOutActivity"
+                android:name="com.unusualapps.tiker.backgroundRemover.CutOutActivity"
                 android:screenOrientation="portrait"
                 android:theme="@style/AppThemeWithOutActionBar"/>
         <activity
-                android:name=".backgroundRemover.IntroActivity"
+                android:name="com.unusualapps.tiker.backgroundRemover.IntroActivity"
                 android:screenOrientation="portrait"/>
         <activity
                 android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
                 android:screenOrientation="portrait"
                 android:theme="@style/MyBaseTheme"/>
         <activity
-                android:name=".whatsapp_api.StickerPackDetailsActivity"
-                android:parentActivityName=".activities.MainActivity"
+                android:name="com.unusualapps.tiker.whatsapp_api.StickerPackDetailsActivity"
+                android:parentActivityName="com.unusualapps.tiker.activities.EntryActivity"
                 android:screenOrientation="portrait"
                 tools:ignore="UnusedAttribute">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".activities.MainActivity"/>
+                    android:value="com.unusualapps.tiker.activities.EntryActivity"/>
         </activity>
         <activity
-                android:name=".activities.RequestPermissionActivity"
+                android:name="com.unusualapps.tiker.activities.RequestPermissionActivity"
                 android:screenOrientation="portrait"
                 android:theme="@style/AppTheme">
             <intent-filter>
@@ -57,18 +68,18 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".whatsapp_api.StickerPackInfoActivity"
+                android:name="com.unusualapps.tiker.whatsapp_api.StickerPackInfoActivity"
                 android:label="@string/title_activity_sticker_pack_info"
-                android:parentActivityName=".whatsapp_api.StickerPackDetailsActivity"
+                android:parentActivityName="com.unusualapps.tiker.whatsapp_api.StickerPackDetailsActivity"
                 android:screenOrientation="portrait"
                 tools:ignore="UnusedAttribute">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value="com.unusualapps.whatsappstickers.whatsapp_api.StickerPackDetailsActivity"/>
+                    android:value="com.unusualapps.tiker.whatsapp_api.StickerPackDetailsActivity"/>
         </activity>
 
         <provider
-                android:name=".whatsapp_api.StickerContentProvider"
+                android:name="com.unusualapps.tiker.whatsapp_api.StickerContentProvider"
                 android:authorities="${contentProviderAuthority}"
                 android:enabled="true"
                 android:exported="true"
@@ -94,14 +105,14 @@
         </provider>
 
         <activity
-                android:name=".activities.NewStickerPackActivity"
+                android:name="com.unusualapps.tiker.activities.NewStickerPackActivity"
                 android:label="@string/title_activity_new_sticker_pack"
                 android:launchMode="singleTask"
-                android:parentActivityName=".activities.MainActivity"
+                android:parentActivityName="com.unusualapps.tiker.activities.EntryActivity"
                 android:screenOrientation="portrait">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".activities.MainActivity"/>
+                    android:value="com.unusualapps.tiker.activities.EntryActivity"/>
         </activity>
     </application>
 
