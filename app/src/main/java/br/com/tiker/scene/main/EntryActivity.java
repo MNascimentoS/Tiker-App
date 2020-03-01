@@ -164,6 +164,8 @@ public class EntryActivity extends AddStickerPackActivity {
     }
 
     private void createPackage() {
+        getSupportFragmentManager().beginTransaction().add(R.id.containerId, new BecomePremiumFragment()).commit();
+
         Intent intent = getIntent();
         if (intent.getType().equals("text/*")) {
             ArrayList<Sticker> stickers = new ArrayList<Sticker>();

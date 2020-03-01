@@ -23,6 +23,10 @@
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-3355203749923756~6760687928"/>
 
+        <meta-data
+            android:name="com.google.android.gms.wallet.api.enabled"
+            android:value="true" />
+
         <provider
             android:name="br.com.tiker.old.whatsapp_api.StickerContentProvider"
             android:authorities="${contentProviderAuthority}"
