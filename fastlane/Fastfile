@@ -1,0 +1,16 @@
+default_platform(:android)
+
+platform :android do
+  desc "Runs all the tests"
+  lane :test do
+    gradle(task: "test")
+  end
+
+  desc "Deploy a new bundle version to the Google Play in internal track"
+  lane :google_play_internal_bundle do |options|
+    sh("chdir .. && gradlew bundleRelease")
+    upload_to_play_store(track: 'internal', aab: 'app/build/outputs/bundle/release/app-release.aab')
+  end
+
+end
+
