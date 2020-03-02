@@ -49,6 +49,18 @@
     <string name="intro_label">Quick look</string>
     <string name="image_chooser_message">Choose an image to cut</string>
     <string name="allow_access">Permitir Acesso</string>
+    <string name="do_login">Fazer Login</string>
+    <string name="share_with_your_friends">Compartilhe com amigos</string>
+    <string name="become_premium">Seja premium</string>
+    <string name="pay_with_gpay">Pague com o Google Pay</string>
+    <string name="i_dont_have_money">Não possuo dinheiro</string>
+    <string name="your_sticker_organizer">seu organizador de stickers</string>
+    <string name="become_premium_description">Remova todas as propagandas .\n\n Garanta as próximas funcionalidades .\n\n Por apenas R$ 2,00</string>
+    <string name="google_rewards">Google Rewards</string>
+    <string name="google_rewards_download">Baixe o Google Rewards e ganhe dinheiro recebendo pesquisas!</string>
+    <string name="download">Baixar</string>
+    <string name="google_rewards_app">market://details?id=com.google.android.apps.paidtasks</string>
+    <string name="share_to_friends_message">Organize agora todos os seus Stickers do Whatsapp. \n\nBaixe o *Tiker*: https://play.google.com/store/apps/details?id=com.br.tiker</string>
 
 
 </resources>

@@ -2,6 +2,9 @@ package br.com.tiker.utils
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.app.Activity
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.view.View
 
 fun View.gone() {
@@ -64,4 +67,16 @@ fun View.fadeOut(duration: Int = AnimationConstants.DURATION_SHORT, finishCallba
         })
         .alpha(0.0f)
         .start()
+}
+
+fun Activity.alert(title: String, message: String, positive: String, onPositiveClick: () -> Unit) {
+    AlertDialog.Builder(this)
+        .setTitle(title)
+        .setMessage(message)
+        .setPositiveButton(positive
+        ) { _, _ ->
+            onPositiveClick()
+        }
+        .show()
+
 }

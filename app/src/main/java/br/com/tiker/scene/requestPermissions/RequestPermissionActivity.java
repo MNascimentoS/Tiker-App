@@ -2,13 +2,13 @@ package br.com.tiker.scene.requestPermissions;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
-import br.com.tiker.utils.*;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -27,10 +27,10 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import br.com.tiker.R;
 import br.com.tiker.persistence.FirebaseDB;
 import br.com.tiker.scene.main.EntryActivity;
+import br.com.tiker.utils.AnimationConstants;
+import br.com.tiker.utils.ExtensionsKt;
 import br.com.tiker.utils.FileUtils;
 import br.com.tiker.utils.RequestPermissionsHelper;
-
-import static br.com.tiker.persistence.FirebaseDB.Companion;
 
 public class RequestPermissionActivity extends AppCompatActivity {
 
@@ -39,27 +39,31 @@ public class RequestPermissionActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;// ...
 
+    private Button mRetryBTN;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request_permission);
         mAuth = FirebaseAuth.getInstance();
-
+        mRetryBTN = findViewById(R.id.retryAllowAccessBTN);
+        ExtensionsKt.fadeIn(findViewById(R.id.logoTickerContainer), AnimationConstants.DURATION_LONG, null);
         MobileAds.initialize(this, initializationStatus -> {
         });
-
-        FileUtils.initializeDirectories(this);
-        if (RequestPermissionsHelper.verifyPermissions(this)) {
-            signIn();
-        } else {
-            RequestPermissionsHelper.requestPermissions(this);
-        }
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        FileUtils.initializeDirectories(this);
+        if (RequestPermissionsHelper.verifyPermissions(this)) {
+            FirebaseUser currentUser = mAuth.getCurrentUser();
+            if (currentUser != null)
+                startActivity(new Intent(RequestPermissionActivity.this, EntryActivity.class));
+            else configureLoginButton();
+        } else {
+            RequestPermissionsHelper.requestPermissions(this);
+        }
     }
 
     @Override
@@ -67,15 +71,26 @@ public class RequestPermissionActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         FileUtils.initializeDirectories(this);
         if (RequestPermissionsHelper.verifyPermissions(this)) {//If the app has all the required permissions we pass to MainActivity to get started
-            signIn();
+            configureLoginButton();
         } else {
             Toast.makeText(this, "We need access to write and read files in your phone", Toast.LENGTH_SHORT).show();
-            findViewById(R.id.retryAllowAccessBTN).setOnClickListener(v -> RequestPermissionsHelper.requestPermissions(this));
-            ExtensionsKt.fadeIn(findViewById(R.id.retryAllowAccessBTN), AnimationConstants.DURATION_SHORT, null);
+            configureTryAccessButton();
         }
     }
 
+    private void configureTryAccessButton() {
+        mRetryBTN.setOnClickListener(v -> RequestPermissionsHelper.requestPermissions(this));
+        ExtensionsKt.fadeIn(mRetryBTN, AnimationConstants.DURATION_LONG, null);
+    }
+
+    private void configureLoginButton() {
+        mRetryBTN.setText(getString(R.string.do_login));
+        mRetryBTN.setOnClickListener(v -> signIn());
+        ExtensionsKt.fadeIn(mRetryBTN, AnimationConstants.DURATION_LONG, null);
+    }
+
     private void signIn() {
+        mRetryBTN.setClickable(false);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -83,6 +98,12 @@ public class RequestPermissionActivity extends AppCompatActivity {
         GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
     @Override
@@ -99,6 +120,7 @@ public class RequestPermissionActivity extends AppCompatActivity {
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "Google sign in failed", e);
+                mAuth.signOut();
                 // ...
             }
         }
@@ -124,6 +146,7 @@ public class RequestPermissionActivity extends AppCompatActivity {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
                         }
+                        mRetryBTN.setClickable(true);
                     }
                 });
     }

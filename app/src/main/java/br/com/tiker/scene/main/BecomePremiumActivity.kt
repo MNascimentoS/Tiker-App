@@ -3,29 +3,28 @@ package br.com.tiker.scene.main
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import br.com.tiker.R
 import br.com.tiker.payment.PaymentsUtil
+import br.com.tiker.utils.alert
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.wallet.AutoResolveHelper
 import com.google.android.gms.wallet.IsReadyToPayRequest
 import com.google.android.gms.wallet.PaymentData
 import com.google.android.gms.wallet.PaymentDataRequest
-import kotlinx.android.synthetic.main.fragment_become_premium.*
+import kotlinx.android.synthetic.main.activity_become_premium.*
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.*
 
 
-class BecomePremiumFragment : Fragment() {
+class BecomePremiumActivity : Activity() {
 
     companion object {
         /**
@@ -37,22 +36,33 @@ class BecomePremiumFragment : Fragment() {
     }
 
     private val paymentClient by lazy {
-        PaymentsUtil.createPaymentsClient(activity)
+        PaymentsUtil.createPaymentsClient(this)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? = inflater.inflate(R.layout.fragment_become_premium, container, false)
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_become_premium)
         initUi()
 
         gPayButton?.setOnClickListener {
             requestPayment(it)
+        }
+        noMoneyBTN?.setOnClickListener {
+            alert(
+                getString(R.string.google_rewards),
+                getString(R.string.google_rewards_download),
+                getString(
+                    R.string.download
+                )
+            ) {
+                startActivity(
+                    Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(getString(R.string.google_rewards_app))
+                    )
+                )
+
+            }
         }
     }
 
@@ -130,7 +140,7 @@ class BecomePremiumFragment : Fragment() {
         // onActivityResult will be called with the result.
         if (request != null) {
             AutoResolveHelper.resolveTask(
-                paymentClient.loadPaymentData(request), activity!!, LOAD_PAYMENT_DATA_REQUEST_CODE
+                paymentClient.loadPaymentData(request), this, LOAD_PAYMENT_DATA_REQUEST_CODE
             )
         }
     }
@@ -191,7 +201,7 @@ class BecomePremiumFragment : Fragment() {
                     .getString("token")
                         == "examplePaymentMethodToken")
             ) {
-                val alertDialog = AlertDialog.Builder(activity)
+                val alertDialog = AlertDialog.Builder(this)
                     .setTitle("Warning")
                     .setMessage(
                         "Gateway name set to \"example\" - please modify "
@@ -206,7 +216,7 @@ class BecomePremiumFragment : Fragment() {
                     .getString("name")
             Log.d("BillingName", billingName)
             Toast.makeText(
-                activity,
+                this,
                 billingName,
                 Toast.LENGTH_LONG
             )

@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -40,12 +41,24 @@ public class EntryActivity extends AddStickerPackActivity {
     private View progressBar;
 
     private InterstitialAd mInterstitialAd;
+    private Button mBecomePremium;
+    private Button mShareWithFriend;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_entry);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            getWindow().setStatusBarColor(getColor(R.color.backgroundSecondary));
+        }
+
         mInterstitialAd = new InterstitialAd(this);
         mInterstitialAd.setAdUnitId("ca-app-pub-3355203749923756/3144521325");
+
+        mBecomePremium = findViewById(R.id.becomePremiumBTN);
+        mShareWithFriend = findViewById(R.id.shareWithFriendsBTN);
         checkPermissions();
     }
 
@@ -87,7 +100,6 @@ public class EntryActivity extends AddStickerPackActivity {
         contentValues.put("stickerPack", new Gson().toJson(stickerPack));
         getContentResolver().insert(StickerContentProvider.AUTHORITY_URI, contentValues);
     }
-
 
     @Override
     protected void onDestroy() {
@@ -137,8 +149,6 @@ public class EntryActivity extends AddStickerPackActivity {
     }
 
     private void initialize() {
-        setContentView(R.layout.activity_entry);
-//        overridePendingTransition(0, 0);
         Intent intent = getIntent();
         Fresco.initialize(this);
         StickerPacksManager.stickerPacksContainer = new StickerPacksContainer("", "", StickerPacksManager.getStickerPacks(this));
@@ -161,11 +171,24 @@ public class EntryActivity extends AddStickerPackActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
+
+        initListeners();
+    }
+
+    private void initListeners() {
+        mBecomePremium.setOnClickListener(v -> startActivity(new Intent(this, BecomePremiumActivity.class)));
+        mShareWithFriend.setOnClickListener(v -> {
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_to_friends_message));
+            sendIntent.setType("text/plain");
+
+            Intent shareIntent = Intent.createChooser(sendIntent, null);
+            startActivity(shareIntent);
+        });
     }
 
     private void createPackage() {
-        getSupportFragmentManager().beginTransaction().add(R.id.containerId, new BecomePremiumFragment()).commit();
-
         Intent intent = getIntent();
         if (intent.getType().equals("text/*")) {
             ArrayList<Sticker> stickers = new ArrayList<Sticker>();

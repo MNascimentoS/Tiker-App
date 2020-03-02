@@ -75,8 +75,9 @@
                 <data android:mimeType="text/*" />
             </intent-filter>
         </activity>
+        <activity android:name=".scene.main.BecomePremiumActivity" />
 
-<!--        <activity android:name="com.unusualapps.tiker.old.activities.AddToStickerPackActivity" android:label="Add to sticker pack">-->
+        <!--        <activity android:name="com.unusualapps.tiker.old.activities.AddToStickerPackActivity" android:label="Add to sticker pack">-->
 <!--            <meta-data-->
 <!--                    android:name="android.support.PARENT_ACTIVITY"-->
 <!--                    android:value="com.unusualapps.tiker.old.activities.EntryActivity"/>-->

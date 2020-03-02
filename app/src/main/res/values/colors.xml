@@ -6,7 +6,7 @@
     -->
     <color name="colorPrimary">#00897C</color>
     <color name="colorPrimaryDark">#00897C</color>
-    <color name="colorAccent">#FFFFFF</color>
+    <color name="colorAccent">#00897C</color>
     <color name="inactiveAddButtonColor">#B3B3B3</color>
     <color name="infoPageBackgroundColor">#EBEBEB</color>
     <color name="actionBarArrowColor">@color/colorAccent</color>
@@ -20,4 +20,5 @@
     <color name="intro_magic_background_color">#373737</color>
     <color name="intro_manual_background_color">#E64E4E</color>
     <color name="intro_zoom_background_color">#4E5DE6</color>
+    <color name="backgroundSecondary">#E5E5E5</color>
 </resources>
