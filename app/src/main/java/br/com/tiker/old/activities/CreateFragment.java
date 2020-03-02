@@ -27,8 +27,8 @@ import com.sangcomz.fishbun.define.Define;
 import br.com.tiker.R;
 import br.com.tiker.old.backgroundRemover.CutOut;
 import br.com.tiker.old.constants.Constants;
-import br.com.tiker.old.utils.FileUtils;
-import br.com.tiker.old.utils.StickerPacksManager;
+import br.com.tiker.utils.FileUtils;
+import br.com.tiker.utils.StickerPacksManager;
 
 import java.io.File;
 import java.util.ArrayList;

@@ -108,7 +108,7 @@ class BecomePremiumFragment : Fragment() {
     }
 
     // This method is called when the Pay with Google button is clicked.
-    private fun requestPayment(view: View?) { // Disables the button to prevent multiple clicks.
+    fun requestPayment(view: View?) { // Disables the button to prevent multiple clicks.
         view?.isClickable = false
         // The price provided to the API should include taxes and shipping.
         // This price is not displayed to the user.

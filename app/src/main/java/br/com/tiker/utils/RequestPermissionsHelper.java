@@ -1,4 +1,4 @@
-package br.com.tiker.old.utils;
+package br.com.tiker.utils;
 
 import android.Manifest;
 import android.app.Activity;

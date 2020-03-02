@@ -24,8 +24,8 @@ import android.widget.TextView;
 
 import br.com.tiker.R;
 import br.com.tiker.old.constants.Constants;
-import br.com.tiker.old.utils.FileUtils;
-import br.com.tiker.old.utils.ImageUtils;
+import br.com.tiker.utils.FileUtils;
+import br.com.tiker.utils.ImageUtils;
 
 import java.lang.ref.WeakReference;
 

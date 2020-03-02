@@ -16,7 +16,7 @@ import com.sangcomz.fishbun.define.Define;
 import br.com.tiker.R;
 import br.com.tiker.old.backgroundRemover.CutOut;
 import br.com.tiker.old.identities.StickerPacksContainer;
-import br.com.tiker.old.utils.StickerPacksManager;
+import br.com.tiker.utils.StickerPacksManager;
 import br.com.tiker.old.whatsapp_api.AddStickerPackActivity;
 
 import java.util.Objects;

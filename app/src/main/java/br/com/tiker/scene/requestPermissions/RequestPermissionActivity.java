@@ -6,11 +6,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
+import br.com.tiker.utils.*;
 
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -23,14 +23,12 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import br.com.tiker.R;
 import br.com.tiker.persistence.FirebaseDB;
 import br.com.tiker.scene.main.EntryActivity;
-import br.com.tiker.old.utils.FileUtils;
-import br.com.tiker.old.utils.RequestPermissionsHelper;
+import br.com.tiker.utils.FileUtils;
+import br.com.tiker.utils.RequestPermissionsHelper;
 
 import static br.com.tiker.persistence.FirebaseDB.Companion;
 
@@ -56,7 +54,6 @@ public class RequestPermissionActivity extends AppCompatActivity {
         } else {
             RequestPermissionsHelper.requestPermissions(this);
         }
-        findViewById(R.id.grant_permissions_button).setOnClickListener(v -> RequestPermissionsHelper.requestPermissions(this));
     }
 
     @Override
@@ -73,6 +70,8 @@ public class RequestPermissionActivity extends AppCompatActivity {
             signIn();
         } else {
             Toast.makeText(this, "We need access to write and read files in your phone", Toast.LENGTH_SHORT).show();
+            findViewById(R.id.retryAllowAccessBTN).setOnClickListener(v -> RequestPermissionsHelper.requestPermissions(this));
+            ExtensionsKt.fadeIn(findViewById(R.id.retryAllowAccessBTN), AnimationConstants.DURATION_SHORT, null);
         }
     }
 

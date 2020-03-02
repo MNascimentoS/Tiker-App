@@ -15,7 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import br.com.tiker.R;
-import br.com.tiker.old.utils.ImageUtils;
+import br.com.tiker.utils.ImageUtils;
 
 public class StickerPreviewAdapter extends RecyclerView.Adapter<StickerPreviewViewHolder> {
 

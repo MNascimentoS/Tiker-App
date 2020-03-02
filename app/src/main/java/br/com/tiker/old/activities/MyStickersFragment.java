@@ -14,7 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import br.com.tiker.R;
-import br.com.tiker.old.utils.StickerPacksManager;
+import br.com.tiker.utils.StickerPacksManager;
 import br.com.tiker.old.whatsapp_api.StickerPack;
 import br.com.tiker.old.whatsapp_api.StickerPackListAdapter;
 import br.com.tiker.old.whatsapp_api.StickerPackListItemViewHolder;

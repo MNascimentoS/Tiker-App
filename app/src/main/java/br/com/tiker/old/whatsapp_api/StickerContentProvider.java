@@ -20,7 +20,7 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 import br.com.tiker.BuildConfig;
 import br.com.tiker.old.constants.Constants;
-import br.com.tiker.old.utils.StickerPacksManager;
+import br.com.tiker.utils.StickerPacksManager;
 
 import java.io.*;
 import java.util.ArrayList;

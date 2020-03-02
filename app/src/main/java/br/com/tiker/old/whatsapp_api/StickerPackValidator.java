@@ -18,8 +18,8 @@ import android.util.Patterns;
 import android.webkit.URLUtil;
 
 import com.facebook.animated.webp.WebPImage;
-import br.com.tiker.old.utils.FileUtils;
-import br.com.tiker.old.utils.ImageUtils;
+import br.com.tiker.utils.FileUtils;
+import br.com.tiker.utils.ImageUtils;
 
 import java.io.IOException;
 import java.io.InputStream;

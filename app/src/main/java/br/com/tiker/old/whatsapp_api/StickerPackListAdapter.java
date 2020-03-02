@@ -26,9 +26,9 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import br.com.tiker.R;
 import br.com.tiker.old.activities.MyStickersFragment;
 import br.com.tiker.old.constants.Constants;
-import br.com.tiker.old.utils.FileUtils;
-import br.com.tiker.old.utils.ImageUtils;
-import br.com.tiker.old.utils.StickerPacksManager;
+import br.com.tiker.utils.FileUtils;
+import br.com.tiker.utils.ImageUtils;
+import br.com.tiker.utils.StickerPacksManager;
 
 import java.util.List;
 

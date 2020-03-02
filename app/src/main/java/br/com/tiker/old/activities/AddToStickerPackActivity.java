@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.widget.Toast;
 
 import br.com.tiker.old.identities.StickerPacksContainer;
-import br.com.tiker.old.utils.StickerPacksManager;
+import br.com.tiker.utils.StickerPacksManager;
 
 public class AddToStickerPackActivity extends AppCompatActivity {
 
