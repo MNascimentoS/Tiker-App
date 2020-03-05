@@ -20,8 +20,8 @@ android {
         applicationId "br.com.tiker"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 6
-        versionName "0.9.0"
+        versionCode 9
+        versionName "0.9.3"
         def contentProviderAuthority = applicationId + ".stickercontentprovider"
         manifestPlaceholders = [contentProviderAuthority: contentProviderAuthority]
         buildConfigField("String", "CONTENT_PROVIDER_AUTHORITY", "\"${contentProviderAuthority}\"")
@@ -55,6 +55,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics:17.2.3'
     implementation 'com.google.firebase:firebase-auth:19.2.0'
     implementation 'com.google.firebase:firebase-database:19.2.1'
+    implementation 'com.firebaseui:firebase-ui-auth:4.3.1'
 
     //Third party libraries
     implementation 'androidx.exifinterface:exifinterface:1.0.0'
@@ -64,6 +65,8 @@ dependencies {
     implementation 'com.facebook.fresco:animated-webp:1.10.0'
     implementation 'com.facebook.fresco:webpsupport:1.10.0'
     implementation 'com.google.code.gson:gson:2.8.5'
+
+    implementation 'io.sentry:sentry:1.7.30'
 
     implementation "com.airbnb.android:lottie:2.7.0"
     implementation 'com.sangcomz:FishBun:0.8.7'

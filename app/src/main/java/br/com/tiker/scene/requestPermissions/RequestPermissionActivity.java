@@ -9,21 +9,18 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCanceledListener;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import br.com.tiker.BuildConfig;
 import br.com.tiker.R;
 import br.com.tiker.persistence.FirebaseDB;
 import br.com.tiker.scene.main.ui.EntryActivity;
@@ -31,6 +28,7 @@ import br.com.tiker.utils.AnimationConstants;
 import br.com.tiker.utils.ExtensionsKt;
 import br.com.tiker.utils.FileUtils;
 import br.com.tiker.utils.RequestPermissionsHelper;
+import io.sentry.Sentry;
 
 public class RequestPermissionActivity extends AppCompatActivity {
 
@@ -45,6 +43,7 @@ public class RequestPermissionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request_permission);
+        Sentry.init(getString(R.string.sentry_dns));
         mAuth = FirebaseAuth.getInstance();
         mRetryBTN = findViewById(R.id.retryAllowAccessBTN);
         ExtensionsKt.fadeIn(findViewById(R.id.logoTickerContainer), AnimationConstants.DURATION_LONG, null);
@@ -117,10 +116,12 @@ public class RequestPermissionActivity extends AppCompatActivity {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
+                Sentry.capture(e);
                 // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "Google sign in failed", e);
-                ExtensionsKt.alert(this, "Erro", "Houve um erro ao tentar realizar o login");
+                ExtensionsKt.alert(this, "Erro", "Houve um erro ao tentar realizar o login do usuário");
                 mAuth.signOut();
+                mRetryBTN.setClickable(true);
                 // ...
             }
         }
@@ -148,11 +149,14 @@ public class RequestPermissionActivity extends AppCompatActivity {
                     mRetryBTN.setClickable(true);
                 })
                 .addOnCanceledListener(this, () -> {
-                    ExtensionsKt.alert(this, "Erro", "Houve um erro ao tentar realizar o login");
+                    ExtensionsKt.alert(this, "Erro", "O login foi cancelado");
+                    mRetryBTN.setClickable(true);
                     mAuth.signOut();
                 })
                 .addOnFailureListener(this, error -> {
+                    Sentry.capture(error);
                     ExtensionsKt.alert(this, "Erro", "Houve um erro ao tentar realizar o login");
+                    mRetryBTN.setClickable(true);
                     mAuth.signOut();
                 });
     }
