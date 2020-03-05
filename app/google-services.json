@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "197118949774-t0m0md5k9n5kosf4jhm92d7silh8munq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.tiker",
+            "certificate_hash": "db2e658b1e9e371e2ad1af847909ffb7043a6970"
+          }
+        },
+        {
+          "client_id": "197118949774-s5sn76sfti3h4khr2814l52os6k3mtit.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.tiker",
+            "certificate_hash": "8d02cc7f0a95bf10828d0e646edf19609bc94c61"
+          }
+        },
+        {
           "client_id": "197118949774-vqc0mdpfsq626opf5kcverg9n0koo2hu.apps.googleusercontent.com",
           "client_type": 3
         }
