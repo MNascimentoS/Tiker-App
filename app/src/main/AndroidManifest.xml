@@ -1,27 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          package="br.com.tiker">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="br.com.tiker">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-            android:allowBackup="true"
-            android:fullBackupContent="true"
-            android:icon="@mipmap/ic_launcher"
-            android:label="@string/app_name"
-            android:launchMode="singleTask"
-            android:roundIcon="@mipmap/ic_launcher_round"
-            android:supportsRtl="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
+        android:allowBackup="true"
+        android:fullBackupContent="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3355203749923756~6760687928"/>
+            android:value="ca-app-pub-3355203749923756~6760687928" />
 
         <meta-data
             android:name="com.google.android.gms.wallet.api.enabled"
@@ -39,31 +37,33 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths"
-                tools:replace="android:resource"/>
+                tools:replace="android:resource" />
         </provider>
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.easyphotopicker.fileprovider"
+            android:authorities="${applicationId}.fileprovider"
             android:enabled="true"
             android:grantUriPermissions="true"
             tools:replace="android:authorities">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths"
-                tools:replace="android:resource"/>
+                tools:replace="android:resource" />
         </provider>
 
         <activity
             android:name="br.com.tiker.scene.requestPermissions.RequestPermissionActivity"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name="br.com.tiker.scene.main.EntryActivity">
+        <activity android:name="br.com.tiker.scene.main.ui.EntryActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -75,53 +75,53 @@
                 <data android:mimeType="text/*" />
             </intent-filter>
         </activity>
-        <activity android:name=".scene.main.BecomePremiumActivity" />
+        <activity android:name=".scene.main.ui.BecomePremiumActivity" />
 
         <!--        <activity android:name="com.unusualapps.tiker.old.activities.AddToStickerPackActivity" android:label="Add to sticker pack">-->
-<!--            <meta-data-->
-<!--                    android:name="android.support.PARENT_ACTIVITY"-->
-<!--                    android:value="com.unusualapps.tiker.old.activities.EntryActivity"/>-->
-<!--        </activity>-->
-<!--        <activity-->
-<!--                android:name="com.unusualapps.tiker.old.backgroundRemover.CutOutActivity"-->
-<!--                android:screenOrientation="portrait"-->
-<!--                android:theme="@style/AppThemeWithOutActionBar"/>-->
-<!--        <activity-->
-<!--                android:name="com.unusualapps.tiker.old.backgroundRemover.IntroActivity"-->
-<!--                android:screenOrientation="portrait"/>-->
-<!--        <activity-->
-<!--                android:name="com.theartofdev.edmodo.cropper.CropImageActivity"-->
-<!--                android:screenOrientation="portrait"-->
-<!--                android:theme="@style/MyBaseTheme"/>-->
-<!--        <activity-->
-<!--                android:name="com.unusualapps.tiker.old.whatsapp_api.StickerPackDetailsActivity"-->
-<!--                android:parentActivityName="com.unusualapps.tiker.old.activities.EntryActivity"-->
-<!--                android:screenOrientation="portrait"-->
-<!--                tools:ignore="UnusedAttribute">-->
-<!--            <meta-data-->
-<!--                    android:name="android.support.PARENT_ACTIVITY"-->
-<!--                    android:value="com.unusualapps.tiker.old.activities.EntryActivity"/>-->
-<!--        </activity>-->
-<!--        <activity-->
-<!--                android:name="com.unusualapps.tiker.old.whatsapp_api.StickerPackInfoActivity"-->
-<!--                android:label="@string/title_activity_sticker_pack_info"-->
-<!--                android:parentActivityName="com.unusualapps.tiker.old.whatsapp_api.StickerPackDetailsActivity"-->
-<!--                android:screenOrientation="portrait"-->
-<!--                tools:ignore="UnusedAttribute">-->
-<!--            <meta-data-->
-<!--                    android:name="android.support.PARENT_ACTIVITY"-->
-<!--                    android:value="com.unusualapps.tiker.old.whatsapp_api.StickerPackDetailsActivity"/>-->
-<!--        </activity>-->
-<!--        <activity-->
-<!--                android:name="com.unusualapps.tiker.old.activities.NewStickerPackActivity"-->
-<!--                android:label="@string/title_activity_new_sticker_pack"-->
-<!--                android:launchMode="singleTask"-->
-<!--                android:parentActivityName="com.unusualapps.tiker.old.activities.EntryActivity"-->
-<!--                android:screenOrientation="portrait">-->
-<!--            <meta-data-->
-<!--                    android:name="android.support.PARENT_ACTIVITY"-->
-<!--                    android:value="com.unusualapps.tiker.old.activities.EntryActivity"/>-->
-<!--        </activity>-->
+        <!--            <meta-data-->
+        <!--                    android:name="android.support.PARENT_ACTIVITY"-->
+        <!--                    android:value="com.unusualapps.tiker.old.activities.EntryActivity"/>-->
+        <!--        </activity>-->
+        <!--        <activity-->
+        <!--                android:name="com.unusualapps.tiker.old.backgroundRemover.CutOutActivity"-->
+        <!--                android:screenOrientation="portrait"-->
+        <!--                android:theme="@style/AppThemeWithOutActionBar"/>-->
+        <!--        <activity-->
+        <!--                android:name="com.unusualapps.tiker.old.backgroundRemover.IntroActivity"-->
+        <!--                android:screenOrientation="portrait"/>-->
+        <!--        <activity-->
+        <!--                android:name="com.theartofdev.edmodo.cropper.CropImageActivity"-->
+        <!--                android:screenOrientation="portrait"-->
+        <!--                android:theme="@style/MyBaseTheme"/>-->
+        <!--        <activity-->
+        <!--                android:name="com.unusualapps.tiker.old.whatsapp_api.StickerPackDetailsActivity"-->
+        <!--                android:parentActivityName="com.unusualapps.tiker.old.activities.EntryActivity"-->
+        <!--                android:screenOrientation="portrait"-->
+        <!--                tools:ignore="UnusedAttribute">-->
+        <!--            <meta-data-->
+        <!--                    android:name="android.support.PARENT_ACTIVITY"-->
+        <!--                    android:value="com.unusualapps.tiker.old.activities.EntryActivity"/>-->
+        <!--        </activity>-->
+        <!--        <activity-->
+        <!--                android:name="com.unusualapps.tiker.old.whatsapp_api.StickerPackInfoActivity"-->
+        <!--                android:label="@string/title_activity_sticker_pack_info"-->
+        <!--                android:parentActivityName="com.unusualapps.tiker.old.whatsapp_api.StickerPackDetailsActivity"-->
+        <!--                android:screenOrientation="portrait"-->
+        <!--                tools:ignore="UnusedAttribute">-->
+        <!--            <meta-data-->
+        <!--                    android:name="android.support.PARENT_ACTIVITY"-->
+        <!--                    android:value="com.unusualapps.tiker.old.whatsapp_api.StickerPackDetailsActivity"/>-->
+        <!--        </activity>-->
+        <!--        <activity-->
+        <!--                android:name="com.unusualapps.tiker.old.activities.NewStickerPackActivity"-->
+        <!--                android:label="@string/title_activity_new_sticker_pack"-->
+        <!--                android:launchMode="singleTask"-->
+        <!--                android:parentActivityName="com.unusualapps.tiker.old.activities.EntryActivity"-->
+        <!--                android:screenOrientation="portrait">-->
+        <!--            <meta-data-->
+        <!--                    android:name="android.support.PARENT_ACTIVITY"-->
+        <!--                    android:value="com.unusualapps.tiker.old.activities.EntryActivity"/>-->
+        <!--        </activity>-->
     </application>
 
 </manifest>

@@ -61,6 +61,8 @@
     <string name="download">Baixar</string>
     <string name="google_rewards_app">market://details?id=com.google.android.apps.paidtasks</string>
     <string name="share_to_friends_message">Organize agora todos os seus Stickers do Whatsapp. \n\nBaixe o *Tiker*: https://play.google.com/store/apps/details?id=com.br.tiker</string>
+    <string name="tutorial_one">1º Crie um grupo no WhatsApp \n\n2º Adicione de 3 à 30 Stickers \n\n3º Clique nos 3 pontinhos</string>
+    <string name="tutorial_image_description">Descrição do Whatsapp</string>
 
 
 </resources>

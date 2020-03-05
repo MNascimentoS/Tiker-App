@@ -3,7 +3,6 @@ package br.com.tiker.scene.requestPermissions;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -26,7 +25,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 import br.com.tiker.R;
 import br.com.tiker.persistence.FirebaseDB;
-import br.com.tiker.scene.main.EntryActivity;
+import br.com.tiker.scene.main.ui.EntryActivity;
 import br.com.tiker.utils.AnimationConstants;
 import br.com.tiker.utils.ExtensionsKt;
 import br.com.tiker.utils.FileUtils;
@@ -48,8 +47,6 @@ public class RequestPermissionActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mRetryBTN = findViewById(R.id.retryAllowAccessBTN);
         ExtensionsKt.fadeIn(findViewById(R.id.logoTickerContainer), AnimationConstants.DURATION_LONG, null);
-        MobileAds.initialize(this, initializationStatus -> {
-        });
     }
 
     @Override
