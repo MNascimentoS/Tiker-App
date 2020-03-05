@@ -25,6 +25,8 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
 
 import br.com.tiker.BuildConfig;
@@ -32,6 +34,7 @@ import br.com.tiker.R;
 import br.com.tiker.old.constants.Constants;
 import br.com.tiker.old.identities.StickerPacksContainer;
 import br.com.tiker.scene.main.ui.BecomePremiumActivity;
+import br.com.tiker.scene.requestPermissions.RequestPermissionActivity;
 import br.com.tiker.utils.FileUtils;
 import br.com.tiker.utils.StickerPacksManager;
 import br.com.tiker.old.whatsapp_api.AddStickerPackActivity;
@@ -155,7 +158,14 @@ public class EntryActivity extends AddStickerPackActivity {
                     }
                 }
                 // all permissions were granted
-                initialize();
+                FirebaseAuth auth = FirebaseAuth.getInstance();
+                FirebaseUser currentUser = auth.getCurrentUser();
+                if (currentUser == null) {
+                    startActivity(new Intent(this, RequestPermissionActivity.class));
+                    finish();
+                } else {
+                    initialize();
+                }
                 break;
         }
     }

@@ -80,3 +80,10 @@ fun Activity.alert(title: String, message: String, positive: String, onPositiveC
         .show()
 
 }
+
+fun Activity.alert(title: String, message: String) {
+    AlertDialog.Builder(this)
+        .setTitle(title)
+        .setMessage(message)
+        .show()
+}

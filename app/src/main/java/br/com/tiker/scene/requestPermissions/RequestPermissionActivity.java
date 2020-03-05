@@ -15,6 +15,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -55,9 +56,10 @@ public class RequestPermissionActivity extends AppCompatActivity {
         FileUtils.initializeDirectories(this);
         if (RequestPermissionsHelper.verifyPermissions(this)) {
             FirebaseUser currentUser = mAuth.getCurrentUser();
-            if (currentUser != null)
+            if (currentUser != null) {
                 startActivity(new Intent(RequestPermissionActivity.this, EntryActivity.class));
-            else configureLoginButton();
+                finish();
+            } else configureLoginButton();
         } else {
             RequestPermissionsHelper.requestPermissions(this);
         }
@@ -117,6 +119,7 @@ public class RequestPermissionActivity extends AppCompatActivity {
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "Google sign in failed", e);
+                ExtensionsKt.alert(this, "Erro", "Houve um erro ao tentar realizar o login");
                 mAuth.signOut();
                 // ...
             }
@@ -128,23 +131,29 @@ public class RequestPermissionActivity extends AppCompatActivity {
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            if (user != null) {
-                                FirebaseDB.Companion.addOrUpdateUser(user.getUid());
-                            }
-                            startActivity(new Intent(RequestPermissionActivity.this, EntryActivity.class));
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(TAG, "signInWithCredential:success");
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user != null) {
+                            FirebaseDB.Companion.addOrUpdateUser(user.getUid());
                         }
-                        mRetryBTN.setClickable(true);
+                        startActivity(new Intent(RequestPermissionActivity.this, EntryActivity.class));
+                        finish();
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w(TAG, "signInWithCredential:failure", task.getException());
                     }
+                    mRetryBTN.setClickable(true);
+                })
+                .addOnCanceledListener(this, () -> {
+                    ExtensionsKt.alert(this, "Erro", "Houve um erro ao tentar realizar o login");
+                    mAuth.signOut();
+                })
+                .addOnFailureListener(this, error -> {
+                    ExtensionsKt.alert(this, "Erro", "Houve um erro ao tentar realizar o login");
+                    mAuth.signOut();
                 });
     }
 }
