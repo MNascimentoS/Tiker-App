@@ -10,10 +10,26 @@
         android:id="@+id/viewPager"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/timerRL"
+        app:layout_constraintBottom_toTopOf="@+id/dotsIndicator"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+        android:id="@+id/dotsIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        app:dotsColor="@color/colorPrimary"
+        app:dotsCornerRadius="8dp"
+        app:dotsSize="6dp"
+        app:dotsSpacing="4dp"
+        app:dotsWidthFactor="5"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:progressMode="true"
+        app:selectedDotColor="@color/colorPrimary" />
 
     <LinearLayout
         android:id="@+id/linearLayout2"
@@ -26,22 +42,21 @@
         android:clipToPadding="false"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <Button
-            android:id="@+id/becomePremiumBTN"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_primary_background"
-            android:fontFamily="@font/ubuntu"
-            android:text="@string/become_premium"
-            android:textAllCaps="false"
-            android:textColor="#FFFFFF"
-            tools:layout_editor_absoluteX="48dp" />
+<!--        <Button-->
+<!--            android:id="@+id/becomePremiumBTN"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@drawable/button_primary_background"-->
+<!--            android:fontFamily="@font/ubuntu"-->
+<!--            android:text="@string/become_premium"-->
+<!--            android:textAllCaps="false"-->
+<!--            android:textColor="#FFFFFF"-->
+<!--            tools:layout_editor_absoluteX="48dp" />-->
 
         <Button
             android:id="@+id/shareWithFriendsBTN"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:background="@drawable/button_acent_background"
             android:fontFamily="@font/ubuntu"
             android:text="@string/share_with_your_friends"
@@ -51,5 +66,54 @@
 
     </LinearLayout>
 
+    <RelativeLayout
+        android:id="@+id/timerRL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textProgressTXT"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/ubuntu_bold"
+            android:textColor="@color/colorPrimary"
+            android:textSize="22sp" />
+
+        <com.mikhaellopez.circularprogressbar.CircularProgressBar
+            android:id="@+id/circularProgressBar"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            app:cpb_background_progressbar_color="#E0E0E0"
+            app:cpb_background_progressbar_width="4dp"
+            app:cpb_progress_direction="to_right"
+            app:cpb_progressbar_color="@color/colorPrimary"
+            app:cpb_progressbar_width="4dp"
+            app:cpb_round_border="false" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/progressComponentRL"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#CCFFFFFF"/>
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"/>
+
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

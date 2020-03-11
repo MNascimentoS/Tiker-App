@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import br.com.tiker.BuildConfig;
 import br.com.tiker.R;
+import br.com.tiker.utils.ExtensionsKt;
 
 public abstract class AddStickerPackActivity extends BaseActivity {
     public static final int ADD_PACK = 200;
@@ -35,7 +36,7 @@ public abstract class AddStickerPackActivity extends BaseActivity {
         try {
             startActivityForResult(intent, ADD_PACK);
         } catch (ActivityNotFoundException e) {
-            Toast.makeText(this, R.string.error_adding_sticker_pack, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.add_pack_fail_prompt_update_whatsapp, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -56,6 +57,12 @@ public abstract class AddStickerPackActivity extends BaseActivity {
                 } else {
                     new StickerPackNotAddedMessageFragment().show(getSupportFragmentManager(), "sticker_pack_not_added");
                 }
+            } else {
+                ExtensionsKt.alert(this, "Stiker Adicionado", "Volte ao Whatsapp para ver o seu pacote", "Voltar", () -> {
+                    Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.whatsapp");
+                    startActivity(launchIntent);
+                    return null;
+                });
             }
         }
     }

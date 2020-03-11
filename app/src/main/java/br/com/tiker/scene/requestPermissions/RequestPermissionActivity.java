@@ -2,6 +2,7 @@ package br.com.tiker.scene.requestPermissions;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
@@ -43,7 +44,6 @@ public class RequestPermissionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request_permission);
-        Sentry.init(getString(R.string.sentry_dns));
         mAuth = FirebaseAuth.getInstance();
         mRetryBTN = findViewById(R.id.retryAllowAccessBTN);
         ExtensionsKt.fadeIn(findViewById(R.id.logoTickerContainer), AnimationConstants.DURATION_LONG, null);
@@ -54,11 +54,17 @@ public class RequestPermissionActivity extends AppCompatActivity {
         super.onStart();
         FileUtils.initializeDirectories(this);
         if (RequestPermissionsHelper.verifyPermissions(this)) {
-            FirebaseUser currentUser = mAuth.getCurrentUser();
-            if (currentUser != null) {
+
+            Handler handler = new Handler();
+            handler.postDelayed(() -> {
                 startActivity(new Intent(RequestPermissionActivity.this, EntryActivity.class));
                 finish();
-            } else configureLoginButton();
+            }, 1000);
+
+//            FirebaseUser currentUser = mAuth.getCurrentUser();
+//            if (currentUser != null) {
+
+//            } else configureLoginButton();
         } else {
             RequestPermissionsHelper.requestPermissions(this);
         }
@@ -69,7 +75,9 @@ public class RequestPermissionActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         FileUtils.initializeDirectories(this);
         if (RequestPermissionsHelper.verifyPermissions(this)) {//If the app has all the required permissions we pass to MainActivity to get started
-            configureLoginButton();
+            startActivity(new Intent(RequestPermissionActivity.this, EntryActivity.class));
+            finish();
+            //            configureLoginButton();
         } else {
             Toast.makeText(this, "We need access to write and read files in your phone", Toast.LENGTH_SHORT).show();
             configureTryAccessButton();
