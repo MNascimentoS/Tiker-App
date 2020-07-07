@@ -5,13 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import kotlin.properties.Delegates
 
 class TutorialFragment : Fragment() {
 
-    private var layout by Delegates.notNull<Int>()
+    private var layout : Int = 0
 
     companion object {
+        private const val LAYOUT = "layout"
         fun newInstance(layout: Int) = TutorialFragment().apply { this.layout = layout }
     }
 
@@ -19,6 +19,15 @@ class TutorialFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? = inflater.inflate(layout, container, false)
+    ): View? {
+        savedInstanceState?.getInt(LAYOUT)?.let { layout = it }
+        return inflater.inflate(layout, container, false)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putInt(LAYOUT, layout)
+        super.onSaveInstanceState(outState)
+    }
+
 
 }

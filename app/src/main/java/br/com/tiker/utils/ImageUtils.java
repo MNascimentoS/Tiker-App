@@ -20,20 +20,10 @@ import java.io.InputStream;
 
 public class ImageUtils {
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     static Bitmap compressImageToBytes(Uri imageUri, int quality, int height, int width, Context context, Bitmap.CompressFormat format) throws IOException {
         Bitmap bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), imageUri);
         try (InputStream inputStream = context.getContentResolver().openInputStream(imageUri)) {
-            ExifInterface exif = new ExifInterface(inputStream);
-            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 0);
             Matrix matrix = new Matrix();
-            if (orientation == 6) {
-                matrix.postRotate(90);
-            } else if (orientation == 3) {
-                matrix.postRotate(180);
-            } else if (orientation == 8) {
-                matrix.postRotate(270);
-            }
             Bitmap compressed = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
             Bitmap scaledBitmap = scaleBitmap(compressed, width, height);
             scaledBitmap = overlayBitmapToCenter(Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888), scaledBitmap);

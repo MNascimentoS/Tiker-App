@@ -58,7 +58,7 @@ public abstract class AddStickerPackActivity extends BaseActivity {
                     new StickerPackNotAddedMessageFragment().show(getSupportFragmentManager(), "sticker_pack_not_added");
                 }
             } else {
-                ExtensionsKt.alert(this, "Stiker Adicionado", "Volte ao Whatsapp para ver o seu pacote", "Voltar", () -> {
+                ExtensionsKt.alert(this, "Stiker Adicionado", "Volte ao Whatsapp para ver o seu pacote", "Voltar", true, () -> {
                     Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.whatsapp");
                     startActivity(launchIntent);
                     return null;

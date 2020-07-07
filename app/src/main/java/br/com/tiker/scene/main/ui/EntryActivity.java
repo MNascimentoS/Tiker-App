@@ -2,7 +2,6 @@ package br.com.tiker.scene.main.ui;
 
 import android.Manifest;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -24,16 +23,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
-import com.google.android.gms.ads.reward.AdMetadataListener;
 import com.google.android.gms.ads.reward.RewardItem;
 import com.google.android.gms.ads.reward.RewardedVideoAd;
 import com.google.android.gms.ads.reward.RewardedVideoAdListener;
-import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
@@ -44,21 +38,22 @@ import br.com.tiker.BuildConfig;
 import br.com.tiker.R;
 import br.com.tiker.old.constants.Constants;
 import br.com.tiker.old.identities.StickerPacksContainer;
-import br.com.tiker.scene.main.ui.BecomePremiumActivity;
-import br.com.tiker.scene.requestPermissions.RequestPermissionActivity;
 import br.com.tiker.utils.ExtensionsKt;
 import br.com.tiker.utils.FileUtils;
 import br.com.tiker.utils.StickerPacksManager;
 import br.com.tiker.old.whatsapp_api.AddStickerPackActivity;
 import br.com.tiker.old.whatsapp_api.Sticker;
-import br.com.tiker.old.whatsapp_api.StickerContentProvider;
+import br.com.tiker.services.StickerContentProvider;
 import br.com.tiker.old.whatsapp_api.StickerPack;
 import br.com.tiker.old.whatsapp_api.StickerPackValidator;
 import io.sentry.Sentry;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+
+import static br.com.tiker.old.whatsapp_api.StickerPackValidator.STICKER_SIZE_MAX;
 
 public class EntryActivity extends AddStickerPackActivity implements RewardedVideoAdListener {
     /**
@@ -82,9 +77,11 @@ public class EntryActivity extends AddStickerPackActivity implements RewardedVid
     private View mProgressComponentRL;
     private int currentTime = 6;
     private int currentProgress = 100;
+    private boolean stickerListEmpty = false;
     private boolean adCompleted = false;
+    private String error = null;
 
-    private StickerPack stickerPack;
+    private ArrayList<StickerPack> stickerPack = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -113,10 +110,14 @@ public class EntryActivity extends AddStickerPackActivity implements RewardedVid
                 currentProgress = 100;
                 currentTime = 6;
             }
+
             @Override
-            public void onPageSelected(int position) {}
+            public void onPageSelected(int position) {
+            }
+
             @Override
-            public void onPageScrollStateChanged(int state) {}
+            public void onPageScrollStateChanged(int state) {
+            }
         });
         DotsIndicator dotsIndicator = findViewById(R.id.dotsIndicator);
         dotsIndicator.setViewPager(mViewPager);
@@ -151,13 +152,10 @@ public class EntryActivity extends AddStickerPackActivity implements RewardedVid
     public String getFileName(Uri uri) {
         String result = null;
         if (uri.getScheme().equals("content")) {
-            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-            try {
+            try (Cursor cursor = getContentResolver().query(uri, null, null, null, null)) {
                 if (cursor != null && cursor.moveToFirst()) {
                     result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
                 }
-            } finally {
-                cursor.close();
             }
         }
         if (result == null) {
@@ -174,11 +172,6 @@ public class EntryActivity extends AddStickerPackActivity implements RewardedVid
         ContentValues contentValues = new ContentValues();
         contentValues.put("stickerPack", new Gson().toJson(stickerPack));
         getContentResolver().insert(StickerContentProvider.AUTHORITY_URI, contentValues);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 
     protected void checkPermissions() {
@@ -224,7 +217,7 @@ public class EntryActivity extends AddStickerPackActivity implements RewardedVid
 //                    startActivity(new Intent(this, RequestPermissionActivity.class));
 //                    finish();
 //                } else {
-                    initialize();
+                initialize();
 //                }
                 break;
         }
@@ -237,12 +230,17 @@ public class EntryActivity extends AddStickerPackActivity implements RewardedVid
 
         // Figure out what to do based on the intent type
         if (intent.getType() != null) {
-            ExtensionsKt.alert(this, "Adicionando Pacote", "Antes de adicionar o pacote, assista esta propaganda para ajudar o projeto.", "Assistir", () -> {
+            ExtensionsKt.alert(this, getString(R.string.adding_package), getString(R.string.info_watch_add), getString(R.string.watch), false, () -> {
                 mProgressComponentRL.setVisibility(View.VISIBLE);
-                createPackage();
+                new Thread() {
+                    @Override
+                    public void run() {
+                        createPackage();
+                    }
+                }.start();
                 String ad = "";
-                if (BuildConfig.DEBUG) ad = "ca-app-pub-3940256099942544/5224354917";
-                else ad = "ca-app-pub-3355203749923756/1018041110";
+                if (BuildConfig.DEBUG) ad = getString(R.string.cod_ad_debug);
+                else ad = getString(R.string.cod_ad_release);
                 mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
                 mRewardedVideoAd.setRewardedVideoAdListener(this);
                 mRewardedVideoAd.loadAd(ad, new AdRequest.Builder().build());
@@ -272,46 +270,68 @@ public class EntryActivity extends AddStickerPackActivity implements RewardedVid
     private void createPackage() {
         Intent intent = getIntent();
         if (intent.getType().equals("text/*")) {
-            ArrayList<Sticker> stickers = new ArrayList<Sticker>();
+            ArrayList<Sticker> stickers = new ArrayList();
             Uri uri = intent.getClipData().getItemAt(0).getUri();
             String name2 = getFileName(uri);
-            String name = name2.replace("Conversa do WhatsApp com ", "").replace(".txt", "");
+            String name = name2.replace(getString(R.string.whatsapp_conversation), "").replace(".txt", "");
             StickerPacksManager.deleteStickerPack(name);
-
+            for (int i = 1; i < 10; i++) {
+                StickerPacksManager.deleteStickerPack(name + " " + i);
+            }
             List<Uri> uries = new ArrayList<>();
             for (int i = 1; i < intent.getClipData().getItemCount(); i++) {
                 Uri uristiker = intent.getClipData().getItemAt(i).getUri();
-                if (!uristiker.toString().endsWith(".webp")) {
-//                    throw new IllegalStateException("O item na posição" + i + "não é uma imagem");
-                    continue;
-                }
+                if (!uristiker.toString().endsWith(".webp")) continue;
+
                 uries.add(uristiker);
             }
-            stickerPack = new StickerPack(name, name, "Tiker", "", "tickerapp0@gmail.com", "", "", "");
-            stickerPack.setAndroidPlayStoreLink("");
-            stickerPack.setIosAppStoreLink("");
-
-            //Save the sticker images locally and get the list of new stickers for pack
-            List<Sticker> stickerList = null;
-            String stickerPath = Constants.STICKERS_DIRECTORY_PATH + name;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                stickerList = StickerPacksManager.saveStickerPackFilesLocally(name, uries, this);
+            if (uries.isEmpty()) {
+                stickerListEmpty = true;
+                return;
+            } else {
+                stickerListEmpty = false;
             }
-            stickerPack.setStickers(stickerList);
 
-            //Generate image tray icon
-            String trayIconFile = FileUtils.generateRandomIdentifier() + ".png";
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                StickerPacksManager.createStickerPackTrayIconFile(uries.get(0), Uri.parse(stickerPath + "/" + trayIconFile), this);
+            ArrayList<String> dividedListName = new ArrayList();
+            ArrayList<List<Uri>> dividedList = new ArrayList();
+            if (uries.size() > STICKER_SIZE_MAX) {
+                dividedList = ExtensionsKt.chopped(uries, STICKER_SIZE_MAX);
+                for (int i = dividedList.size(); i > 0; i--) {
+                    dividedListName.add(name + " " + i);
+                }
+            } else {
+                dividedList.add(uries);
+                dividedListName.add(name);
             }
-            stickerPack.trayImageFile = trayIconFile;
 
-            //Save stickerPack created to write in json
-            StickerPacksManager.stickerPacksContainer.addStickerPack(stickerPack);
-            StickerPacksManager.saveStickerPacksToJson(StickerPacksManager.stickerPacksContainer);
-            insertStickerPackInContentProvider(stickerPack);
+            for (int i = 0; i < dividedList.size(); i++) {
+                stickerPack.add(new StickerPack(dividedListName.get(i), dividedListName.get(i), getString(R.string.app_name), "", "tickerapp0@gmail.com", "", "", ""));
+                stickerPack.get(i).setAndroidPlayStoreLink("");
+                stickerPack.get(i).setIosAppStoreLink("");
 
-            StickerPackValidator.verifyStickerPackValidity(this, stickerPack);
+                //Save the sticker images locally and get the list of new stickers for pack
+                List<Sticker> stickerList;
+                String stickerPath = Constants.STICKERS_DIRECTORY_PATH + dividedListName.get(i);
+                stickerList = StickerPacksManager.saveStickerPackFilesLocally(dividedListName.get(i), dividedList.get(i), this);
+                stickerPack.get(i).setStickers(stickerList);
+
+                //Generate image tray icon
+                String trayIconFile = FileUtils.generateRandomIdentifier() + ".png";
+                StickerPacksManager.createStickerPackTrayIconFile(dividedList.get(i).get(0), Uri.parse(stickerPath + "/" + trayIconFile), this);
+
+                stickerPack.get(i).trayImageFile = trayIconFile;
+
+                //Save stickerPack created to write in json
+                StickerPacksManager.stickerPacksContainer.addStickerPack(stickerPack.get(i));
+                StickerPacksManager.saveStickerPacksToJson(StickerPacksManager.stickerPacksContainer);
+                insertStickerPackInContentProvider(stickerPack.get(i));
+
+                try {
+                    StickerPackValidator.verifyStickerPackValidity(this, stickerPack.get(i));
+                } catch (Exception ex) {
+                    error = ex.getMessage();
+                }
+            }
         }
     }
 
@@ -325,44 +345,59 @@ public class EntryActivity extends AddStickerPackActivity implements RewardedVid
     }
 
     @Override
-    public void onRewardedVideoAdOpened() {}
-
-    @Override
-    public void onRewardedVideoStarted() {}
-
-    @Override
     public void onRewardedVideoAdClosed() {
         if (!adCompleted) {
-            ExtensionsKt.alert(this, "Erro", "Você precisa assistir a propaganda até o final", "Assistir", () -> {
-                mProgressComponentRL.setVisibility(View.VISIBLE);
-                String ad = "";
-                if (BuildConfig.DEBUG) ad = "ca-app-pub-3940256099942544/5224354917";
-                else ad = "ca-app-pub-3355203749923756/1018041110";
-                mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
-                mRewardedVideoAd.setRewardedVideoAdListener(this);
-                mRewardedVideoAd.loadAd(ad, new AdRequest.Builder().build());
-                return null;
-            });
+            if (error == null) {
+                ExtensionsKt.alert(this, getString(R.string.error), getString(R.string.error_watch_add), getString(R.string.watch), false, () -> {
+                    mProgressComponentRL.setVisibility(View.VISIBLE);
+                    String ad = "";
+                    if (BuildConfig.DEBUG) ad = getString(R.string.cod_ad_debug);
+                    else ad = getString(R.string.cod_ad_release);
+                    mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
+                    mRewardedVideoAd.setRewardedVideoAdListener(this);
+                    mRewardedVideoAd.loadAd(ad, new AdRequest.Builder().build());
+                    return null;
+                });
+            } else {
+                Sentry.capture(error);
+                ExtensionsKt.alert(this, getString(R.string.error), getString(R.string.error_default), getString(R.string.ok), false, () -> null);
+            }
+        } else {
+            if (stickerListEmpty) {
+                ExtensionsKt.alert(this, getString(R.string.error), getString(R.string.error_find_stickers), getString(R.string.ok), false, () -> null);
+            } else {
+                for (int i = 0; i < stickerPack.size(); i++) {
+                    this.addStickerPackToWhatsApp(stickerPack.get(i).identifier, stickerPack.get(i).name);
+                }
+            }
         }
     }
 
     @Override
-    public void onRewarded(RewardItem rewardItem) {
-        this.addStickerPackToWhatsApp(stickerPack.identifier, stickerPack.name);
-    }
-
-    @Override
-    public void onRewardedVideoAdLeftApplication() {
-
-    }
-
-    @Override
-    public void onRewardedVideoAdFailedToLoad(int i) {
-        this.addStickerPackToWhatsApp(stickerPack.identifier, stickerPack.name);
+    public void onRewardedVideoAdFailedToLoad(int value) {
+        for (int i = 0; i < stickerPack.size(); i++) {
+            this.addStickerPackToWhatsApp(stickerPack.get(i).identifier, stickerPack.get(i).name);
+        }
     }
 
     @Override
     public void onRewardedVideoCompleted() {
         adCompleted = true;
+    }
+
+    @Override
+    public void onRewarded(RewardItem rewardItem) {
+    }
+
+    @Override
+    public void onRewardedVideoAdLeftApplication() {
+    }
+
+    @Override
+    public void onRewardedVideoAdOpened() {
+    }
+
+    @Override
+    public void onRewardedVideoStarted() {
     }
 }

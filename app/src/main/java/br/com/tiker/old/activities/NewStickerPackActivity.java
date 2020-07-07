@@ -24,7 +24,7 @@ import br.com.tiker.old.constants.Constants;
 import br.com.tiker.utils.FileUtils;
 import br.com.tiker.utils.StickerPacksManager;
 import br.com.tiker.old.whatsapp_api.Sticker;
-import br.com.tiker.old.whatsapp_api.StickerContentProvider;
+import br.com.tiker.services.StickerContentProvider;
 import br.com.tiker.old.whatsapp_api.StickerPack;
 import br.com.tiker.old.whatsapp_api.StickerPackDetailsActivity;
 

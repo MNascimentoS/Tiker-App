@@ -15,7 +15,7 @@ import java.util.List;
 
 public class Sticker implements Parcelable {
     public String imageFileName;
-    List<String> emojis;
+    public List<String> emojis;
     long size;
 
     public Sticker(String imageFileName, List<String> emojis) {

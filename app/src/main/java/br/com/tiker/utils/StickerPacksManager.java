@@ -22,7 +22,6 @@ public class StickerPacksManager {
 
     public static StickerPacksContainer stickerPacksContainer = null;
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public static List<Sticker> saveStickerPackFilesLocally(String identifier, List<Uri> stickersUries, Context context) {
         String stickerPath = Constants.STICKERS_DIRECTORY_PATH + identifier;
         List<Sticker> stickerList = new ArrayList<>();
@@ -38,7 +37,6 @@ public class StickerPacksManager {
         return stickerList;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     private static void saveStickerFilesLocally(Sticker sticker, Uri stickerUri, String stickerPath, Context context) {
         createStickerImageFile(stickerUri, Uri.parse(stickerPath + "/" + sticker.imageFileName), context, Bitmap.CompressFormat.WEBP);
     }
@@ -70,7 +68,6 @@ public class StickerPacksManager {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public static void createStickerImageFile(Uri sourceUri, Uri destinyUri, Context context, Bitmap.CompressFormat format) {
         String destinationFilename = destinyUri.getPath();
         try {
@@ -93,7 +90,6 @@ public class StickerPacksManager {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public static void createStickerPackTrayIconFile(Uri sourceUri, Uri destinyUri, Context context) {
         String destinationFilename = destinyUri.getPath();
         try {

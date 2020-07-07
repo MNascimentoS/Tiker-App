@@ -37,6 +37,7 @@ import top.defaults.checkerboarddrawable.CheckerboardDrawable;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
@@ -323,7 +324,7 @@ public class CutOutActivity extends AppCompatActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
 
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
@@ -351,14 +352,14 @@ public class CutOutActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onImagePicked(File imageFile, EasyImage.ImageSource source, int type) {
-                    setDrawViewBitmap(Uri.parse(imageFile.toURI().toString()));
+                public void onImagesPicked(@NonNull List<File> list, EasyImage.ImageSource imageSource, int i) {
+                    setDrawViewBitmap(Uri.parse(list.get(0).toURI().toString()));
                 }
 
                 @Override
                 public void onCanceled(EasyImage.ImageSource source, int type) {
                     // Cancel handling, removing taken photo if it was canceled
-                    if (source == EasyImage.ImageSource.CAMERA) {
+                    if (source == EasyImage.ImageSource.CAMERA_IMAGE) {
                         File photoFile = EasyImage.lastlyTakenButCanceledPhoto(CutOutActivity.this);
                         if (photoFile != null) photoFile.delete();
                     }

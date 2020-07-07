@@ -4,7 +4,6 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.app.Activity
 import android.app.AlertDialog
-import android.content.DialogInterface
 import android.view.View
 
 fun View.gone() {
@@ -24,6 +23,20 @@ object AnimationConstants {
     const val DURATION_LONG = 400
 }
 
+// chops a list into non-view sublists of length L
+fun <T> chopped(list: List<T>, L: Int): ArrayList<List<T>>? {
+    val parts: ArrayList<List<T>> = ArrayList()
+    val N = list.size
+    var i = 0
+    while (i < N) {
+        parts.add(ArrayList(
+                list.subList(i, N.coerceAtMost(i + L)))
+        )
+        i += L
+    }
+    return parts
+}
+
 /**
  * Fade In Animation
  *
@@ -36,15 +49,15 @@ fun View.fadeIn(duration: Int = AnimationConstants.DURATION_SHORT, finishCallbac
     this.visible()
     this.alpha = 0.0f
     this.animate()
-        .setDuration(duration.toLong())
-        .setListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator) {
-                finishCallback?.let { it() }
-                super.onAnimationEnd(animation)
-            }
-        })
-        .alpha(1.0f)
-        .start()
+            .setDuration(duration.toLong())
+            .setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    finishCallback?.let { it() }
+                    super.onAnimationEnd(animation)
+                }
+            })
+            .alpha(1.0f)
+            .start()
 }
 
 /**
@@ -58,32 +71,35 @@ fun View.fadeIn(duration: Int = AnimationConstants.DURATION_SHORT, finishCallbac
 fun View.fadeOut(duration: Int = AnimationConstants.DURATION_SHORT, finishCallback: (() -> Unit)? = null) {
     this.alpha = 1.0f
     this.animate()
-        .setDuration(duration.toLong())
-        .setListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator) {
-                finishCallback?.let { it() }
-                super.onAnimationEnd(animation)
-            }
-        })
-        .alpha(0.0f)
-        .start()
+            .setDuration(duration.toLong())
+            .setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator) {
+                    finishCallback?.let { it() }
+                    super.onAnimationEnd(animation)
+                }
+            })
+            .alpha(0.0f)
+            .start()
 }
 
-fun Activity.alert(title: String, message: String, positive: String, onPositiveClick: () -> Unit) {
+fun Activity.alert(title: String, message: String, positive: String, allowDismiss: Boolean, onPositiveClick: () -> Unit) {
+    var dismiss = allowDismiss
     AlertDialog.Builder(this)
-        .setTitle(title)
-        .setMessage(message)
-        .setPositiveButton(positive
-        ) { _, _ ->
-            onPositiveClick()
-        }
-        .show()
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton(positive
+            ) { _, _ ->
+                dismiss = true
+                onPositiveClick()
+            }
+            .setOnDismissListener { if (!dismiss) alert(title, message, positive, dismiss, onPositiveClick) }
+            .show()
 
 }
 
 fun Activity.alert(title: String, message: String) {
     AlertDialog.Builder(this)
-        .setTitle(title)
-        .setMessage(message)
-        .show()
+            .setTitle(title)
+            .setMessage(message)
+            .show()
 }

@@ -22,11 +22,11 @@ public class StickerPack implements Parcelable {
     public final String publisherWebsite;
     public final String privacyPolicyWebsite;
     public final String licenseAgreementWebsite;
+    public String iosAppStoreLink;
+    public String androidPlayStoreLink;
 
-    String iosAppStoreLink;
     private List<Sticker> stickers;
     private long totalSize;
-    String androidPlayStoreLink;
     private boolean isWhitelisted;
 
     public StickerPack(String identifier, String name, String publisher, String trayImageFile, String publisherEmail, String publisherWebsite, String privacyPolicyWebsite, String licenseAgreementWebsite) {

@@ -49,17 +49,18 @@ class BecomePremiumActivity : Activity() {
         }
         noMoneyBTN?.setOnClickListener {
             alert(
-                getString(R.string.google_rewards),
-                getString(R.string.google_rewards_download),
-                getString(
-                    R.string.download
-                )
+                    getString(R.string.google_rewards),
+                    getString(R.string.google_rewards_download),
+                    getString(
+                            R.string.download
+                    ),
+                    true
             ) {
                 startActivity(
-                    Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse(getString(R.string.google_rewards_app))
-                    )
+                        Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse(getString(R.string.google_rewards_app))
+                        )
                 )
 
             }
@@ -82,12 +83,12 @@ class BecomePremiumActivity : Activity() {
             return
         }
         val request =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                IsReadyToPayRequest.fromJson(isReadyToPayJson.get().toString())
-                    ?: return
-            } else {
-                TODO("VERSION.SDK_INT < N")
-            }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    IsReadyToPayRequest.fromJson(isReadyToPayJson.get().toString())
+                            ?: return
+                } else {
+                    TODO("VERSION.SDK_INT < N")
+                }
         // The call to isReadyToPay is asynchronous and returns a Task. We need to provide an
         // OnCompleteListener to be triggered when the result of the call is known.
         val task: Task<Boolean> = paymentClient.isReadyToPay(request)
@@ -123,25 +124,25 @@ class BecomePremiumActivity : Activity() {
         // The price provided to the API should include taxes and shipping.
         // This price is not displayed to the user.
         val price =
-            PaymentsUtil.microsToString(2)
+                PaymentsUtil.microsToString(2)
         // TransactionInfo transaction = PaymentsUtil.createTransaction(price);
         val paymentDataRequestJson = PaymentsUtil.getPaymentDataRequest(price)
         if (!paymentDataRequestJson.isPresent) {
             return
         }
         val request =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                PaymentDataRequest.fromJson(paymentDataRequestJson.get().toString())
-            } else {
-                TODO("VERSION.SDK_INT < N")
-            }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    PaymentDataRequest.fromJson(paymentDataRequestJson.get().toString())
+                } else {
+                    TODO("VERSION.SDK_INT < N")
+                }
         // Since loadPaymentData may show the UI asking the user to select a payment method, we use
         // AutoResolveHelper to wait for the user interacting with it. Once completed,
         // onActivityResult will be called with the result.
         if (request != null) {
             AutoResolveHelper.resolveTask(
-                paymentClient.loadPaymentData(request), this,
-                LOAD_PAYMENT_DATA_REQUEST_CODE
+                    paymentClient.loadPaymentData(request), this,
+                    LOAD_PAYMENT_DATA_REQUEST_CODE
             )
         }
     }
@@ -195,37 +196,37 @@ class BecomePremiumActivity : Activity() {
             // If the gateway is set to "example", no payment information is returned - instead, the
 // token will only consist of "examplePaymentMethodToken".
             if ((paymentMethodData
-                    .getJSONObject("tokenizationData")
-                    .getString("type")
-                        == "PAYMENT_GATEWAY") && (paymentMethodData
-                    .getJSONObject("tokenizationData")
-                    .getString("token")
-                        == "examplePaymentMethodToken")
+                            .getJSONObject("tokenizationData")
+                            .getString("type")
+                            == "PAYMENT_GATEWAY") && (paymentMethodData
+                            .getJSONObject("tokenizationData")
+                            .getString("token")
+                            == "examplePaymentMethodToken")
             ) {
                 val alertDialog = AlertDialog.Builder(this)
-                    .setTitle("Warning")
-                    .setMessage(
-                        "Gateway name set to \"example\" - please modify "
-                                + "Constants.java and replace it with your own gateway."
-                    )
-                    .setPositiveButton("OK", null)
-                    .create()
+                        .setTitle("Warning")
+                        .setMessage(
+                                "Gateway name set to \"example\" - please modify "
+                                        + "Constants.java and replace it with your own gateway."
+                        )
+                        .setPositiveButton("OK", null)
+                        .create()
                 alertDialog.show()
             }
             val billingName =
-                paymentMethodData.getJSONObject("info").getJSONObject("billingAddress")
-                    .getString("name")
+                    paymentMethodData.getJSONObject("info").getJSONObject("billingAddress")
+                            .getString("name")
             Log.d("BillingName", billingName)
             Toast.makeText(
-                this,
-                billingName,
-                Toast.LENGTH_LONG
+                    this,
+                    billingName,
+                    Toast.LENGTH_LONG
             )
-                .show()
+                    .show()
             // Logging token string.
             Log.d(
-                "GooglePaymentToken",
-                paymentMethodData.getJSONObject("tokenizationData").getString("token")
+                    "GooglePaymentToken",
+                    paymentMethodData.getJSONObject("tokenizationData").getString("token")
             )
         } catch (e: JSONException) {
             Log.e("handlePaymentSuccess", "Error: $e")
@@ -244,8 +245,8 @@ class BecomePremiumActivity : Activity() {
      */
     private fun handleError(statusCode: Int) {
         Log.w(
-            "loadPaymentData failed",
-            String.format("Error code: %d", statusCode)
+                "loadPaymentData failed",
+                String.format("Error code: %d", statusCode)
         )
     }
 

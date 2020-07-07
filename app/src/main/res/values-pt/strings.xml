@@ -1,0 +1,78 @@
+<resources>
+    <string name="tray_image_content_description">Arquivo de Imagem do Pack de Stickers</string>
+    <string name="more_info_button">Mais informações sobre o pacote de Stickers</string>
+    <string name="add_to_whatsapp">Adicione ao Whatsapp</string>
+    <string name="add_button_content_description">Adicione o Pack de Stickers ao WhatsApp</string>
+    <string name="title_activity_sticker_packs_list">Packs de Sticker</string>
+    <string name="dot">•</string>
+    <string name="title_activity_sticker_pack_details_single_pack">SPack de Sticker</string>
+    <string name="title_activity_sticker_pack_details_multiple_pack">Detalhes do Sticker</string>
+    <string name="title_activity_sticker_pack_info">Informações</string>
+    <string name="view_webpage">Ver Website</string>
+    <string name="send_email">Envie um email</string>
+    <string name="privacy_policy">Política de Privacidade</string>
+    <string name="error_adding_sticker_pack">Não foi possível adicionar o pacote de stickers. Por favor instale a versão mais atualizada
+        do WhatsApp antes de adicionar o pacote de Stickers
+    </string>
+    <string name="error_message">Ocorreu um erro na criação do pacote. Mas não se preoculpe! Nosso time já está olhando este problema :)</string>
+    <string name="title_validation_error">Erro com o pack</string>
+    <string name="info_screen_tray_icon">Icone do Pacote</string>
+    <string name="details_pack_already_added">Pack de Sticker adicionado ao Whatsapp</string>
+    <string name="info_send_email_to_prompt">Envie um email com</string>
+    <string name="add_pack_fail_prompt_update_whatsapp">Não foi possível adicionar o pacote de Sticker. Cheque se você está utilizando a última versão do Whatsapp</string>
+    <string name="add_pack_fail_prompt_update_play_link">Atualize</string>
+    <string name="cannot_find_play_store">Google Play não está instalado no dispositivo.</string>
+
+    <!-- Strings related to NewStickerPackActivity -->
+    <string name="prompt_name">Nome</string>
+    <string name="prompt_author">Autor</string>
+    <string name="create_sticker_pack">Selecione a imagem</string>
+    <string name="create_sticker_button">Criar sticker</string>
+
+    <!--Background remover -->
+    <string name="intro_magic_title">Automatic background clearing</string>
+    <string name="intro_manual_title">Manual background clearing</string>
+    <string name="intro_zoom_title">Zooming and Moving the picture</string>
+    <string name="intro_magic_description">Use the Magic Wand tool and touch parts of the background you want to erase
+    </string>
+    <string name="intro_manual_description">Use the Pencil tool to erase the background dragging your finger around the
+        screen
+    </string>
+    <string name="intro_zoom_description">Use the Magnifier tool to Zoom in/out so you can make better cuts</string>
+    <string name="intro_label">Tour</string>
+    <string name="image_chooser_message">Escolha uma imagem para cortar</string>
+    <string name="allow_access">Permitir Acesso</string>
+    <string name="do_login">Fazer Login</string>
+    <string name="share_with_your_friends">Compartilhe com amigos</string>
+    <string name="become_premium">Seja premium</string>
+    <string name="pay_with_gpay">Pague com o Google Pay</string>
+    <string name="i_dont_have_money">Não possuo dinheiro</string>
+    <string name="your_sticker_organizer">seu organizador de stickers</string>
+    <string name="become_premium_description">Remova todas as propagandas .\n\n Garanta as próximas funcionalidades .\n\n Por apenas R$ 2,00</string>
+    <string name="google_rewards">Google Rewards</string>
+    <string name="google_rewards_download">Baixe o Google Rewards e ganhe dinheiro recebendo pesquisas!</string>
+    <string name="download">Baixar</string>
+    <string name="google_rewards_app">market://details?id=com.google.android.apps.paidtasks</string>
+    <string name="share_to_friends_message">Organize agora todos os seus Stickers do Whatsapp. \n\nBaixe o *Tiker*: https://play.google.com/store/apps/details?id=br.com.tiker</string>
+    <string name="tutorial_one">1º Crie um grupo novo no WhatsApp \n(o nome do grupo deve ser único e será o nome do pacote) \n\n2º Adicione os stickers Stickers \n\n3º Clique nos 3 pontinhos</string>
+    <string name="tutorial_image_description">Descrição do Whatsapp</string>
+    <string name="error">Erro</string>
+    <string name="error_default">Ocorreu um erro na criação do pacote. Mas não se preoculpe! Nosso time já está olhando este problema :)</string>
+    <string name="error_watch_add">Você precisa assistir a propaganda até o final</string>
+    <string name="watch">Assistir</string>
+    <string name="ok">Ok</string>
+    <string name="error_find_stickers">Não foi possível encontrar nenhum Sticker na conversa</string>
+    <string name="adding_package">Adicionando Pacote</string>
+    <string name="info_watch_add">Antes de adicionar o pacote, assista esta propaganda para ajudar o projeto.</string>
+    <string name="sticker_pack_indentifies">sticker pack identifier is empty</string>
+    <string name="sticker_pack_identifier_cannot_exceed">\"sticker pack identifier cannot exceed \"</string>
+    <string name="characters">\" characters\"</string>
+    <string name="whatsapp_conversation">\"Conversa do WhatsApp com \"</string>
+    <string name="sticker_pack_publisher_is_empty">sticker pack publisher is empty, sticker pack identifier:</string>
+    <string name="sticker_pack_exceed">\"sticker pack publisher cannot exceed \"</string>
+    <string name="characters_sticker_pack_identifier">\" characters, sticker pack identifier:\"</string>
+    <string name="sticker_pack_is_empty">sticker pack name is empty, sticker pack identifier:</string>
+    <string name="sticker_pack_name_is_empty">\"sticker pack name cannot exceed \"</string>
+
+
+</resources>

@@ -9,18 +9,25 @@
 package br.com.tiker.old.whatsapp_api;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import androidx.annotation.NonNull;
+
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
 import android.webkit.URLUtil;
 
 import com.facebook.animated.webp.WebPImage;
+
+import br.com.tiker.R;
 import br.com.tiker.utils.FileUtils;
 import br.com.tiker.utils.ImageUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -29,11 +36,11 @@ import java.util.List;
 import java.util.Objects;
 
 public class StickerPackValidator {
+    public static final int STICKER_SIZE_MAX = 30;
     private static final int STICKER_FILE_SIZE_LIMIT_KB = 100;
     private static final int IMAGE_HEIGHT = 512;
     private static final int IMAGE_WIDTH = 512;
     private static final int STICKER_SIZE_MIN = 3;
-    private static final int STICKER_SIZE_MAX = 30;
     private static final int CHAR_COUNT_MAX = 128;
     private static final long ONE_KIBIBYTE = 8 * 1024;
     private static final int TRAY_IMAGE_FILE_SIZE_MAX_KB = 50;
@@ -48,23 +55,23 @@ public class StickerPackValidator {
      */
     public static void verifyStickerPackValidity(@NonNull Context context, @NonNull StickerPack stickerPack) throws IllegalStateException {
         if (TextUtils.isEmpty(stickerPack.identifier)) {
-            throw new IllegalStateException("sticker pack identifier is empty");
+            throw new IllegalStateException(context.getString(R.string.sticker_pack_indentifies));
         }
         if (stickerPack.identifier.length() > CHAR_COUNT_MAX) {
-            throw new IllegalStateException("sticker pack identifier cannot exceed " + CHAR_COUNT_MAX + " characters");
+            throw new IllegalStateException(context.getString(R.string.sticker_pack_identifier_cannot_exceed) + CHAR_COUNT_MAX + context.getString(R.string.characters));
         }
         checkStringValidity(stickerPack.identifier);
         if (TextUtils.isEmpty(stickerPack.publisher)) {
-            throw new IllegalStateException("sticker pack publisher is empty, sticker pack identifier:" + stickerPack.identifier);
+            throw new IllegalStateException(context.getString(R.string.sticker_pack_publisher_is_empty) + stickerPack.identifier);
         }
         if (stickerPack.publisher.length() > CHAR_COUNT_MAX) {
-            throw new IllegalStateException("sticker pack publisher cannot exceed " + CHAR_COUNT_MAX + " characters, sticker pack identifier:" + stickerPack.identifier);
+            throw new IllegalStateException(context.getString(R.string.sticker_pack_exceed) + CHAR_COUNT_MAX + context.getString(R.string.characters_sticker_pack_identifier) + stickerPack.identifier);
         }
         if (TextUtils.isEmpty(stickerPack.name)) {
-            throw new IllegalStateException("sticker pack name is empty, sticker pack identifier:" + stickerPack.identifier);
+            throw new IllegalStateException(context.getString(R.string.sticker_pack_is_empty) + stickerPack.identifier);
         }
         if (stickerPack.name.length() > CHAR_COUNT_MAX) {
-            throw new IllegalStateException("sticker pack name cannot exceed " + CHAR_COUNT_MAX + " characters, sticker pack identifier:" + stickerPack.identifier);
+            throw new IllegalStateException(context.getString(R.string.sticker_pack_name_is_empty) + CHAR_COUNT_MAX + context.getString(R.string.characters_sticker_pack_identifier) + stickerPack.identifier);
         }
         if (TextUtils.isEmpty(stickerPack.trayImageFile)) {
             throw new IllegalStateException("sticker pack tray id is empty, sticker pack identifier:" + stickerPack.identifier);
@@ -94,7 +101,8 @@ public class StickerPackValidator {
             throw new IllegalStateException("publisher email does not seem valid, email is: " + stickerPack.publisherEmail);
         }
         try {
-            InputStream iStream = context.getContentResolver().openInputStream(ImageUtils.getStickerImageAsset(stickerPack.identifier, stickerPack.trayImageFile));
+            Uri uri = ImageUtils.getStickerImageAsset(stickerPack.identifier, stickerPack.trayImageFile);
+            InputStream iStream = context.getContentResolver().openInputStream(uri);
             final byte[] bytes = FileUtils.getBytes(Objects.requireNonNull(iStream));
             if (bytes.length > TRAY_IMAGE_FILE_SIZE_MAX_KB * ONE_KIBIBYTE) {
                 throw new IllegalStateException("tray image should be less than " + TRAY_IMAGE_FILE_SIZE_MAX_KB + " KB, tray image file: " + stickerPack.trayImageFile);
@@ -107,7 +115,6 @@ public class StickerPackValidator {
                 throw new IllegalStateException("tray image width should be between " + TRAY_IMAGE_DIMENSION_MIN + " and " + TRAY_IMAGE_DIMENSION_MAX + " pixels, current tray image width is " + bitmap.getWidth() + ", tray image file: " + stickerPack.trayImageFile);
             }
         } catch (IOException e) {
-
             throw new IllegalStateException("Cannot open tray image, " + stickerPack.trayImageFile, e);
         }
         final List<Sticker> stickers = stickerPack.getStickers();

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package br.com.tiker.old.whatsapp_api;
+package br.com.tiker.services;
 
 import android.content.*;
 import android.database.Cursor;
@@ -20,6 +20,8 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 import br.com.tiker.BuildConfig;
 import br.com.tiker.old.constants.Constants;
+import br.com.tiker.old.whatsapp_api.Sticker;
+import br.com.tiker.old.whatsapp_api.StickerPack;
 import br.com.tiker.utils.StickerPacksManager;
 
 import java.io.*;
