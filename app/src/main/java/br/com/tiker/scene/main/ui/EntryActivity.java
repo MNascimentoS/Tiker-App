@@ -36,24 +36,24 @@ import com.tbuonomo.viewpagerdotsindicator.DotsIndicator;
 
 import br.com.tiker.BuildConfig;
 import br.com.tiker.R;
-import br.com.tiker.old.constants.Constants;
-import br.com.tiker.old.identities.StickerPacksContainer;
+import br.com.tiker.model.Constants;
+import br.com.tiker.scene.AddStickerPackActivity;
+import br.com.tiker.model.Sticker;
+import br.com.tiker.model.StickerPack;
+import br.com.tiker.scene.StickerPackValidator;
+import br.com.tiker.scene.StickerPacksContainer;
 import br.com.tiker.utils.ExtensionsKt;
 import br.com.tiker.utils.FileUtils;
 import br.com.tiker.utils.StickerPacksManager;
-import br.com.tiker.old.whatsapp_api.AddStickerPackActivity;
-import br.com.tiker.old.whatsapp_api.Sticker;
 import br.com.tiker.services.StickerContentProvider;
-import br.com.tiker.old.whatsapp_api.StickerPack;
-import br.com.tiker.old.whatsapp_api.StickerPackValidator;
 import io.sentry.Sentry;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-import static br.com.tiker.old.whatsapp_api.StickerPackValidator.STICKER_SIZE_MAX;
+import static br.com.tiker.scene.StickerPackValidator.STICKER_SIZE_MAX;
+
 
 public class EntryActivity extends AddStickerPackActivity implements RewardedVideoAdListener {
     /**

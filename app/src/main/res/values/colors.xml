@@ -7,6 +7,12 @@
     <color name="colorPrimary">#00897C</color>
     <color name="colorPrimaryDark">#00897C</color>
     <color name="colorAccent">#00897C</color>
+    <color name="colorTextPrimary">#474a4d</color>
+    <color name="colorTextSecondary">#8d9193</color>
+    <color name="colorTextDelete">#ff5205</color>
+    <color name="colorDetails">#a4abb1</color>
+    <color name="colorDetails2">#e3e7e6</color>
+
     <color name="inactiveAddButtonColor">#B3B3B3</color>
     <color name="infoPageBackgroundColor">#EBEBEB</color>
     <color name="actionBarArrowColor">@color/colorAccent</color>

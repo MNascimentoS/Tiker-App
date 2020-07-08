@@ -1,0 +1,197 @@
+package br.com.tiker.ui.stickerPackage
+
+import android.content.ContentValues
+import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.provider.MediaStore
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import br.com.tiker.BuildConfig
+import br.com.tiker.R
+import br.com.tiker.model.Constants
+import br.com.tiker.model.Sticker
+import br.com.tiker.model.StickerPack
+import br.com.tiker.persistence.StickerRoomDatabase
+import br.com.tiker.scene.StickerPackValidator
+import br.com.tiker.scene.StickerPacksContainer
+import br.com.tiker.services.StickerContentProvider
+import br.com.tiker.utils.FileUtils
+import br.com.tiker.utils.StickerPacksManager
+import com.google.gson.Gson
+import io.sentry.Sentry
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import org.koin.core.KoinComponent
+import org.koin.core.inject
+import java.io.ByteArrayOutputStream
+import kotlin.coroutines.CoroutineContext
+import kotlin.random.Random
+
+
+class StickerPackageViewModel : ViewModel(), KoinComponent, CoroutineScope {
+
+    private val stickerDb: StickerRoomDatabase by inject()
+    private val job = Job()
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
+
+    lateinit var stickerPack: StickerPack
+    private var stickerPackageId = 0
+
+    val uiEventLiveData = MutableLiveData<Pair<Int, Any>>()
+
+    var isLoading: MutableLiveData<Boolean> = MutableLiveData()
+    var closeActivity: MutableLiveData<Boolean> = MutableLiveData()
+
+    var namePackage: MutableLiveData<String> = MutableLiveData()
+    var authorPackage: MutableLiveData<String> = MutableLiveData()
+    var stickerList: MutableLiveData<List<Bitmap>> = MutableLiveData()
+
+    fun loadSavedStickerList(id: Int){
+        isLoading.value = true
+        launch {
+            val result = stickerDb.stickerDao().getLastStickerListAllData(id)
+            if (result.first != null && result.second != null) {
+                stickerPackageId = result.first!!.id
+                val bitmapList = arrayListOf<Bitmap>()
+                result.second!!.forEach {
+                    val bmp = BitmapFactory.decodeByteArray(it.sticker, 0, it.sticker.size)
+                    bitmapList.add(bmp)
+                }
+                namePackage.value = result.first?.name ?: "-"
+                authorPackage.value = result.first?.author ?: "-"
+                stickerList.value = bitmapList
+            }
+            isLoading.value = false
+        }
+    }
+
+    fun removeStickerPackage(id: Int) {
+        isLoading.value = true
+        launch {
+            stickerDb.stickerDao().removeSavedStickersPackageList(id)
+            isLoading.value = false
+            closeActivity.value = true
+        }
+    }
+
+    fun createPackageToWhatsApp(context: Context) {
+        stickerPack = StickerPack(namePackage.value, namePackage.value, context.getString(R.string.app_name), "", "tickerapp0@gmail.com", "", "", "")
+
+        val stickerUriList = arrayListOf<Uri>()
+        stickerList.value?.forEach {
+            getImageUri(it, context)?.let { uri ->
+                stickerUriList.add(uri)
+            }
+        }
+
+        //Save the sticker images locally and get the list of new stickers for pack
+        val stickerPath: String = Constants.STICKERS_DIRECTORY_PATH + namePackage.value
+        val stickerList: List<Sticker?> = StickerPacksManager.saveStickerPackFilesLocally(namePackage.value, stickerUriList, context)
+        stickerPack.stickers = stickerList
+
+
+        //Generate image tray icon
+        val trayIconFile = FileUtils.generateRandomIdentifier() + ".png"
+        StickerPacksManager.createStickerPackTrayIconFile(stickerUriList[0], Uri.parse("$stickerPath/$trayIconFile"), context)
+
+        stickerPack.trayImageFile = trayIconFile
+
+        //Save stickerPack created to write in json
+        StickerPacksManager.stickerPacksContainer = StickerPacksContainer("", "", StickerPacksManager.getStickerPacks(context))
+        StickerPacksManager.deleteStickerPack(namePackage.value)
+        StickerPacksManager.stickerPacksContainer.addStickerPack(stickerPack)
+        StickerPacksManager.saveStickerPacksToJson(StickerPacksManager.stickerPacksContainer)
+        insertStickerPackInContentProvider(stickerPack, context)
+
+        try {
+            StickerPackValidator.verifyStickerPackValidity(context, stickerPack)
+        } catch (ex: Exception) {
+            Sentry.capture(ex)
+            // TODO Error
+            //error = ex.message
+        }
+
+    }
+
+    private fun getImageUri(bitmap: Bitmap, context: Context): Uri? {
+        val bytes = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val path = MediaStore.Images.Media.insertImage(context.contentResolver, bitmap, random() + Random.nextInt(), null)
+        return Uri.parse(path)
+    }
+
+    private fun insertStickerPackInContentProvider(stickerPack: StickerPack, context: Context) {
+        val contentValues = ContentValues()
+        contentValues.put("stickerPack", Gson().toJson(stickerPack))
+        context.contentResolver.insert(StickerContentProvider.AUTHORITY_URI, contentValues)
+    }
+
+    private fun random(): String? {
+        val generator = java.util.Random()
+        val randomStringBuilder = StringBuilder()
+        val randomLength = generator.nextInt(20)
+        var tempChar: Char
+        for (i in 0 until randomLength) {
+            tempChar = (generator.nextInt(96) + 32).toChar()
+            randomStringBuilder.append(tempChar)
+        }
+        return randomStringBuilder.toString()
+    }
+
+    fun addStickerPackToWhatsApp(context: Context) {
+
+    }
+
+    //Handle cases either of WhatsApp are set as default app to handle this intent. We still want users to see both options.
+    private fun launchIntentToAddPackToChooser(identifier: String, stickerPackName: String) {
+        val intent = createIntentToAddStickerPack(identifier, stickerPackName)
+        uiEventLiveData.value = Pair(0, intent)
+    }
+
+    private fun launchIntentToAddPackToSpecificPackage(
+        identifier: String,
+        stickerPackName: String,
+        whatsappPackageName: String
+    ) {
+        val intent = createIntentToAddStickerPack(identifier, stickerPackName)
+        intent.setPackage(whatsappPackageName)
+        uiEventLiveData.value = Pair(0, intent)
+    }
+
+    private fun createIntentToAddStickerPack(identifier: String, stickerPackName: String): Intent {
+        val intent = Intent()
+        intent.action = "com.whatsapp.intent.action.ENABLE_STICKER_PACK"
+        intent.putExtra(EXTRA_STICKER_PACK_ID, identifier)
+        intent.putExtra(
+            EXTRA_STICKER_PACK_AUTHORITY,
+            BuildConfig.CONTENT_PROVIDER_AUTHORITY
+        )
+        intent.putExtra(EXTRA_STICKER_PACK_NAME, stickerPackName)
+        return intent
+    }
+
+    companion object {
+        val TAG = this::class.java.canonicalName ?: ""
+        const val ADD_PACK = 200
+
+        const val EXTRA_STICKER_PACK_ID = "sticker_pack_id"
+        const val EXTRA_STICKER_PACK_AUTHORITY = "sticker_pack_authority"
+        const val EXTRA_STICKER_PACK_NAME = "sticker_pack_name"
+
+        const val EXTRA_STICKER_PACK_WEBSITE = "sticker_pack_website"
+        const val EXTRA_STICKER_PACK_EMAIL = "sticker_pack_email"
+        const val EXTRA_STICKER_PACK_PRIVACY_POLICY = "sticker_pack_privacy_policy"
+        const val EXTRA_STICKER_PACK_LICENSE_AGREEMENT = "sticker_pack_license_agreement"
+        const val EXTRA_STICKER_PACK_TRAY_ICON = "sticker_pack_tray_icon"
+        const val EXTRA_SHOW_UP_BUTTON = "show_up_button"
+        const val EXTRA_STICKER_PACK_DATA = "sticker_pack"
+    }
+
+}

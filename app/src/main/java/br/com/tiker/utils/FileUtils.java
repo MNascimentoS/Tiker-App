@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 
-import br.com.tiker.old.constants.Constants;
+import br.com.tiker.model.Constants;
 
 import java.io.*;
 import java.util.Objects;

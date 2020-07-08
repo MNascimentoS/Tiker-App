@@ -5,6 +5,8 @@ import android.animation.AnimatorListenerAdapter
 import android.app.Activity
 import android.app.AlertDialog
 import android.view.View
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
 
 fun View.gone() {
     this.visibility = View.GONE
@@ -35,6 +37,10 @@ fun <T> chopped(list: List<T>, L: Int): ArrayList<List<T>>? {
         i += L
     }
     return parts
+}
+
+inline fun <T> LifecycleOwner.observe(liveData: LiveData<T>, crossinline onChanged: (T) -> Unit) {
+    liveData.observe(this, androidx.lifecycle.Observer { onChanged(it) })
 }
 
 /**
