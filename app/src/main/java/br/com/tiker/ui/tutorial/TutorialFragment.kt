@@ -1,4 +1,4 @@
-package br.com.tiker.scene.main.ui
+package br.com.tiker.ui.tutorial
 
 import android.os.Bundle
 import android.view.LayoutInflater

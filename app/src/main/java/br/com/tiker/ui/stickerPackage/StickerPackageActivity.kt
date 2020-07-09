@@ -3,12 +3,14 @@ package br.com.tiker.ui.stickerPackage
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import br.com.tiker.BuildConfig
 import br.com.tiker.R
 import br.com.tiker.ui.adapter.StickerDefaultRecyclerAdapter
 import br.com.tiker.ui.base.AddStickerPackActivity
+import br.com.tiker.ui.main.MainActivity
 import br.com.tiker.ui.stickerPackage.StickerPackageViewModel.Companion.ADD_PACK
 import br.com.tiker.ui.stickerPackage.StickerPackageViewModel.Companion.EXTRA_STICKER_PACK_AUTHORITY
 import br.com.tiker.ui.stickerPackage.StickerPackageViewModel.Companion.EXTRA_STICKER_PACK_ID
@@ -131,7 +133,11 @@ class StickerPackageActivity : CubosActivity() {
             }
 
             override fun onRewardedVideoAdFailedToLoad(p0: Int) {
-                progressBar?.gone()
+                val handler = Handler()
+                handler.postDelayed({
+                    progressBar?.gone()
+                    addStickerPackToWhatsApp(viewModel.stickerPack.identifier, viewModel.stickerPack.name)
+                }, 5000)
             }
 
             override fun onRewardedVideoStarted() {}

@@ -65,9 +65,9 @@
         <activity android:name=".ui.main.MainActivity" />
         <activity android:name=".ui.create.CreateActivity" />
         <activity android:name=".ui.stickerPackage.StickerPackageActivity" />
-        <activity android:name=".scene.main.ui.BecomePremiumActivity" />
+        <activity android:name=".ui.becomePremium.BecomePremiumActivity" />
 
-        <activity android:name="br.com.tiker.scene.main.ui.EntryActivity"
+        <activity android:name="br.com.tiker.ui.entry.EntryActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.SEND_MULTIPLE" />

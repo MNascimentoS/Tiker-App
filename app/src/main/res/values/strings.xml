@@ -55,6 +55,8 @@
     <string name="characters_sticker_pack_identifier">\" characters, sticker pack identifier:\"</string>
     <string name="sticker_pack_is_empty">sticker pack name is empty, sticker pack identifier:</string>
     <string name="sticker_pack_name_is_empty">\"sticker pack name cannot exceed \"</string>
+    <string name="more">More</string>
+    <string name="import_from_whatsapp">Importar do WhatsApp</string>
 
 
 </resources>

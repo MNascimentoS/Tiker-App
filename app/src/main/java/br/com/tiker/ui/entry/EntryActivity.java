@@ -1,4 +1,4 @@
-package br.com.tiker.scene.main.ui;
+package br.com.tiker.ui.entry;
 
 import android.Manifest;
 import android.content.ContentValues;
@@ -40,6 +40,7 @@ import br.com.tiker.model.Constants;
 import br.com.tiker.ui.base.AddStickerPackActivity;
 import br.com.tiker.model.Sticker;
 import br.com.tiker.model.StickerPack;
+import br.com.tiker.ui.tutorial.TutorialViewPagerAdapter;
 import br.com.tiker.utils.StickerPackValidator;
 import br.com.tiker.utils.StickerPacksContainer;
 import br.com.tiker.utils.ExtensionsKt;

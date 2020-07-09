@@ -23,7 +23,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 import br.com.tiker.R;
 import br.com.tiker.persistence.FirebaseDB;
-import br.com.tiker.scene.main.ui.EntryActivity;
+import br.com.tiker.ui.entry.EntryActivity;
 import br.com.tiker.ui.main.MainActivity;
 import br.com.tiker.utils.AnimationConstants;
 import br.com.tiker.utils.ExtensionsKt;

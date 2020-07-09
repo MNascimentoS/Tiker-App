@@ -1,9 +1,10 @@
-package br.com.tiker.scene.main.ui
+package br.com.tiker.ui.tutorial
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import br.com.tiker.R
+import br.com.tiker.ui.tutorial.TutorialFragment
 
 class TutorialViewPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 

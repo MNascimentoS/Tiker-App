@@ -122,7 +122,7 @@ class StickerPackageViewModel : ViewModel(), KoinComponent, CoroutineScope {
 
     private fun getImageUri(bitmap: Bitmap, context: Context): Uri? {
         val bytes = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, bytes)
         val path = MediaStore.Images.Media.insertImage(context.contentResolver, bitmap, random() + Random.nextInt(), null)
         return Uri.parse(path)
     }

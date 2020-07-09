@@ -1,4 +1,4 @@
-package br.com.tiker.scene.main.ui
+package br.com.tiker.ui.becomePremium
 
 import android.app.Activity
 import android.app.AlertDialog
