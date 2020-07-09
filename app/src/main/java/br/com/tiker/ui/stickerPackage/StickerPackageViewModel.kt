@@ -15,8 +15,8 @@ import br.com.tiker.model.Constants
 import br.com.tiker.model.Sticker
 import br.com.tiker.model.StickerPack
 import br.com.tiker.persistence.StickerRoomDatabase
-import br.com.tiker.scene.StickerPackValidator
-import br.com.tiker.scene.StickerPacksContainer
+import br.com.tiker.utils.StickerPackValidator
+import br.com.tiker.utils.StickerPacksContainer
 import br.com.tiker.services.StickerContentProvider
 import br.com.tiker.utils.FileUtils
 import br.com.tiker.utils.StickerPacksManager
@@ -145,26 +145,6 @@ class StickerPackageViewModel : ViewModel(), KoinComponent, CoroutineScope {
         return randomStringBuilder.toString()
     }
 
-    fun addStickerPackToWhatsApp(context: Context) {
-
-    }
-
-    //Handle cases either of WhatsApp are set as default app to handle this intent. We still want users to see both options.
-    private fun launchIntentToAddPackToChooser(identifier: String, stickerPackName: String) {
-        val intent = createIntentToAddStickerPack(identifier, stickerPackName)
-        uiEventLiveData.value = Pair(0, intent)
-    }
-
-    private fun launchIntentToAddPackToSpecificPackage(
-        identifier: String,
-        stickerPackName: String,
-        whatsappPackageName: String
-    ) {
-        val intent = createIntentToAddStickerPack(identifier, stickerPackName)
-        intent.setPackage(whatsappPackageName)
-        uiEventLiveData.value = Pair(0, intent)
-    }
-
     private fun createIntentToAddStickerPack(identifier: String, stickerPackName: String): Intent {
         val intent = Intent()
         intent.action = "com.whatsapp.intent.action.ENABLE_STICKER_PACK"
@@ -178,20 +158,11 @@ class StickerPackageViewModel : ViewModel(), KoinComponent, CoroutineScope {
     }
 
     companion object {
-        val TAG = this::class.java.canonicalName ?: ""
         const val ADD_PACK = 200
 
         const val EXTRA_STICKER_PACK_ID = "sticker_pack_id"
         const val EXTRA_STICKER_PACK_AUTHORITY = "sticker_pack_authority"
         const val EXTRA_STICKER_PACK_NAME = "sticker_pack_name"
-
-        const val EXTRA_STICKER_PACK_WEBSITE = "sticker_pack_website"
-        const val EXTRA_STICKER_PACK_EMAIL = "sticker_pack_email"
-        const val EXTRA_STICKER_PACK_PRIVACY_POLICY = "sticker_pack_privacy_policy"
-        const val EXTRA_STICKER_PACK_LICENSE_AGREEMENT = "sticker_pack_license_agreement"
-        const val EXTRA_STICKER_PACK_TRAY_ICON = "sticker_pack_tray_icon"
-        const val EXTRA_SHOW_UP_BUTTON = "show_up_button"
-        const val EXTRA_STICKER_PACK_DATA = "sticker_pack"
     }
 
 }

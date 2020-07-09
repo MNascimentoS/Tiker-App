@@ -7,10 +7,12 @@ import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import br.com.tiker.BuildConfig
 import br.com.tiker.R
-import br.com.tiker.scene.AddStickerPackActivity
-import br.com.tiker.scene.StickerPackDetailsActivity
+import br.com.tiker.ui.base.AddStickerPackActivity
 import br.com.tiker.ui.adapter.StickerDefaultRecyclerAdapter
 import br.com.tiker.ui.stickerPackage.StickerPackageViewModel.Companion.ADD_PACK
+import br.com.tiker.ui.stickerPackage.StickerPackageViewModel.Companion.EXTRA_STICKER_PACK_AUTHORITY
+import br.com.tiker.ui.stickerPackage.StickerPackageViewModel.Companion.EXTRA_STICKER_PACK_ID
+import br.com.tiker.ui.stickerPackage.StickerPackageViewModel.Companion.EXTRA_STICKER_PACK_NAME
 import br.com.tiker.utils.alert
 import br.com.tiker.utils.gone
 import br.com.tiker.utils.observe
@@ -144,9 +146,9 @@ class StickerPackageActivity : CubosActivity() {
     fun addStickerPackToWhatsApp(identifier: String?, stickerPackName: String?) {
         val intent = Intent()
         intent.action = "com.whatsapp.intent.action.ENABLE_STICKER_PACK"
-        intent.putExtra(StickerPackDetailsActivity.EXTRA_STICKER_PACK_ID, identifier)
-        intent.putExtra(StickerPackDetailsActivity.EXTRA_STICKER_PACK_AUTHORITY, BuildConfig.CONTENT_PROVIDER_AUTHORITY)
-        intent.putExtra(StickerPackDetailsActivity.EXTRA_STICKER_PACK_NAME, stickerPackName)
+        intent.putExtra(EXTRA_STICKER_PACK_ID, identifier)
+        intent.putExtra(EXTRA_STICKER_PACK_AUTHORITY, BuildConfig.CONTENT_PROVIDER_AUTHORITY)
+        intent.putExtra(EXTRA_STICKER_PACK_NAME, stickerPackName)
         try {
             startActivityForResult(intent, AddStickerPackActivity.ADD_PACK)
         } catch (e: ActivityNotFoundException) {

@@ -65,7 +65,7 @@
         <activity android:name=".ui.main.MainActivity" />
         <activity android:name=".ui.create.CreateActivity" />
         <activity android:name=".ui.stickerPackage.StickerPackageActivity" />
-
+        <activity android:name=".scene.main.ui.BecomePremiumActivity" />
 
         <activity android:name="br.com.tiker.scene.main.ui.EntryActivity"
             android:screenOrientation="portrait">
@@ -80,7 +80,6 @@
                 <data android:mimeType="text/*" />
             </intent-filter>
         </activity>
-        <activity android:name=".scene.main.ui.BecomePremiumActivity" />
     </application>
 
 </manifest>

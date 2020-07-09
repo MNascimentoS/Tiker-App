@@ -7,10 +7,8 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import br.com.tiker.model.Constants;
-import br.com.tiker.scene.ContentFileParser;
 import br.com.tiker.model.Sticker;
 import br.com.tiker.model.StickerPack;
-import br.com.tiker.scene.StickerPacksContainer;
 
 import java.io.*;
 import java.util.ArrayList;

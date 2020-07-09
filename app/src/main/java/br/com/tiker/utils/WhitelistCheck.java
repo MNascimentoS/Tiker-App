@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package br.com.tiker.scene;
+package br.com.tiker.utils;
 
 import android.content.ContentResolver;
 import android.content.Context;

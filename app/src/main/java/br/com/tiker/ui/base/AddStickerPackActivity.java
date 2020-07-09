@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package br.com.tiker.scene;
+package br.com.tiker.ui.base;
 
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
@@ -24,6 +24,11 @@ import android.widget.Toast;
 import br.com.tiker.BuildConfig;
 import br.com.tiker.R;
 import br.com.tiker.utils.ExtensionsKt;
+import br.com.tiker.utils.WhitelistCheck;
+
+import static br.com.tiker.ui.stickerPackage.StickerPackageViewModel.EXTRA_STICKER_PACK_AUTHORITY;
+import static br.com.tiker.ui.stickerPackage.StickerPackageViewModel.EXTRA_STICKER_PACK_ID;
+import static br.com.tiker.ui.stickerPackage.StickerPackageViewModel.EXTRA_STICKER_PACK_NAME;
 
 public abstract class AddStickerPackActivity extends AppCompatActivity {
     public static final int ADD_PACK = 200;
@@ -31,9 +36,9 @@ public abstract class AddStickerPackActivity extends AppCompatActivity {
     public void addStickerPackToWhatsApp(String identifier, String stickerPackName) {
         Intent intent = new Intent();
         intent.setAction("com.whatsapp.intent.action.ENABLE_STICKER_PACK");
-        intent.putExtra(StickerPackDetailsActivity.EXTRA_STICKER_PACK_ID, identifier);
-        intent.putExtra(StickerPackDetailsActivity.EXTRA_STICKER_PACK_AUTHORITY, BuildConfig.CONTENT_PROVIDER_AUTHORITY);
-        intent.putExtra(StickerPackDetailsActivity.EXTRA_STICKER_PACK_NAME, stickerPackName);
+        intent.putExtra(EXTRA_STICKER_PACK_ID, identifier);
+        intent.putExtra(EXTRA_STICKER_PACK_AUTHORITY, BuildConfig.CONTENT_PROVIDER_AUTHORITY);
+        intent.putExtra(EXTRA_STICKER_PACK_NAME, stickerPackName);
         try {
             startActivityForResult(intent, ADD_PACK);
         } catch (ActivityNotFoundException e) {
