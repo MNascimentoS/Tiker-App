@@ -28,34 +28,37 @@ class AllStickersViewModel : ViewModel(), KoinComponent, CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
-    var hasItems: MutableLiveData<Boolean> = MutableLiveData()
+    private var _hasItems: MutableLiveData<Boolean> = MutableLiveData()
+    var hasItems: LiveData<Boolean> = _hasItems
 
-    var isLoading: MutableLiveData<Boolean> = MutableLiveData()
+    private var _isLoading: MutableLiveData<Boolean> = MutableLiveData()
+    var isLoading: LiveData<Boolean> = _isLoading
 
     val stickerList: LiveData<PagedList<StickerModel>> =
         LivePagedListBuilder<Int, StickerModel>(StickerExternalDatabase.instance.stickerDataSourceFactory, 100)
             .setBoundaryCallback(object : PagedList.BoundaryCallback<StickerModel>() {
                 override fun onZeroItemsLoaded() {
                     super.onZeroItemsLoaded()
-                    isLoading.value = false
-                    hasItems.value = false
+                    _isLoading.value = false
+                    _hasItems.value = false
                 }
 
                 override fun onItemAtEndLoaded(itemAtEnd: StickerModel) {
                     super.onItemAtEndLoaded(itemAtEnd)
-                    hasItems.value = true
-                    isLoading.value = false
+                    _hasItems.value = true
+                    _isLoading.value = false
                 }
 
                 override fun onItemAtFrontLoaded(itemAtFront: StickerModel) {
                     super.onItemAtFrontLoaded(itemAtFront)
-                    hasItems.value = true
-                    isLoading.value = false
+                    _hasItems.value = true
+                    _isLoading.value = false
                 }
             })
             .build()
 
     fun saveTempStickerList(stickerList: ArrayList<StickerModel>) = launch {
+        _isLoading.value = true
         val imageByteList = arrayListOf<StickerEntity>()
         stickerList.forEach {
             val stream = ByteArrayOutputStream()
@@ -64,7 +67,11 @@ class AllStickersViewModel : ViewModel(), KoinComponent, CoroutineScope {
         }
 
         stickerDb.stickerDao().addStickerList(StickerPackageEntity(), imageByteList)
-        isLoading.value = false
+        _isLoading.value = false
+    }
+
+    fun forceRechargePackage() {
+
     }
 
 }

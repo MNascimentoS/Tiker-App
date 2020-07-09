@@ -9,7 +9,7 @@
     </style>
 
     <style name="MyCustomToolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar" >
-        <item name="android:fontFamily">@font/ubuntu_bold</item>
+        <item name="android:fontFamily">@font/ubuntu</item>
     </style>
 
     <style name="MyCustomTabLayout" parent="Widget.Design.TabLayout">

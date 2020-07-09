@@ -2,11 +2,15 @@
     <string name="label_all_stickers">Todas figurinhas</string>
     <string name="label_my_packages">Meus pacotes</string>
     <string name="create_package">Criar pacote</string>
-    <string name="error_min_stickers">Você precisa selecionar ao menos três stickers</string>
+    <string name="add_to_whatsapp">Add to WhatsApp</string>
+    <string name="error_min_stickers">Você precisa selecionar ao menos 3 Stickers</string>
+    <string name="error_max_stickers">O WhatsApp permite criar no máximo 30 Stickers por pacote</string>
     <string name="error_not_found_stickers">Você ainda não possui figurinhas</string>
+    <string name="error_not_found_packages">Você ainda não possui nenhum pacote</string>
     <string name="error_field_name_empty">O campo de nome não pode ficar vazio</string>
     <string name="error_field_author_empty">O campo de autor não pode ficar vazio</string>
     <string name="message_import_stickers">Importe ou adicione e seja feliz</string>
+    <string name="message_create_package">Crie um pacote na área de Todas as Figurinhas</string>
     <string name="label_confirm">Confirmar</string>
     <string name="label_add_to_whatsapp">Adicionar ao Whatsapp</string>
     <string name="label_package_name">Nome do pacote</string>

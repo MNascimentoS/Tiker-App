@@ -7,8 +7,8 @@ import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import br.com.tiker.BuildConfig
 import br.com.tiker.R
-import br.com.tiker.ui.base.AddStickerPackActivity
 import br.com.tiker.ui.adapter.StickerDefaultRecyclerAdapter
+import br.com.tiker.ui.base.AddStickerPackActivity
 import br.com.tiker.ui.stickerPackage.StickerPackageViewModel.Companion.ADD_PACK
 import br.com.tiker.ui.stickerPackage.StickerPackageViewModel.Companion.EXTRA_STICKER_PACK_AUTHORITY
 import br.com.tiker.ui.stickerPackage.StickerPackageViewModel.Companion.EXTRA_STICKER_PACK_ID
@@ -69,7 +69,7 @@ class StickerPackageActivity : CubosActivity() {
                         startActivityForResult(
                             Intent.createChooser(
                                 it.second as Intent,
-                                "Add to whatsapp"//getString(R.string.add_to_whatsapp)
+                                getString(R.string.add_to_whatsapp)
                             ), ADD_PACK
                         )
                     } catch (e: ActivityNotFoundException) {
@@ -94,7 +94,11 @@ class StickerPackageActivity : CubosActivity() {
     private fun initListeners() {
         sharePackageBTN?.setOnClickListener {
             configureAd()
-            viewModel.createPackageToWhatsApp(this)
+            object : Thread() {
+                override fun run() {
+                    viewModel.createPackageToWhatsApp(this@StickerPackageActivity)
+                }
+            }.start()
         }
 
         removePackageBTN?.setOnClickListener {

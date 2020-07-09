@@ -15,9 +15,7 @@ class StickerExternalDatabase private constructor(
 
         fun initialize(context: Context) {
             instance = StickerExternalDatabase(
-                StickerDataSourceFactory(
-                    context
-                ),
+                StickerDataSourceFactory(context),
                 PackageStickerDataSourceFactory()
             )
         }

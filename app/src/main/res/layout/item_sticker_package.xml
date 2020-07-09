@@ -55,45 +55,45 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/packageAuthorTXT">
 
-        <include
-            android:id="@+id/itemSticker1INC"
-            layout="@layout/item_sticker"
+        <br.com.tiker.views.GridViewItem
+            android:id="@+id/stickerIMG1"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp" />
+            android:layout_marginEnd="4dp"
+            tools:src="@tools:sample/backgrounds/scenic"/>
 
-        <include
-            android:id="@+id/itemSticker2INC"
-            layout="@layout/item_sticker"
+        <br.com.tiker.views.GridViewItem
+            android:id="@+id/stickerIMG2"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp" />
+            android:layout_marginEnd="4dp"
+            tools:src="@tools:sample/backgrounds/scenic"/>
 
-        <include
-            android:id="@+id/itemSticker3INC"
-            layout="@layout/item_sticker"
+        <br.com.tiker.views.GridViewItem
+            android:id="@+id/stickerIMG3"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp" />
+            android:layout_marginEnd="4dp"
+            tools:src="@tools:sample/backgrounds/scenic"/>
 
-        <include
-            android:id="@+id/itemSticker4INC"
-            layout="@layout/item_sticker"
+        <br.com.tiker.views.GridViewItem
+            android:id="@+id/stickerIMG4"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp" />
+            android:layout_marginEnd="4dp"
+            tools:src="@tools:sample/backgrounds/scenic"/>
 
-        <include
-            android:id="@+id/itemSticker5INC"
-            layout="@layout/item_sticker"
+        <br.com.tiker.views.GridViewItem
+            android:id="@+id/stickerIMG5"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp" />
+            android:layout_marginEnd="4dp"
+            tools:src="@tools:sample/backgrounds/scenic"/>
 
     </LinearLayout>
 

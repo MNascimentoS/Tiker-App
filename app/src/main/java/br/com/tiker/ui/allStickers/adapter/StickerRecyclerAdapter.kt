@@ -1,11 +1,13 @@
 package br.com.tiker.ui.allStickers.adapter
 
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import br.com.tiker.R
 import br.com.tiker.model.StickerModel
+import br.com.tiker.utils.StickerPackValidator.STICKER_SIZE_MAX
 import io.cubos.r2d2lib.gone
 import io.cubos.r2d2lib.inflate
 import io.cubos.r2d2lib.visible
@@ -33,6 +35,10 @@ class StickerRecyclerAdapter() :
             }
             setOnClickListener {
                 currentItem?.let {
+                    if (selectedStickers.size >= STICKER_SIZE_MAX && !currentItem.selected) {
+                        Toast.makeText(context, R.string.error_max_stickers, Toast.LENGTH_LONG).show()
+                        return@setOnClickListener
+                    }
                     currentItem.selected = !currentItem.selected
                     if (currentItem.selected) {
                         selectedStickers.add(currentItem)

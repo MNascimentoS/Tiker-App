@@ -1,6 +1,7 @@
 package br.com.tiker.ui.myPackages
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
@@ -23,19 +24,31 @@ class MyPackagesViewModel : ViewModel(), KoinComponent, CoroutineScope {
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
 
+    private var _hasItems: MutableLiveData<Boolean> = MutableLiveData()
+    var hasItems: LiveData<Boolean> = _hasItems
+
+    private var _isLoading: MutableLiveData<Boolean> = MutableLiveData()
+    var isLoading: LiveData<Boolean> = _isLoading
+
     val stickerPackageList: LiveData<PagedList<StickerPackageModel>> =
         LivePagedListBuilder<Int, StickerPackageModel>(StickerExternalDatabase.instance.packageStickerDataSourceFactory, 10)
             .setBoundaryCallback(object : PagedList.BoundaryCallback<StickerPackageModel>() {
                 override fun onZeroItemsLoaded() {
                     super.onZeroItemsLoaded()
+                    _isLoading.value = false
+                    _hasItems.value = false
                 }
 
                 override fun onItemAtEndLoaded(itemAtEnd: StickerPackageModel) {
                     super.onItemAtEndLoaded(itemAtEnd)
+                    _isLoading.value = false
+                    _hasItems.value = true
                 }
 
                 override fun onItemAtFrontLoaded(itemAtFront: StickerPackageModel) {
                     super.onItemAtFrontLoaded(itemAtFront)
+                    _isLoading.value = false
+                    _hasItems.value = true
                 }
             })
             .build()

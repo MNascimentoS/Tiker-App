@@ -1,6 +1,8 @@
 package br.com.tiker.persistence.dataSource
 
+import android.graphics.BitmapFactory
 import androidx.paging.PageKeyedDataSource
+import br.com.tiker.model.StickerModel
 import br.com.tiker.model.StickerPackageModel
 import br.com.tiker.persistence.StickerRoomDatabase
 import br.com.tiker.persistence.model.StickerPackageEntity
@@ -25,59 +27,62 @@ class PackageStickerDataSource : PageKeyedDataSource<Int, StickerPackageModel>()
     private var currentValue = 0
 
     override fun loadInitial(
-        params: LoadInitialParams<Int>,
-        callback: LoadInitialCallback<Int, StickerPackageModel>
+            params: LoadInitialParams<Int>,
+            callback: LoadInitialCallback<Int, StickerPackageModel>
     ) {
         launch {
-            newPage++
-            resultList = stickerDb.stickerDao().getSavedStickerList()
-            resultList?.let { stickerPackageList ->
-                val packageResult = arrayListOf<StickerPackageModel>()
-                repeat(params.requestedLoadSize) {
-                    if (stickerPackageList.size > currentValue) {
-                        val sPackage = stickerPackageList[currentValue]
-                        packageResult.add(StickerPackageModel(
-                            id = sPackage.id,
-                            name = sPackage.name,
-                            author = sPackage.author,
-                            stickerList = listOf()
-                        ))
-                        currentValue++
-                    }
-                }
-                callback.onResult(packageResult, null, newPage)
-
-            } ?: run {
-                callback.onResult(arrayListOf(), null, 0)
-            }
+            val stickerPackageList = getStickerPacks(params.requestedLoadSize)
+            callback.onResult(stickerPackageList, null, if (stickerPackageList.size > 0) newPage else 0)
         }
     }
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, StickerPackageModel>) {
         launch {
-            newPage++
-            resultList = stickerDb.stickerDao().getSavedStickerList()
-            resultList?.let { stickerPackageList ->
-                val packageResult = arrayListOf<StickerPackageModel>()
-                repeat(params.requestedLoadSize) {
-                    if (stickerPackageList.size < currentValue) {
-                        currentValue++
-                        val sPackage = stickerPackageList[currentValue]
-                        packageResult.add(StickerPackageModel(
-                            name = sPackage.name,
-                            author = sPackage.author,
-                            stickerList = listOf()
-                        ))
-                    }
-                }
-                callback.onResult(packageResult, newPage)
-
-            } ?: run {
-                callback.onResult(arrayListOf(), newPage)
-            }
+            val stickerPackageList = getStickerPacks(params.requestedLoadSize)
+            callback.onResult(stickerPackageList, newPage)
         }
     }
 
     override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, StickerPackageModel>) {}
+
+    private suspend fun getStickerPacks(requestedLoadSize: Int) : ArrayList<StickerPackageModel> {
+        val packageResult = arrayListOf<StickerPackageModel>()
+        newPage++
+        resultList = stickerDb.stickerDao().getSavedStickerList()
+        resultList?.let { stickerPackageList ->
+            repeat(requestedLoadSize) {
+                if (stickerPackageList.size > currentValue) {
+                    val sPackage = stickerPackageList[currentValue]
+                    val stickerDBList = stickerDb.stickerDao().getLastStickerListAllData(sPackage.id)
+                    val stickerList = arrayListOf<StickerModel>()
+
+                    stickerDBList.second?.let { stickers ->
+                        for (i in 0..4) {
+                            if (stickers.size > i) {
+                                val sticker = stickers[i]
+                                val bmp = BitmapFactory.decodeByteArray(sticker.sticker, 0, sticker.sticker.size)
+                                stickerList.add(
+                                        StickerModel(
+                                                id = sticker.id,
+                                                selected = false,
+                                                image = bmp
+                                        )
+                                )
+                            }
+                        }
+                    }
+
+                    packageResult.add(StickerPackageModel(
+                            id = sPackage.id,
+                            name = sPackage.name,
+                            author = sPackage.author,
+                            stickerList = stickerList
+                    ))
+                    currentValue++
+                }
+            }
+        }
+        return packageResult
+    }
 
 }

@@ -1,19 +1,20 @@
 package br.com.tiker.ui.myPackages
 
 import android.content.Intent
-import org.koin.androidx.viewmodel.ext.android.viewModel
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.tiker.R
 import br.com.tiker.ui.myPackages.adapter.MyPackagesRecyclerAdapter
 import br.com.tiker.ui.stickerPackage.StickerPackageActivity
 import br.com.tiker.utils.observe
-import kotlinx.android.synthetic.main.activity_sticker_package.*
+import io.cubos.r2d2lib.gone
+import io.cubos.r2d2lib.visible
+import kotlinx.android.synthetic.main.fragment_my_packages.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MyPackagesFragment : Fragment() {
 
@@ -37,25 +38,47 @@ class MyPackagesFragment : Fragment() {
     }
 
     private fun initUi() {
+        initializeAdapter()
+        observe(viewModel.isLoading) { isLoading ->
+            if (isLoading) progressBar?.visible()
+            else progressBar?.gone()
+        }
+
+        observe(viewModel.stickerPackageList) {
+            if (!::adapter.isInitialized) initializeAdapter()
+            adapter.submitList(it)
+        }
+
+        observe(viewModel.hasItems) { hasItems ->
+            if (!hasItems) emptyStateView?.visible()
+            else emptyStateView?.gone()
+        }
+    }
+
+    private fun initializeAdapter() {
         adapter = MyPackagesRecyclerAdapter()
         recyclerView?.layoutManager = LinearLayoutManager(context)
         recyclerView?.adapter = adapter
 
-        adapter.onSelectPackage = {
-            startActivity(Intent(context, StickerPackageActivity::class.java).apply {
-                putExtra(
-                    StickerPackageActivity.STICKER_PACKAGE_ID,
-                    it
-                )
-            })
-        }
-
         adapter.onDeletePackage = {
             viewModel.removeStickerPackage(it)
         }
+        adapter.onSelectPackage = {
+            startActivity(Intent(context, StickerPackageActivity::class.java).apply {
+                putExtra(
+                        StickerPackageActivity.STICKER_PACKAGE_ID,
+                        it
+                )
+            })
+        }
+    }
 
-        observe(viewModel.stickerPackageList) {
-            adapter.submitList(it)
+    override fun onStart() {
+        super.onStart()
+        if (::adapter.isInitialized) {
+            viewModel.forceRechargePackage()
+        } else {
+            initializeAdapter()
         }
     }
 

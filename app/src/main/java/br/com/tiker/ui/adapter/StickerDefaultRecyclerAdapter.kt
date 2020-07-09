@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.item_sticker.view.*
 class StickerDefaultRecyclerAdapter :
     RecyclerView.Adapter<StickerDefaultRecyclerAdapter.ViewHolder>() {
 
-    private val bitmapList = arrayListOf<Bitmap>()
+    private var bitmapList = listOf<Bitmap>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(parent.inflate(R.layout.item_sticker))
@@ -27,7 +27,7 @@ class StickerDefaultRecyclerAdapter :
     override fun getItemCount(): Int = bitmapList.size
 
     fun updateList(bitmapList: List<Bitmap>) {
-        this.bitmapList.addAll(bitmapList)
+        this.bitmapList = bitmapList
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view)

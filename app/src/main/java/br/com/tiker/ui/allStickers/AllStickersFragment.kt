@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import br.com.tiker.R
@@ -37,14 +38,13 @@ class AllStickersFragment : Fragment() {
     }
 
     private fun initUi() {
-        adapter = StickerRecyclerAdapter()
+        initializeAdapter()
 
         observe(viewModel.stickerList) {
+            if (!::adapter.isInitialized) initializeAdapter()
             adapter.submitList(it)
             firstLoad = false
         }
-        recyclerView?.layoutManager = GridLayoutManager(context, 4)
-        recyclerView?.adapter = adapter
 
         observe(viewModel.isLoading) { isLoading ->
             if (isLoading) progressBar?.visible()
@@ -52,18 +52,26 @@ class AllStickersFragment : Fragment() {
         }
         observe(viewModel.hasItems) { hasItems ->
             if (!hasItems) emptyStateView?.visible()
-
         }
     }
 
     fun createPackage() {
-        if (::adapter.isInitialized && adapter.selectedStickers.size >= 3) {
-            viewModel.isLoading.value = true
-            viewModel.saveTempStickerList(adapter.selectedStickers)
-            startActivity(Intent(context, CreateActivity::class.java))
+        if (::adapter.isInitialized) {
+            if (adapter.selectedStickers.size >= 3) {
+                viewModel.saveTempStickerList(adapter.selectedStickers)
+                startActivity(Intent(context, CreateActivity::class.java))
+            } else {
+                Toast.makeText(context, getString(R.string.error_min_stickers), Toast.LENGTH_LONG).show()
+            }
         } else {
-//            toastLong(getString(R.string.error_min_stickers))
-        } 
+            initializeAdapter()
+        }
+    }
+
+    private fun initializeAdapter() {
+        adapter = StickerRecyclerAdapter()
+        recyclerView?.layoutManager = GridLayoutManager(context, 4)
+        recyclerView?.adapter = adapter
     }
 
 }
