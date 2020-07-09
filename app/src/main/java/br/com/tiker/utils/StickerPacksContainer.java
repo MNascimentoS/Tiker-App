@@ -1,4 +1,4 @@
-package br.com.tiker.scene;
+package br.com.tiker.utils;
 
 import java.util.ArrayList;
 import java.util.List;
