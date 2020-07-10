@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,6 +22,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import br.com.tiker.BuildConfig;
 import br.com.tiker.R;
 import br.com.tiker.persistence.FirebaseDB;
 import br.com.tiker.ui.entry.EntryActivity;
@@ -44,6 +46,8 @@ public class SplashScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
+        TextView androidVersion = findViewById(R.id.androidVersionTXT);
+        androidVersion.setText((BuildConfig.VERSION_NAME + " : " + BuildConfig.VERSION_CODE));
         mAuth = FirebaseAuth.getInstance();
         mRetryBTN = findViewById(R.id.retryAllowAccessBTN);
         ExtensionsKt.fadeIn(findViewById(R.id.logoTickerContainer), AnimationConstants.DURATION_LONG, null);

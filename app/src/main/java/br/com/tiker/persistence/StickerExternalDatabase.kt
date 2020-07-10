@@ -1,6 +1,5 @@
 package br.com.tiker.persistence
 
-import android.content.Context
 import br.com.tiker.persistence.dataSource.PackageStickerDataSourceFactory
 import br.com.tiker.persistence.dataSource.StickerDataSourceFactory
 
@@ -13,9 +12,9 @@ class StickerExternalDatabase private constructor(
         lateinit var instance: StickerExternalDatabase
             private set
 
-        fun initialize(context: Context) {
+        fun initialize() {
             instance = StickerExternalDatabase(
-                StickerDataSourceFactory(context),
+                StickerDataSourceFactory(),
                 PackageStickerDataSourceFactory()
             )
         }

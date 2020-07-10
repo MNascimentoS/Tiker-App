@@ -128,16 +128,21 @@ class StickerPackageActivity : CubosActivity() {
                         configureAd()
                     }
                 } else {
-                    addStickerPackToWhatsApp(viewModel.stickerPack.identifier, viewModel.stickerPack.name)
+//                    if (viewModel.stickerPackAdded == false) {
+//                        alert(getString(R.string.error), viewModel.error ?: getString(R.string.error_default))
+//                    } else {
+                        addStickerPackToWhatsApp(viewModel.stickerPack.identifier, viewModel.stickerPack.name)
+//                    }
                 }
             }
 
             override fun onRewardedVideoAdFailedToLoad(p0: Int) {
-                val handler = Handler()
-                handler.postDelayed({
-                    progressBar?.gone()
+                progressBar?.gone()
+//                if (viewModel.stickerPackAdded == false) {
+//                    alert(getString(R.string.error), viewModel.error ?: getString(R.string.error_default))
+//                } else {
                     addStickerPackToWhatsApp(viewModel.stickerPack.identifier, viewModel.stickerPack.name)
-                }, 5000)
+//                }
             }
 
             override fun onRewardedVideoStarted() {}

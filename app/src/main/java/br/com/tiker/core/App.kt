@@ -17,7 +17,7 @@ import org.koin.dsl.module
 class App : Application() {
     override fun onCreate() {
         super.onCreate()
-        StickerExternalDatabase.initialize(applicationContext)
+        StickerExternalDatabase.initialize()
         startKoin {
             modules(listOf(
                     module {

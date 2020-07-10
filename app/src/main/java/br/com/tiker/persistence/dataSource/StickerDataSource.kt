@@ -1,96 +1,74 @@
 package br.com.tiker.persistence.dataSource
 
-import android.content.Context
 import android.graphics.BitmapFactory
 import android.os.Environment
 import androidx.paging.PageKeyedDataSource
 import br.com.tiker.model.StickerModel
-import io.cubos.r2d2lib.executeLongOperation
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import java.io.File
+import kotlin.coroutines.CoroutineContext
 
-class StickerDataSource(private val context: Context) : PageKeyedDataSource<Int, StickerModel>() {
+class StickerDataSource() : PageKeyedDataSource<Int, StickerModel>(), CoroutineScope {
+
+    private val job = Job()
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
 
     private var newPage = 0
-    private var files = arrayOf<File>()
+    private var files = listOf<File>()
     private var lastFileIndex = 0
 
     override fun loadInitial(
         params: LoadInitialParams<Int>,
         callback: LoadInitialCallback<Int, StickerModel>
     ) {
-        executeLongOperation ({
-            newPage++
-            if (files.isEmpty()) {
-                val path = Environment.getExternalStorageDirectory().toString() + "/WhatsApp/Media/WhatsApp Stickers"
-                val directory = File(path)
-                val allFiles = directory.listFiles()
-                if (allFiles == null || allFiles.isEmpty()) {
-                    return@executeLongOperation Pair(arrayListOf<StickerModel>(), 0)
-                }
-                files = allFiles
-                files.reverse()
-            }
-            val stickers = mutableListOf<StickerModel>()
-            run fillStickers@{
-                repeat(params.requestedLoadSize) {
-                    if (lastFileIndex > files.size) {
-                        newPage = -1
-                        return@fillStickers
-                    }
-                    stickers.add(
-                        StickerModel(
-                            lastFileIndex,
-                            BitmapFactory.decodeFile(files[lastFileIndex].absolutePath)
-                        )
-                    )
-                    lastFileIndex++
-                }
-            }
-            Pair(stickers, newPage)
-        }, { pair ->
-            if (pair is Pair<*, *>) {
-                if (pair.first is MutableList<*>) {
-                    callback.onResult(pair.first as MutableList<StickerModel>, null, pair.second as Int)
-                }
-            }
-        })
+        newPage++
+        launch {
+            val stickers = getStickersFromWhatsApp(params.requestedLoadSize)
+            callback.onResult(stickers, null, newPage)
+        }
     }
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, StickerModel>) {
-        executeLongOperation ({
-            newPage++
-            if (files.isEmpty()) {
-                val path = Environment.getExternalStorageDirectory().toString() + "/WhatsApp/Media/WhatsApp Stickers"
-                val directory = File(path)
-                files = directory.listFiles()
-                files.reverse()
-            }
-            val stickers = mutableListOf<StickerModel>()
-            run fillStickers@{
-                repeat(params.requestedLoadSize) {
-                    if (lastFileIndex > files.size) {
-                        newPage = -1
-                        return@fillStickers
-                    }
-                    stickers.add(
-                        StickerModel(
-                            lastFileIndex,
-                            BitmapFactory.decodeFile(files[lastFileIndex].absolutePath)
-                        )
-                    )
-                    lastFileIndex++
-                }
-            }
-            Pair(stickers, newPage)
-        }, { pair ->
-            if (pair is Pair<*, *>) {
-                if (pair.first is MutableList<*>) {
-                    callback.onResult(pair.first as MutableList<StickerModel>, newPage)
-                }
-            }
-        })
+        newPage++
+        launch {
+            val stickers = getStickersFromWhatsApp(params.requestedLoadSize)
+            callback.onResult(stickers, newPage)
+        }
     }
 
     override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, StickerModel>) {}
+
+    private fun getStickersFromWhatsApp(requestedLoadSize: Int) : MutableList<StickerModel> {
+        if (files.isEmpty()) {
+            val path = Environment.getExternalStorageDirectory().toString() + "/WhatsApp/Media/WhatsApp Stickers"
+            val directory = File(path)
+            val allFiles = directory.listFiles()?.toMutableList() ?: mutableListOf()
+
+            files = allFiles.sortedByDescending { it.lastModified() }.toList()
+        }
+
+        val stickers = mutableListOf<StickerModel>()
+        run fillStickers@{
+            repeat(requestedLoadSize) {
+                if (lastFileIndex > files.size) {
+                    newPage = -1
+                    return@fillStickers
+                }
+                stickers.add(
+                        StickerModel(
+                                lastFileIndex,
+                                BitmapFactory.decodeFile(files[lastFileIndex].absolutePath)
+                        )
+                )
+                lastFileIndex++
+            }
+        }
+        return stickers
+    }
 
 }

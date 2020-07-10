@@ -2,23 +2,23 @@ package br.com.tiker.ui.stickerPackage
 
 import android.content.ContentValues
 import android.content.Context
-import android.content.Intent
+import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.provider.MediaStore
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import br.com.tiker.BuildConfig
 import br.com.tiker.R
 import br.com.tiker.model.Constants
 import br.com.tiker.model.Sticker
 import br.com.tiker.model.StickerPack
+import br.com.tiker.persistence.SaveBitmapToDevice
 import br.com.tiker.persistence.StickerRoomDatabase
-import br.com.tiker.utils.StickerPackValidator
-import br.com.tiker.utils.StickerPacksContainer
 import br.com.tiker.services.StickerContentProvider
 import br.com.tiker.utils.FileUtils
+import br.com.tiker.utils.StickerPackValidator
+import br.com.tiker.utils.StickerPacksContainer
 import br.com.tiker.utils.StickerPacksManager
 import com.google.gson.Gson
 import io.sentry.Sentry
@@ -43,6 +43,7 @@ class StickerPackageViewModel : ViewModel(), KoinComponent, CoroutineScope {
 
     lateinit var stickerPack: StickerPack
     private var stickerPackageId = 0
+    var stickerPackAdded: Boolean? = null
 
     val uiEventLiveData = MutableLiveData<Pair<Int, Any>>()
 
@@ -52,6 +53,7 @@ class StickerPackageViewModel : ViewModel(), KoinComponent, CoroutineScope {
     var namePackage: MutableLiveData<String> = MutableLiveData()
     var authorPackage: MutableLiveData<String> = MutableLiveData()
     var stickerList: MutableLiveData<List<Bitmap>> = MutableLiveData()
+    var error: String? = null
 
     fun loadSavedStickerList(id: Int){
         isLoading.value = true
@@ -81,7 +83,7 @@ class StickerPackageViewModel : ViewModel(), KoinComponent, CoroutineScope {
         }
     }
 
-    fun createPackageToWhatsApp(context: Context) {
+    fun createPackageToWhatsApp(context: Context) = launch {
         stickerPack = StickerPack(namePackage.value, namePackage.value, context.getString(R.string.app_name), "", "tickerapp0@gmail.com", "", "", "")
 
         val stickerUriList = arrayListOf<Uri>()
@@ -112,18 +114,19 @@ class StickerPackageViewModel : ViewModel(), KoinComponent, CoroutineScope {
 
         try {
             StickerPackValidator.verifyStickerPackValidity(context, stickerPack)
+            stickerPackAdded = true
         } catch (ex: Exception) {
+            error = ex.message
             Sentry.capture(ex)
-            // TODO Error
-            //error = ex.message
+            stickerPackAdded = false
         }
-
     }
 
     private fun getImageUri(bitmap: Bitmap, context: Context): Uri? {
         val bytes = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, bytes)
-        val path = MediaStore.Images.Media.insertImage(context.contentResolver, bitmap, random() + Random.nextInt(), null)
+
+        val path = SaveBitmapToDevice().insertImageIntoGallery(context.contentResolver, bitmap, random() + Random.nextInt(), namePackage.value)
         return Uri.parse(path)
     }
 
@@ -142,19 +145,11 @@ class StickerPackageViewModel : ViewModel(), KoinComponent, CoroutineScope {
             tempChar = (generator.nextInt(96) + 32).toChar()
             randomStringBuilder.append(tempChar)
         }
+        val string = randomStringBuilder.toString()
+        string.replace("/", "")
+        string.replace(":", "")
+        string.replace(";", "")
         return randomStringBuilder.toString()
-    }
-
-    private fun createIntentToAddStickerPack(identifier: String, stickerPackName: String): Intent {
-        val intent = Intent()
-        intent.action = "com.whatsapp.intent.action.ENABLE_STICKER_PACK"
-        intent.putExtra(EXTRA_STICKER_PACK_ID, identifier)
-        intent.putExtra(
-            EXTRA_STICKER_PACK_AUTHORITY,
-            BuildConfig.CONTENT_PROVIDER_AUTHORITY
-        )
-        intent.putExtra(EXTRA_STICKER_PACK_NAME, stickerPackName)
-        return intent
     }
 
     companion object {

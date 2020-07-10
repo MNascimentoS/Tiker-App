@@ -53,6 +53,19 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <TextView
+        android:id="@+id/androidVersionTXT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/retryAllowAccessBTN"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="36dp"
+        android:fontFamily="@font/ubuntu"
+        android:textColor="#FFF"
+        android:textSize="12sp"
+        tools:text="Android Version" />
+
     <Button
         android:id="@+id/retryAllowAccessBTN"
         android:layout_width="match_parent"

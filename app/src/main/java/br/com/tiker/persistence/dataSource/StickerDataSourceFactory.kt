@@ -1,12 +1,11 @@
 package br.com.tiker.persistence.dataSource
 
-import android.content.Context
-import androidx.paging.DataSource
 import androidx.lifecycle.MutableLiveData
+import androidx.paging.DataSource
 import br.com.tiker.model.StickerModel
 
 
-class StickerDataSourceFactory(private val context: Context) : DataSource.Factory<Int, StickerModel>() {
+class StickerDataSourceFactory : DataSource.Factory<Int, StickerModel>() {
 
     private var stickerDataSource: StickerDataSource? = null
     private var mutableLiveData: MutableLiveData<StickerDataSource>? = null
@@ -16,7 +15,7 @@ class StickerDataSourceFactory(private val context: Context) : DataSource.Factor
     }
 
     override fun create(): DataSource<Int, StickerModel> {
-        stickerDataSource = StickerDataSource(context)
+        stickerDataSource = StickerDataSource()
         mutableLiveData?.postValue(stickerDataSource)
         return stickerDataSource as StickerDataSource
     }
