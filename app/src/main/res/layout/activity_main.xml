@@ -54,15 +54,11 @@
         android:layout_height="0dp"
         android:layout_gravity="bottom"
         android:visibility="invisible"
-        android:background="@drawable/rectangle_bottom_view_shadow">
-
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        android:background="@drawable/rectangle_bottom_view_shadow"/>
 
     <Button
-        android:id="@+id/createPackageBTN"
-        android:layout_width="wrap_content"
+        android:id="@+id/principalBTN"
+        android:layout_width="@dimen/createPackageWidth"
         android:layout_height="wrap_content"
         app:layout_anchor="@id/bottomView"
         app:layout_anchorGravity="top|center"

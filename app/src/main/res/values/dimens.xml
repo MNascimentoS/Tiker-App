@@ -16,6 +16,10 @@
     <dimen name="defaultPadding">16dp</dimen>
     <dimen name="smallPadding">8dp</dimen>
 
+    <dimen name="createPackageWidth">150dp</dimen>
+    <dimen name="shareWithFriendsWidth">300dp</dimen>
+
+
     <!-- Text Size -->
     <dimen name="textBigSize">16sp</dimen>
     <dimen name="textNormalSize">14sp</dimen>

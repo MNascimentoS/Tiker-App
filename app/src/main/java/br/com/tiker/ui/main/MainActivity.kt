@@ -1,18 +1,18 @@
 package br.com.tiker.ui.main
 
+import android.animation.ValueAnimator
 import android.content.Intent
-import br.com.tiker.R
-import br.com.tiker.ui.allStickers.AllStickersFragment
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.viewpager.widget.ViewPager
+import br.com.tiker.R
+import br.com.tiker.ui.allStickers.AllStickersFragment
 import br.com.tiker.ui.entry.EntryActivity
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import kotlinx.android.synthetic.main.activity_create.createPackageBTN
 import kotlinx.android.synthetic.main.activity_entry.viewPager
 import kotlinx.android.synthetic.main.activity_main.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class MainActivity : AppCompatActivity() {
@@ -52,11 +52,51 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initListeners() {
-        createPackageBTN?.setOnClickListener {
-            if (::adapter.isInitialized) {
-                val allFragment = adapter.getItem(0) as AllStickersFragment
-                allFragment.createPackage()
+        viewPager?.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {}
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+            override fun onPageSelected(position: Int) {
+                when (position) {
+                    0 -> {
+                        val img = resources.getDrawable(R.drawable.ic_add, theme)
+                        principalBTN?.apply {
+                            text = getString(R.string.create_package)
+                            setCompoundDrawablesWithIntrinsicBounds(img, null, null, null)
+                            setOnClickListener {
+                                if (::adapter.isInitialized) {
+                                    val allFragment = adapter.getItem(0) as AllStickersFragment
+                                    allFragment.createPackage()
+                                }
+                            }
+                        }
+                    }
+                    1 -> {
+                        principalBTN?.apply {
+                            text = getString(R.string.share_with_your_friends)
+                            setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
+                            setOnClickListener {
+                                val sendIntent = Intent()
+                                sendIntent.action = Intent.ACTION_SEND
+                                sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_to_friends_message))
+                                sendIntent.type = "text/plain"
+                                val shareIntent = Intent.createChooser(sendIntent, null)
+                                startActivity(shareIntent)
+                            }
+                        }
+                    }
+                }
+
+                val anim = if (position == 0) ValueAnimator.ofInt(principalBTN.width, resources.getDimension(R.dimen.createPackageWidth).toInt())
+                else ValueAnimator.ofInt(principalBTN.width, resources.getDimension(R.dimen.shareWithFriendsWidth).toInt())
+
+                anim.addUpdateListener { animation ->
+                    val layoutParams = principalBTN.layoutParams
+                    layoutParams.width = animation.animatedValue as Int
+                    principalBTN.requestLayout()
+                }
+                anim.duration = 250
+                anim.start()
             }
-        }
+        })
     }
 }
