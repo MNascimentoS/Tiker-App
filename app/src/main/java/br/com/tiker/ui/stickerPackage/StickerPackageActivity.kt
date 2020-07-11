@@ -125,25 +125,17 @@ class StickerPackageActivity : CubosActivity() {
 
             override fun onRewardedVideoAdClosed() {
                 if (!adCompleted) {
-                    alert(getString(R.string.error), getString(R.string.error_watch_add), getString(R.string.watch), false) {
-                        configureAd()
-                    }
+                    alert(getString(R.string.error), getString(R.string.error_watch_add), getString(R.string.watch), true, {
+                        viewModel.clearStickersFromFileSystem(this@StickerPackageActivity)
+                    }) { configureAd() }
                 } else {
-//                    if (viewModel.stickerPackAdded == false) {
-//                        alert(getString(R.string.error), viewModel.error ?: getString(R.string.error_default))
-//                    } else {
-                        addStickerPackToWhatsApp(viewModel.stickerPack.identifier, viewModel.stickerPack.name)
-//                    }
+                    addStickerPackToWhatsApp(viewModel.stickerPack.identifier, viewModel.stickerPack.name)
                 }
             }
 
             override fun onRewardedVideoAdFailedToLoad(p0: Int) {
                 progressBar?.gone()
-//                if (viewModel.stickerPackAdded == false) {
-//                    alert(getString(R.string.error), viewModel.error ?: getString(R.string.error_default))
-//                } else {
-                    addStickerPackToWhatsApp(viewModel.stickerPack.identifier, viewModel.stickerPack.name)
-//                }
+                addStickerPackToWhatsApp(viewModel.stickerPack.identifier, viewModel.stickerPack.name)
             }
 
             override fun onRewardedVideoStarted() {}
@@ -175,6 +167,7 @@ class StickerPackageActivity : CubosActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == AddStickerPackActivity.ADD_PACK) {
+            viewModel.clearStickersFromFileSystem(this)
             if (resultCode == Activity.RESULT_CANCELED) {
                 if (data != null) {
                     val validationError = data.getStringExtra("validation_error")

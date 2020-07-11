@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import br.com.tiker.R
 import br.com.tiker.model.StickerModel
 import br.com.tiker.utils.StickerPackValidator.STICKER_SIZE_MAX
+import com.bumptech.glide.Glide
 import io.cubos.r2d2lib.gone
 import io.cubos.r2d2lib.inflate
 import io.cubos.r2d2lib.visible
@@ -26,7 +27,7 @@ class StickerRecyclerAdapter() :
         val currentItem = getItem(position)
         with(holder.itemView) {
             currentItem?.let {
-                stickerIMG.setImageBitmap(currentItem.image)
+                stickerIMG?.setImageBitmap(currentItem.image)
                 if (currentItem.selected) {
                     selectedIMG?.visible()
                 } else {

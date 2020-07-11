@@ -36,6 +36,7 @@ import kotlin.random.Random
 class StickerPackageViewModel : ViewModel(), KoinComponent, CoroutineScope {
 
     private val stickerDb: StickerRoomDatabase by inject()
+    private val saveBitmapToDevice: SaveBitmapToDevice by inject()
     private val job = Job()
 
     override val coroutineContext: CoroutineContext
@@ -107,7 +108,6 @@ class StickerPackageViewModel : ViewModel(), KoinComponent, CoroutineScope {
 
         //Save stickerPack created to write in json
         StickerPacksManager.stickerPacksContainer = StickerPacksContainer("", "", StickerPacksManager.getStickerPacks(context))
-        StickerPacksManager.deleteStickerPack(namePackage.value)
         StickerPacksManager.stickerPacksContainer.addStickerPack(stickerPack)
         StickerPacksManager.saveStickerPacksToJson(StickerPacksManager.stickerPacksContainer)
         insertStickerPackInContentProvider(stickerPack, context)
@@ -122,11 +122,16 @@ class StickerPackageViewModel : ViewModel(), KoinComponent, CoroutineScope {
         }
     }
 
+    fun clearStickersFromFileSystem(context: Context) {
+        saveBitmapToDevice.clearStoredFiles(context.contentResolver)
+        StickerPacksManager.deleteStickerPack(namePackage.value)
+    }
+
     private fun getImageUri(bitmap: Bitmap, context: Context): Uri? {
         val bytes = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, bytes)
 
-        val path = SaveBitmapToDevice().insertImageIntoGallery(context.contentResolver, bitmap, random() + Random.nextInt(), namePackage.value)
+        val path = saveBitmapToDevice.insertImageIntoGallery(context.contentResolver, bitmap, random() + Random.nextInt(), namePackage.value)
         return Uri.parse(path)
     }
 

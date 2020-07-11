@@ -88,7 +88,7 @@ fun View.fadeOut(duration: Int = AnimationConstants.DURATION_SHORT, finishCallba
             .start()
 }
 
-fun Activity.alert(title: String, message: String, positive: String, allowDismiss: Boolean, onPositiveClick: () -> Unit) {
+fun Activity.alert(title: String, message: String, positive: String, allowDismiss: Boolean, onDismissClick: (() -> Unit)? = null, onPositiveClick: () -> Unit) {
     var dismiss = allowDismiss
     AlertDialog.Builder(this)
             .setTitle(title)
@@ -98,7 +98,10 @@ fun Activity.alert(title: String, message: String, positive: String, allowDismis
                 dismiss = true
                 onPositiveClick()
             }
-            .setOnDismissListener { if (!dismiss) alert(title, message, positive, dismiss, onPositiveClick) }
+            .setOnDismissListener {
+                if (!dismiss) alert(title, message, positive, dismiss, onDismissClick, onPositiveClick)
+                else onDismissClick?.invoke()
+            }
             .show()
 
 }

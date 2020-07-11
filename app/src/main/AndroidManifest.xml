@@ -16,6 +16,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:screenOrientation="portrait"
         android:theme="@style/AppTheme"
         android:requestLegacyExternalStorage="true">
 
@@ -46,7 +47,8 @@
             android:authorities="${applicationId}.fileprovider"
             android:enabled="true"
             android:grantUriPermissions="true"
-            tools:replace="android:authorities">
+            tools:replace="android:authorities"
+            tools:ignore="ExportedContentProvider">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths"
@@ -62,12 +64,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.main.MainActivity" />
-        <activity android:name=".ui.create.CreateActivity" />
-        <activity android:name=".ui.stickerPackage.StickerPackageActivity" />
-        <activity android:name=".ui.becomePremium.BecomePremiumActivity" />
+        <activity android:name=".ui.main.MainActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.create.CreateActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.stickerPackage.StickerPackageActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.becomePremium.BecomePremiumActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name="br.com.tiker.ui.entry.EntryActivity"
+        <activity android:name=".ui.entry.EntryActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.SEND_MULTIPLE" />

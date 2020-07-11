@@ -26,6 +26,8 @@ import java.util.*
  */
 class SaveBitmapToDevice  {
 
+    private val uriList = arrayListOf<Uri?>()
+
     /**
      * A copy of the Android internals insertImage method, this method populates the
      * meta data with DATE_ADDED and DATE_TAKEN. This fixes a common problem where media
@@ -47,6 +49,7 @@ class SaveBitmapToDevice  {
         var stringUrl: String? = null /* value to be returned */
         try {
             url = cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+            uriList.add(url)
             if (source != null) {
                 val imageOut = cr.openOutputStream(url!!)
                 imageOut.use { image ->
@@ -148,6 +151,13 @@ class SaveBitmapToDevice  {
             ex.printStackTrace()
             null
         }
+    }
+
+    fun clearStoredFiles(contentResolver: ContentResolver) {
+        uriList.forEach { uri ->
+            uri?.let { contentResolver.delete(uri, null, null) }
+        }
+        uriList.clear()
     }
 
 }

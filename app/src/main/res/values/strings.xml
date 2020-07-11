@@ -47,4 +47,9 @@
     <string name="back">Back</string>
     <string name="back_whatsapp_see_package">Return to WhatsApp to see the package</string>
     <string name="rate_us">Rate the APP</string>
+    <string name="click_in_more">Click in \"More\"</string>
+    <string name="click_in_export_chat">Click in \"Export chat\"</string>
+    <string name="click_in_include_media">Click in \"Include Media\"</string>
+    <string name="choose_tiker">Choose Ticker</string>
+    <string name="click_in_add_end_tutorial">Click in \"Add\"\n\n\n\nhe tutorial ended here. \nNow go back to WhatsApp and add your first stickers pack.</string>
 </resources>

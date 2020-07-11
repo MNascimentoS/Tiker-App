@@ -2,6 +2,7 @@ package br.com.tiker.core
 
 import android.app.Application
 import androidx.room.Room
+import br.com.tiker.persistence.SaveBitmapToDevice
 import br.com.tiker.persistence.StickerExternalDatabase
 import br.com.tiker.persistence.StickerRoomDatabase
 import br.com.tiker.ui.allStickers.AllStickersFragment
@@ -26,6 +27,7 @@ class App : Application() {
                                     .databaseBuilder(applicationContext, StickerRoomDatabase::class.java, StickerRoomDatabase.NAME)
                                     .build()
                         }
+                        single { SaveBitmapToDevice() }
                         single { MainViewModel() }
                         factory { AllStickersViewModel() }
                         factory { CreateViewModel() }

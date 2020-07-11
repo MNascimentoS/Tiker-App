@@ -12,6 +12,7 @@ import androidx.viewpager.widget.ViewPager
 import br.com.tiker.R
 import br.com.tiker.ui.allStickers.AllStickersFragment
 import br.com.tiker.ui.entry.EntryActivity
+import io.sentry.Sentry
 import kotlinx.android.synthetic.main.activity_entry.viewPager
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -27,6 +28,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         initUi()
         initListeners()
+        Sentry.init(getString(R.string.sentry_dns))
+
         viewModel.removeAllUnsavedStickers()
         viewModel.retriveIntentData(this, intent, contentResolver)
     }

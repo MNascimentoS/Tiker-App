@@ -231,7 +231,7 @@ public class EntryActivity extends AddStickerPackActivity implements RewardedVid
 
         // Figure out what to do based on the intent type
         if (intent.getType() != null) {
-            ExtensionsKt.alert(this, getString(R.string.adding_package), getString(R.string.info_watch_add), getString(R.string.watch), false, () -> {
+            ExtensionsKt.alert(this, getString(R.string.adding_package), getString(R.string.info_watch_add), getString(R.string.watch), false, null, () -> {
                 mProgressComponentRL.setVisibility(View.VISIBLE);
                 new Thread() {
                     @Override
@@ -349,7 +349,7 @@ public class EntryActivity extends AddStickerPackActivity implements RewardedVid
     public void onRewardedVideoAdClosed() {
         if (!adCompleted) {
             if (error == null) {
-                ExtensionsKt.alert(this, getString(R.string.error), getString(R.string.error_watch_add), getString(R.string.watch), false, () -> {
+                ExtensionsKt.alert(this, getString(R.string.error), getString(R.string.error_watch_add), getString(R.string.watch), false, null, () -> {
                     mProgressComponentRL.setVisibility(View.VISIBLE);
                     String ad = "";
                     if (BuildConfig.DEBUG) ad = getString(R.string.cod_ad_debug);
@@ -361,11 +361,11 @@ public class EntryActivity extends AddStickerPackActivity implements RewardedVid
                 });
             } else {
                 Sentry.capture(error);
-                ExtensionsKt.alert(this, getString(R.string.error), getString(R.string.error_default), getString(R.string.ok), false, () -> null);
+                ExtensionsKt.alert(this, getString(R.string.error), getString(R.string.error_default), getString(R.string.ok), false, null, () -> null);
             }
         } else {
             if (stickerListEmpty) {
-                ExtensionsKt.alert(this, getString(R.string.error), getString(R.string.error_find_stickers), getString(R.string.ok), false, () -> null);
+                ExtensionsKt.alert(this, getString(R.string.error), getString(R.string.error_find_stickers), getString(R.string.ok), false, null, () -> null);
             } else {
                 for (int i = 0; i < stickerPack.size(); i++) {
                     this.addStickerPackToWhatsApp(stickerPack.get(i).identifier, stickerPack.get(i).name);

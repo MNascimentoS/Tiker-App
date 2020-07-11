@@ -60,7 +60,7 @@ public abstract class AddStickerPackActivity extends AppCompatActivity {
                     new StickerPackNotAddedMessageFragment().show(getSupportFragmentManager(), "sticker_pack_not_added");
                 }
             } else {
-                ExtensionsKt.alert(this, getString(R.string.sticker_added), getString(R.string.back_whatsapp_see_package), getString(R.string.back), true, () -> {
+                ExtensionsKt.alert(this, getString(R.string.sticker_added), getString(R.string.back_whatsapp_see_package), getString(R.string.back), true, null, () -> {
                     Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.whatsapp");
                     startActivity(launchIntent);
                     return null;
