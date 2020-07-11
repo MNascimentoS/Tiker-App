@@ -42,13 +42,13 @@
             android:fontFamily="@font/ubuntu_bold"
             android:text="@string/error_not_found_stickers" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/textNormalSize"
-            android:fontFamily="@font/ubuntu"
-            android:textColor="@color/colorTextSecondary"
-            android:text="@string/message_import_stickers" />
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:textSize="@dimen/textNormalSize"-->
+<!--            android:fontFamily="@font/ubuntu"-->
+<!--            android:textColor="@color/colorTextSecondary"-->
+<!--            android:text="@string/message_import_stickers" />-->
 
     </LinearLayout>
 

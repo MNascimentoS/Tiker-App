@@ -8,7 +8,6 @@
     <string name="error_not_found_packages">Você ainda não possui nenhum pacote</string>
     <string name="error_field_name_empty">O campo de nome não pode ficar vazio</string>
     <string name="error_field_author_empty">O campo de autor não pode ficar vazio</string>
-    <string name="message_import_stickers">Importe ou adicione e seja feliz</string>
     <string name="message_create_package">Crie um pacote na área de Todas as Figurinhas</string>
     <string name="label_confirm">Confirmar</string>
     <string name="label_add_to_whatsapp">Adicionar ao Whatsapp</string>
@@ -36,7 +35,6 @@
     <string name="google_rewards">Google Rewards</string>
     <string name="google_rewards_download">Baixe o Google Rewards e ganhe dinheiro recebendo pesquisas!</string>
     <string name="download">Baixar</string>
-    <string name="google_rewards_app">market://details?id=com.google.android.apps.paidtasks</string>
     <string name="share_to_friends_message">Organize agora todos os seus Stickers do Whatsapp. \n\nBaixe o *Tiker*: https://play.google.com/store/apps/details?id=br.com.tiker</string>
     <string name="tutorial_one">1º Crie um grupo novo no WhatsApp \n(o nome do grupo deve ser único e será o nome do pacote) \n\n2º Adicione os stickers Stickers \n\n3º Clique nos 3 pontinhos</string>
     <string name="tutorial_image_description">Descrição do Whatsapp</string>
@@ -49,6 +47,7 @@
     <string name="adding_package">Adicionando Pacote</string>
     <string name="info_watch_add">Antes de adicionar o pacote, assista esta propaganda para ajudar o projeto.</string>
     <string name="whatsapp_conversation">Conversa do WhatsApp com </string>
-
-
+    <string name="more">Mais</string>
+    <string name="buy_with_googlepay_button_content_description">Pague com Google Pay</string>
+    <string name="googlepay_button_content_description">Pague com Google Pay</string>
 </resources>
