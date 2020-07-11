@@ -54,17 +54,13 @@ public abstract class AddStickerPackActivity extends AppCompatActivity {
                 if (data != null) {
                     final String validationError = data.getStringExtra("validation_error");
                     if (validationError != null) {
-                        if (BuildConfig.DEBUG) {
-                            //validation error should be shown to developer only, not users.
-//                            MessageDialogFragment.newInstance(R.string.title_validation_error, validationError).show(getSupportFragmentManager(), "validation error");
-                        }
                         Log.e("AddStickerPackActivity", "Validation failed:" + validationError);
                     }
                 } else {
                     new StickerPackNotAddedMessageFragment().show(getSupportFragmentManager(), "sticker_pack_not_added");
                 }
             } else {
-                ExtensionsKt.alert(this, "Stiker Adicionado", "Volte ao Whatsapp para ver o seu pacote", "Voltar", true, () -> {
+                ExtensionsKt.alert(this, getString(R.string.sticker_added), getString(R.string.back_whatsapp_see_package), getString(R.string.back), true, () -> {
                     Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.whatsapp");
                     startActivity(launchIntent);
                     return null;

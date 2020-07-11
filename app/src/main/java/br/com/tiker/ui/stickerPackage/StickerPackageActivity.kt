@@ -1,16 +1,17 @@
 package br.com.tiker.ui.stickerPackage
 
+import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
+import android.util.Log
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import br.com.tiker.BuildConfig
 import br.com.tiker.R
 import br.com.tiker.ui.adapter.StickerDefaultRecyclerAdapter
 import br.com.tiker.ui.base.AddStickerPackActivity
-import br.com.tiker.ui.main.MainActivity
+import br.com.tiker.ui.base.AddStickerPackActivity.StickerPackNotAddedMessageFragment
 import br.com.tiker.ui.stickerPackage.StickerPackageViewModel.Companion.ADD_PACK
 import br.com.tiker.ui.stickerPackage.StickerPackageViewModel.Companion.EXTRA_STICKER_PACK_AUTHORITY
 import br.com.tiker.ui.stickerPackage.StickerPackageViewModel.Companion.EXTRA_STICKER_PACK_ID
@@ -168,6 +169,27 @@ class StickerPackageActivity : CubosActivity() {
             startActivityForResult(intent, AddStickerPackActivity.ADD_PACK)
         } catch (e: ActivityNotFoundException) {
             Toast.makeText(this, R.string.add_pack_fail_prompt_update_whatsapp, Toast.LENGTH_LONG).show()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == AddStickerPackActivity.ADD_PACK) {
+            if (resultCode == Activity.RESULT_CANCELED) {
+                if (data != null) {
+                    val validationError = data.getStringExtra("validation_error")
+                    if (validationError != null) {
+                        Log.e("AddStickerPackActivity", "Validation failed:$validationError")
+                    }
+                } else {
+                    StickerPackNotAddedMessageFragment().show(supportFragmentManager, "sticker_pack_not_added")
+                }
+            } else {
+                alert(getString(R.string.sticker_added), getString(R.string.back_whatsapp_see_package), getString(R.string.back), true) {
+                    val launchIntent = packageManager.getLaunchIntentForPackage("com.whatsapp")
+                    startActivity(launchIntent)
+                }
+            }
         }
     }
 

@@ -1,7 +1,9 @@
 package br.com.tiker.ui.main
 
 import android.animation.ValueAnimator
+import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -45,13 +47,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.import_whats_app) {
-            startActivity(Intent(this, EntryActivity::class.java))
+        when (item.itemId) {
+            R.id.import_whats_app -> startActivity(Intent(this, EntryActivity::class.java))
+            R.id.rate_us -> {
+                val appPackageName = packageName
+                try {
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$appPackageName")))
+                } catch (ex: ActivityNotFoundException) {
+                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName")))
+                }
+            }
         }
         return super.onOptionsItemSelected(item)
     }
 
     private fun initListeners() {
+        principalBTN?.setOnClickListener { createPackage() }
         viewPager?.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {}
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
@@ -62,32 +73,22 @@ class MainActivity : AppCompatActivity() {
                         principalBTN?.apply {
                             text = getString(R.string.create_package)
                             setCompoundDrawablesWithIntrinsicBounds(img, null, null, null)
-                            setOnClickListener {
-                                if (::adapter.isInitialized) {
-                                    val allFragment = adapter.getItem(0) as AllStickersFragment
-                                    allFragment.createPackage()
-                                }
-                            }
+                            setOnClickListener { createPackage() }
                         }
                     }
                     1 -> {
                         principalBTN?.apply {
                             text = getString(R.string.share_with_your_friends)
                             setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
-                            setOnClickListener {
-                                val sendIntent = Intent()
-                                sendIntent.action = Intent.ACTION_SEND
-                                sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_to_friends_message))
-                                sendIntent.type = "text/plain"
-                                val shareIntent = Intent.createChooser(sendIntent, null)
-                                startActivity(shareIntent)
-                            }
+                            setOnClickListener { shareWithFriends() }
                         }
                     }
                 }
 
-                val anim = if (position == 0) ValueAnimator.ofInt(principalBTN.width, resources.getDimension(R.dimen.createPackageWidth).toInt())
-                else ValueAnimator.ofInt(principalBTN.width, resources.getDimension(R.dimen.shareWithFriendsWidth).toInt())
+                val animValue = resources.getDimension(if (position == 0) R.dimen.createPackageWidth
+                else R.dimen.shareWithFriendsWidth).toInt()
+
+                val anim = ValueAnimator.ofInt(principalBTN.width, animValue)
 
                 anim.addUpdateListener { animation ->
                     val layoutParams = principalBTN.layoutParams
@@ -98,5 +99,21 @@ class MainActivity : AppCompatActivity() {
                 anim.start()
             }
         })
+    }
+
+    private fun createPackage() {
+        if (::adapter.isInitialized) {
+            val allFragment = adapter.getItem(0) as AllStickersFragment
+            allFragment.createPackage()
+        }
+    }
+
+    private fun shareWithFriends() {
+        val sendIntent = Intent()
+        sendIntent.action = Intent.ACTION_SEND
+        sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_to_friends_message))
+        sendIntent.type = "text/plain"
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        startActivity(shareIntent)
     }
 }

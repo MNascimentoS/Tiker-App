@@ -20,10 +20,6 @@
     <string name="add_pack_fail_prompt_update_whatsapp">Não foi possível adicionar o pacote de Sticker. Cheque se você está utilizando a última versão do Whatsapp</string>
     <string name="add_pack_fail_prompt_update_play_link">Update</string>
     <string name="cannot_find_play_store">Google Play is not installed on the device.</string>
-    <string name="prompt_name">Name</string>
-    <string name="prompt_author">Author</string>
-    <string name="create_sticker_pack">Select images</string>
-    <string name="create_sticker_button">Create sticker</string>
     <string name="allow_access">Alow Access</string>
     <string name="do_login">Login</string>
     <string name="share_with_your_friends">Share with friends</string>
@@ -46,17 +42,11 @@
     <string name="error_find_stickers">Could not find any Stickers in conversation</string>
     <string name="adding_package">Adding Package</string>
     <string name="info_watch_add">Before adding the package, watch this advertisement to help the project.</string>
-    <string name="sticker_pack_indentifies">sticker pack identifier is empty</string>
-    <string name="sticker_pack_identifier_cannot_exceed">\"sticker pack identifier cannot exceed \"</string>
-    <string name="characters">\" characters\"</string>
-    <string name="whatsapp_conversation">\"Conversa do WhatsApp com \"</string>
-    <string name="sticker_pack_publisher_is_empty">sticker pack publisher is empty, sticker pack identifier:</string>
-    <string name="sticker_pack_exceed">\"sticker pack publisher cannot exceed \"</string>
-    <string name="characters_sticker_pack_identifier">\" characters, sticker pack identifier:\"</string>
-    <string name="sticker_pack_is_empty">sticker pack name is empty, sticker pack identifier:</string>
-    <string name="sticker_pack_name_is_empty">\"sticker pack name cannot exceed \"</string>
-    <string name="more">More</string>
+    <string name="whatsapp_conversation">Conversa do WhatsApp com </string>
     <string name="import_from_whatsapp">Importar do WhatsApp</string>
-
+    <string name="sticker_added">Stiker Adicionado</string>
+    <string name="back">Voltar</string>
+    <string name="back_whatsapp_see_package">Volte ao Whatsapp para ver o seu pacote</string>
+    <string name="rate_us">Avalie o App</string>
 
 </resources>

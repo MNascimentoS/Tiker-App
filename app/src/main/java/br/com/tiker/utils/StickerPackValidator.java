@@ -54,23 +54,23 @@ public class StickerPackValidator {
      */
     public static void verifyStickerPackValidity(@NonNull Context context, @NonNull StickerPack stickerPack) throws IllegalStateException {
         if (TextUtils.isEmpty(stickerPack.identifier)) {
-            throw new IllegalStateException(context.getString(R.string.sticker_pack_indentifies));
+            throw new IllegalStateException("sticker pack identifier is empty");
         }
         if (stickerPack.identifier.length() > CHAR_COUNT_MAX) {
-            throw new IllegalStateException(context.getString(R.string.sticker_pack_identifier_cannot_exceed) + CHAR_COUNT_MAX + context.getString(R.string.characters));
+            throw new IllegalStateException("sticker pack identifier cannot exceed" + CHAR_COUNT_MAX + " characters");
         }
         checkStringValidity(stickerPack.identifier);
         if (TextUtils.isEmpty(stickerPack.publisher)) {
-            throw new IllegalStateException(context.getString(R.string.sticker_pack_publisher_is_empty) + stickerPack.identifier);
+            throw new IllegalStateException("sticker pack publisher is empty, sticker pack identifier:" + stickerPack.identifier);
         }
         if (stickerPack.publisher.length() > CHAR_COUNT_MAX) {
-            throw new IllegalStateException(context.getString(R.string.sticker_pack_exceed) + CHAR_COUNT_MAX + context.getString(R.string.characters_sticker_pack_identifier) + stickerPack.identifier);
+            throw new IllegalStateException("sticker pack publisher cannot exceed " + CHAR_COUNT_MAX + " characters, sticker pack identifier:" + stickerPack.identifier);
         }
         if (TextUtils.isEmpty(stickerPack.name)) {
-            throw new IllegalStateException(context.getString(R.string.sticker_pack_is_empty) + stickerPack.identifier);
+            throw new IllegalStateException("sticker pack name is empty, sticker pack identifier:" + stickerPack.identifier);
         }
         if (stickerPack.name.length() > CHAR_COUNT_MAX) {
-            throw new IllegalStateException(context.getString(R.string.sticker_pack_name_is_empty) + CHAR_COUNT_MAX + context.getString(R.string.characters_sticker_pack_identifier) + stickerPack.identifier);
+            throw new IllegalStateException("sticker pack name cannot exceed " + CHAR_COUNT_MAX + " characters, sticker pack identifier:" + stickerPack.identifier);
         }
         if (TextUtils.isEmpty(stickerPack.trayImageFile)) {
             throw new IllegalStateException("sticker pack tray id is empty, sticker pack identifier:" + stickerPack.identifier);
