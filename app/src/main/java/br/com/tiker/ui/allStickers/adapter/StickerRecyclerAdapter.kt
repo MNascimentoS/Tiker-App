@@ -1,5 +1,7 @@
 package br.com.tiker.ui.allStickers.adapter
 
+import android.graphics.drawable.AnimatedImageDrawable
+import android.os.Build
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.paging.PagedListAdapter
@@ -27,7 +29,13 @@ class StickerRecyclerAdapter() :
         val currentItem = getItem(position)
         with(holder.itemView) {
             currentItem?.let {
-                stickerIMG?.setImageBitmap(currentItem.image)
+                //stickerIMG?.setImageBitmap(currentItem.image)
+                currentItem.drawable?.let { drawable ->
+                    stickerIMG?.setImageDrawable(drawable)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && drawable is AnimatedImageDrawable) {
+                        drawable.start()
+                    }
+                }
                 if (currentItem.selected) {
                     selectedIMG?.visible()
                 } else {

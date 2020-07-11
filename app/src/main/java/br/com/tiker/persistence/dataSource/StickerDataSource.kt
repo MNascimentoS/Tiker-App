@@ -1,6 +1,8 @@
 package br.com.tiker.persistence.dataSource
 
 import android.graphics.BitmapFactory
+import android.graphics.ImageDecoder
+import android.os.Build
 import android.os.Environment
 import androidx.paging.PageKeyedDataSource
 import br.com.tiker.model.StickerModel
@@ -59,12 +61,22 @@ class StickerDataSource() : PageKeyedDataSource<Int, StickerModel>(), CoroutineS
                     newPage = -1
                     return@fillStickers
                 }
-                stickers.add(
-                        StickerModel(
-                                lastFileIndex,
-                                BitmapFactory.decodeFile(files[lastFileIndex].absolutePath)
-                        )
-                )
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    stickers.add(
+                            StickerModel(
+                                    lastFileIndex,
+                                    BitmapFactory.decodeFile(files[lastFileIndex].absolutePath),
+                                    ImageDecoder.decodeDrawable(ImageDecoder.createSource(files[lastFileIndex]))
+                            )
+                    )
+                } else {
+                    stickers.add(
+                            StickerModel(
+                                    lastFileIndex,
+                                    BitmapFactory.decodeFile(files[lastFileIndex].absolutePath)
+                            )
+                    )
+                }
                 lastFileIndex++
             }
         }
