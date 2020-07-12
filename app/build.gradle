@@ -25,7 +25,7 @@ android {
         applicationId "br.com.tiker"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 23
+        versionCode 24
         versionName "2.0.0"
         def contentProviderAuthority = applicationId + ".stickercontentprovider"
         manifestPlaceholders = [contentProviderAuthority: contentProviderAuthority]
@@ -77,6 +77,7 @@ dependencies {
     implementation 'org.koin:koin-core:2.0.1'
     implementation 'org.koin:koin-android:2.0.1'
     implementation 'org.koin:koin-androidx-viewmodel:2.0.1'
+    implementation "org.koin:koin-java:2.0.1"
 
     //Third party libraries
     implementation 'io.cubos:r2d2:0.0.81'

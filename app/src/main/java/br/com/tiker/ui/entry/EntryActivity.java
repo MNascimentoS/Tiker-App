@@ -1,10 +1,13 @@
 package br.com.tiker.ui.entry;
 
 import android.Manifest;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,6 +40,9 @@ import com.tbuonomo.viewpagerdotsindicator.DotsIndicator;
 import br.com.tiker.BuildConfig;
 import br.com.tiker.R;
 import br.com.tiker.model.Constants;
+import br.com.tiker.persistence.StickerRoomDatabase;
+import br.com.tiker.persistence.model.StickerEntity;
+import br.com.tiker.persistence.model.StickerPackageEntity;
 import br.com.tiker.ui.base.AddStickerPackActivity;
 import br.com.tiker.model.Sticker;
 import br.com.tiker.model.StickerPack;
@@ -48,12 +54,19 @@ import br.com.tiker.utils.FileUtils;
 import br.com.tiker.utils.StickerPacksManager;
 import br.com.tiker.services.StickerContentProvider;
 import io.sentry.Sentry;
+import kotlin.Lazy;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+
 import static br.com.tiker.utils.StickerPackValidator.STICKER_SIZE_MAX;
+import static org.koin.java.KoinJavaComponent.inject;
 
 
 public class EntryActivity extends AddStickerPackActivity implements RewardedVideoAdListener {
@@ -69,6 +82,9 @@ public class EntryActivity extends AddStickerPackActivity implements RewardedVid
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
     private final static int MAX_ITEMS = 5;
+
+     private Lazy<StickerRoomDatabase> stickerDb = inject(StickerRoomDatabase.class);
+
 
     private RewardedVideoAd mRewardedVideoAd;
     private Button mShareWithFriend;
@@ -332,9 +348,30 @@ public class EntryActivity extends AddStickerPackActivity implements RewardedVid
                 } catch (Exception ex) {
                     error = ex.getMessage();
                 }
+
+
+                ArrayList<StickerEntity> imageByteList = new ArrayList<StickerEntity>();
+                ContentResolver cr = getApplicationContext().getContentResolver();
+                for (int j = 0; j < dividedList.get(i).size(); j++) {
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    try {
+                        InputStream is = cr.openInputStream(dividedList.get(i).get(j));
+                        Bitmap bitmap = BitmapFactory.decodeStream(is);
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        imageByteList.add(new StickerEntity(0, stream.toByteArray()));
+                        if (is != null) is.close();
+                    } catch (IOException e) {
+                        Sentry.capture(e);
+                        e.printStackTrace();
+                    }
+                }
+
+                stickerDb.getValue().stickerDao().addStickerListJ(name, getString(R.string.app_name), new StickerPackageEntity(), imageByteList);
             }
         }
     }
+
+
 
     @Override
     public void onRewardedVideoAdLoaded() {

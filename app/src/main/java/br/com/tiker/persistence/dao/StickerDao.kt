@@ -102,4 +102,20 @@ interface StickerDao {
         removeStickerPackage(id)
     }
 
+    @Insert
+    fun addStickerJ(stickerEntity: List<StickerEntity>) : List<Long>
+
+    @Insert
+    fun addStickerPackageJ(stickerPackageEntity: StickerPackageEntity)
+
+    @Transaction
+    fun addStickerListJ(name: String, author: String, stickerPackageEntity: StickerPackageEntity, stickerEntity: List<StickerEntity>) {
+        val stickerList = addStickerJ(stickerEntity)
+        stickerPackageEntity.stickerList = stickerList
+        stickerPackageEntity.name = name
+        stickerPackageEntity.author = author
+        addStickerPackageJ(stickerPackageEntity)
+    }
+
+
 }
