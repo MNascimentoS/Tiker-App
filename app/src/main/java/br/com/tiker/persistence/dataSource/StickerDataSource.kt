@@ -55,16 +55,20 @@ class StickerDataSource() : PageKeyedDataSource<Int, StickerModel>(), CoroutineS
         val stickers = mutableListOf<StickerModel>()
         run fillStickers@{
             repeat(requestedLoadSize) {
-                if (lastFileIndex > files.size) {
+                if (files.isEmpty() || lastFileIndex >= files.size) {
                     newPage = -1
                     return@fillStickers
                 }
-                stickers.add(
-                        StickerModel(
-                                lastFileIndex,
-                                BitmapFactory.decodeFile(files[lastFileIndex].absolutePath)
-                        )
-                )
+
+                val btm = BitmapFactory.decodeFile(files[lastFileIndex].absolutePath)
+                btm?.let {
+                    stickers.add(
+                            StickerModel(
+                                    lastFileIndex,
+                                    BitmapFactory.decodeFile(files[lastFileIndex].absolutePath)
+                            )
+                    )
+                }
                 lastFileIndex++
             }
         }

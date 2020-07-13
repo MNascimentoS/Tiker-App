@@ -45,6 +45,9 @@
     <string name="import_from_whatsapp">Import from WhatsApp</string>
     <string name="sticker_added">Added sticker</string>
     <string name="back">Back</string>
+    <string name="more">More</string>
+    <string name="buy_with_googlepay_button_content_description">Pay with Google Pay</string>
+    <string name="googlepay_button_content_description">Pay with Google Pay</string>
     <string name="back_whatsapp_see_package">Return to WhatsApp to see the package</string>
     <string name="rate_us">Rate the APP</string>
     <string name="click_in_more">Click in \"More\"</string>
@@ -52,4 +55,5 @@
     <string name="click_in_include_media">Click in \"Include Media\"</string>
     <string name="choose_tiker">Choose Ticker</string>
     <string name="click_in_add_end_tutorial">Click in \"Add\"\n\n\n\nhe tutorial ended here. \nNow go back to WhatsApp and add your first stickers pack.</string>
+    <string name="version">Version</string>
 </resources>

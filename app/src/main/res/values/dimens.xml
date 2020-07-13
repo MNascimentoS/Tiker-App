@@ -8,6 +8,9 @@
     <dimen name="createPackageWidth">200dp</dimen>
     <dimen name="shareWithFriendsWidth">320dp</dimen>
 
+    <dimen name="tikerLogoSmall">100dp</dimen>
+    <dimen name="tikerLogoBig">200dp</dimen>
+
 
     <!-- Text Size -->
     <dimen name="textBigSize">16sp</dimen>

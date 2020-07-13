@@ -29,9 +29,6 @@ class MainActivity : AppCompatActivity() {
         initUi()
         initListeners()
         Sentry.init(getString(R.string.sentry_dns))
-
-        viewModel.removeAllUnsavedStickers()
-        viewModel.retriveIntentData(this, intent, contentResolver)
     }
 
     private fun initUi() {
@@ -42,6 +39,11 @@ class MainActivity : AppCompatActivity() {
 
         adapter = MainPagerAdapter(this, supportFragmentManager)
         viewPager?.adapter = adapter
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.removeAllUnsavedStickers()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

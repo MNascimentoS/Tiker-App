@@ -1,10 +1,13 @@
 package br.com.tiker.ui.splashScreen;
 
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +44,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;// ...
 
     private Button mRetryBTN;
+    private Boolean logoIsBig = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +54,37 @@ public class SplashScreenActivity extends AppCompatActivity {
         androidVersion.setText((BuildConfig.VERSION_NAME + " : " + BuildConfig.VERSION_CODE));
         mAuth = FirebaseAuth.getInstance();
         mRetryBTN = findViewById(R.id.retryAllowAccessBTN);
-        ExtensionsKt.fadeIn(findViewById(R.id.logoTickerContainer), AnimationConstants.DURATION_LONG, null);
+
+        initUi();
+    }
+
+    private void initUi() {
+        ImageView tickerLogo = findViewById(R.id.logoTickerContainer);
+        ExtensionsKt.fadeIn(tickerLogo, AnimationConstants.DURATION_LONG, null);
+        animButton((int) getResources().getDimension(R.dimen.tikerLogoSmall), (int) getResources().getDimension(R.dimen.tikerLogoBig));
+    }
+
+    private void animButton(int fromSize, int toSize) {
+        ImageView tickerLogo = findViewById(R.id.logoTickerContainer);
+        ValueAnimator anim = ValueAnimator.ofInt(fromSize, toSize);
+        anim.addUpdateListener(animation -> {
+            ViewGroup.LayoutParams layoutParams = tickerLogo.getLayoutParams();
+            int animationValue = (int) animation.getAnimatedValue();
+            if (animationValue == toSize) {
+                anim.cancel();
+                logoIsBig = !logoIsBig;
+                int dimen;
+                if (logoIsBig) dimen = (int) getResources().getDimension(R.dimen.tikerLogoSmall);
+                else dimen = (int) getResources().getDimension(R.dimen.tikerLogoBig);
+                animButton(animationValue, dimen);
+                return;
+            }
+            layoutParams.width = animationValue;
+            layoutParams.height = animationValue;
+            tickerLogo.requestLayout();
+        });
+        anim.setDuration(1500);
+        anim.start();
     }
 
     @Override
@@ -58,12 +92,11 @@ public class SplashScreenActivity extends AppCompatActivity {
         super.onStart();
         FileUtils.initializeDirectories(this);
         if (RequestPermissionsHelper.verifyPermissions(this)) {
-
             Handler handler = new Handler();
             handler.postDelayed(() -> {
                 startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));
                 finish();
-            }, 1000);
+            }, 1500);
 
 //            FirebaseUser currentUser = mAuth.getCurrentUser();
 //            if (currentUser != null) {

@@ -11,6 +11,7 @@ import br.com.tiker.ui.create.CreateViewModel
 import br.com.tiker.ui.main.MainViewModel
 import br.com.tiker.ui.myPackages.MyPackagesViewModel
 import br.com.tiker.ui.stickerPackage.StickerPackageViewModel
+import com.facebook.soloader.SoLoader
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
@@ -18,6 +19,7 @@ import org.koin.dsl.module
 class App : Application() {
     override fun onCreate() {
         super.onCreate()
+        SoLoader.init(this, false)
         StickerExternalDatabase.initialize()
         startKoin {
             modules(listOf(
