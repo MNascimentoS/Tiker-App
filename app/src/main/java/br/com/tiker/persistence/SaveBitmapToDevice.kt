@@ -57,9 +57,9 @@ class SaveBitmapToDevice  {
                 }
                 val id = ContentUris.parseId(url)
                 // Wait until MINI_KIND thumbnail is generated.
-                val miniThumb = MediaStore.Images.Thumbnails.getThumbnail(cr, id, MediaStore.Images.Thumbnails.MINI_KIND, null)
+                // val miniThumb = MediaStore.Images.Thumbnails.getThumbnail(cr, id, MediaStore.Images.Thumbnails.MINI_KIND, null)
                 // This is for backward compatibility.
-                storeThumbnail(cr, miniThumb, id, 50f, 50f, MediaStore.Images.Thumbnails.MICRO_KIND)
+                // storeThumbnail(cr, miniThumb, id, 50f, 50f, MediaStore.Images.Thumbnails.MICRO_KIND)
             } else {
                 //cr.delete(url!!, null, null)
                 return storeToAlternateSd(source, title, packageName ?: "")

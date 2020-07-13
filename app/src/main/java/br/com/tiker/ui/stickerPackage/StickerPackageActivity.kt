@@ -35,6 +35,7 @@ class StickerPackageActivity : CubosActivity() {
     private var stickerPackageId: Int = 0
 
     private var adCompleted = false
+    private var calledWhatsapp = false
     private val rewardedVideoAd by lazy { MobileAds.getRewardedVideoAdInstance(this) }
 
     companion object {
@@ -60,34 +61,27 @@ class StickerPackageActivity : CubosActivity() {
 
         observe(viewModel.namePackage) { packageNameTXT?.text = it }
         observe(viewModel.authorPackage) { packageAuthorTXT?.text = it }
+        observe(viewModel.isLoading) { loading ->
+            if (loading) progressBar?.visible()
+            else progressBar?.gone()
+        }
         observe(viewModel.stickerList) {
             adapter.updateList(it)
             adapter.notifyDataSetChanged()
         }
 
+        observe(viewModel.createdPackage) {
+            if (adCompleted && !calledWhatsapp) {
+                progressBar?.gone()
+                addStickerPackToWhatsApp(viewModel.stickerPack.identifier, viewModel.stickerPack.name)
+                calledWhatsapp = true
+            }
+        }
+
        observe(viewModel.uiEventLiveData) {
             when (it?.first) {
-                1 -> {
-                    try {
-                        startActivityForResult(
-                            Intent.createChooser(
-                                it.second as Intent,
-                                getString(R.string.add_to_whatsapp)
-                            ), ADD_PACK
-                        )
-                    } catch (e: ActivityNotFoundException) {
-//            Toast.makeText(this, R.string.add_pack_fail_prompt_update_whatsapp, Toast.LENGTH_LONG)
-//                .show()
-                    }
-                }
-                2 -> {
-                    try {
-                        startActivityForResult(it.second as Intent, ADD_PACK)
-                    } catch (e: ActivityNotFoundException) {
-//            Toast.makeText(this, R.string.add_pack_fail_prompt_update_whatsapp, Toast.LENGTH_LONG)
-//                .show()
-                    }
-                }
+                1 -> startActivityForResult(Intent.createChooser(it.second as Intent, getString(R.string.add_to_whatsapp)), ADD_PACK)
+                2 -> startActivityForResult(it.second as Intent, ADD_PACK)
             }
         }
 
@@ -96,12 +90,9 @@ class StickerPackageActivity : CubosActivity() {
 
     private fun initListeners() {
         sharePackageBTN?.setOnClickListener {
+            if (viewModel.isLoading.value == true) return@setOnClickListener
+            viewModel.isLoading.value = true
             configureAd()
-            object : Thread() {
-                override fun run() {
-                    viewModel.createPackageToWhatsApp(this@StickerPackageActivity)
-                }
-            }.start()
         }
 
         removePackageBTN?.setOnClickListener {
@@ -116,9 +107,9 @@ class StickerPackageActivity : CubosActivity() {
     private fun configureAd() {
         rewardedVideoAd.rewardedVideoAdListener = object : RewardedVideoAdListener {
             override fun onRewardedVideoAdLoaded() {
-                progressBar?.gone()
                 if (rewardedVideoAd.isLoaded)
                     rewardedVideoAd.show()
+                viewModel.createPackageToWhatsApp(this@StickerPackageActivity)
             }
 
             override fun onRewardedVideoCompleted() { adCompleted = true }
@@ -127,15 +118,23 @@ class StickerPackageActivity : CubosActivity() {
                 if (!adCompleted) {
                     alert(getString(R.string.error), getString(R.string.error_watch_add), getString(R.string.watch), true, {
                         viewModel.clearStickersFromFileSystem(this@StickerPackageActivity)
-                    }) { configureAd() }
+                    }) { sharePackageBTN?.callOnClick() }
                 } else {
-                    addStickerPackToWhatsApp(viewModel.stickerPack.identifier, viewModel.stickerPack.name)
+                    if (viewModel.createdPackage.value == true) {
+                        addStickerPackToWhatsApp(viewModel.stickerPack.identifier, viewModel.stickerPack.name)
+                        calledWhatsapp = true
+                    }
                 }
             }
 
             override fun onRewardedVideoAdFailedToLoad(p0: Int) {
-                progressBar?.gone()
-                addStickerPackToWhatsApp(viewModel.stickerPack.identifier, viewModel.stickerPack.name)
+                adCompleted = true
+                if (viewModel.createdPackage.value == true) {
+                    addStickerPackToWhatsApp(viewModel.stickerPack.identifier, viewModel.stickerPack.name)
+                    calledWhatsapp = true
+                } else {
+                    viewModel.createPackageToWhatsApp(this@StickerPackageActivity)
+                }
             }
 
             override fun onRewardedVideoStarted() {}
@@ -148,10 +147,10 @@ class StickerPackageActivity : CubosActivity() {
         }
         val ad = if (BuildConfig.DEBUG) getString(R.string.cod_ad_debug) else getString(R.string.cod_ad_release)
         rewardedVideoAd.loadAd(ad, AdRequest.Builder().build())
-        progressBar?.visible()
     }
 
     fun addStickerPackToWhatsApp(identifier: String?, stickerPackName: String?) {
+        viewModel.isLoading.value = false
         val intent = Intent()
         intent.action = "com.whatsapp.intent.action.ENABLE_STICKER_PACK"
         intent.putExtra(EXTRA_STICKER_PACK_ID, identifier)
@@ -166,7 +165,15 @@ class StickerPackageActivity : CubosActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        val bundle = intent.extras
+        if (bundle != null) {
+            for (key in bundle.keySet()) {
+                Log.e(TAG, key + " : " + if (bundle[key] != null) bundle[key] else "NULL")
+            }
+        }
         if (requestCode == AddStickerPackActivity.ADD_PACK) {
+            adCompleted = false
+            calledWhatsapp = false
             viewModel.clearStickersFromFileSystem(this)
             if (resultCode == Activity.RESULT_CANCELED) {
                 if (data != null) {
