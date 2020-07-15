@@ -146,7 +146,7 @@ class StickerPackageActivity : CubosActivity() {
             override fun onRewardedVideoAdLeftApplication() {}
         }
         val ad = if (BuildConfig.DEBUG) getString(R.string.cod_ad_debug) else getString(R.string.cod_ad_release)
-        rewardedVideoAd.loadAd(ad, AdRequest.Builder().build())
+        rewardedVideoAd.loadAd("ad", AdRequest.Builder().build())
     }
 
     fun addStickerPackToWhatsApp(identifier: String?, stickerPackName: String?) {
