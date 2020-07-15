@@ -87,21 +87,28 @@ public class SplashScreenActivity extends AppCompatActivity {
         anim.start();
     }
 
+    private kotlin.Unit checkUserIsPremium(boolean isPremium) {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            FirebaseDB.Companion.addOrUpdateUser(currentUser.getUid(), isPremium);
+        }
+        return null;
+    }
+
     @Override
     public void onStart() {
         super.onStart();
         FileUtils.initializeDirectories(this);
         if (RequestPermissionsHelper.verifyPermissions(this)) {
-            Handler handler = new Handler();
-            handler.postDelayed(() -> {
-                startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));
-                finish();
-            }, 1500);
-
-//            FirebaseUser currentUser = mAuth.getCurrentUser();
-//            if (currentUser != null) {
-
-//            } else configureLoginButton();
+            FirebaseUser currentUser = mAuth.getCurrentUser();
+            if (currentUser != null) {
+                FirebaseDB.Companion.getUserIsPremium(this::checkUserIsPremium);
+                Handler handler = new Handler();
+                handler.postDelayed(() -> {
+                    startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));
+                    finish();
+                }, 1500);
+            } else configureLoginButton();
         } else {
             RequestPermissionsHelper.requestPermissions(this);
         }
@@ -181,11 +188,8 @@ public class SplashScreenActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithCredential:success");
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        if (user != null) {
-                            FirebaseDB.Companion.addOrUpdateUser(user.getUid());
-                        }
-                        startActivity(new Intent(SplashScreenActivity.this, EntryActivity.class));
+                        FirebaseDB.Companion.getUserIsPremium(this::checkUserIsPremium);
+                        startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));
                         finish();
                     } else {
                         // If sign in fails, display a message to the user.

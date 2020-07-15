@@ -41,6 +41,7 @@ import com.tbuonomo.viewpagerdotsindicator.DotsIndicator;
 import br.com.tiker.BuildConfig;
 import br.com.tiker.R;
 import br.com.tiker.model.Constants;
+import br.com.tiker.persistence.FirebaseDB;
 import br.com.tiker.persistence.StickerRoomDatabase;
 import br.com.tiker.persistence.model.StickerEntity;
 import br.com.tiker.persistence.model.StickerPackageEntity;
@@ -100,6 +101,7 @@ public class EntryActivity extends AddStickerPackActivity implements RewardedVid
     private String error = null;
     private ArrayList<StickerEntity> imageByteList = new ArrayList<StickerEntity>();
     private String name = "";
+    private boolean isPremium = false;
 
 
     private ArrayList<StickerPack> stickerPack = new ArrayList<>();
@@ -152,6 +154,7 @@ public class EntryActivity extends AddStickerPackActivity implements RewardedVid
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ADD_PACK) {
+            mProgressComponentRL.setVisibility(View.GONE);
             if (resultCode == RESULT_CANCELED) {
                 if (data != null) {
                     final String validationError = data.getStringExtra("validation_error");
@@ -280,6 +283,19 @@ public class EntryActivity extends AddStickerPackActivity implements RewardedVid
 
         // Figure out what to do based on the intent type
         if (intent.getType() != null) {
+            FirebaseDB.Companion.getUserIsPremium(this::checkUserIsPremium);
+        }
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+
+        initListeners();
+    }
+
+    private kotlin.Unit checkUserIsPremium(boolean isPremium) {
+        this.isPremium = isPremium;
+        if (!isPremium) {
             ExtensionsKt.alert(this, getString(R.string.adding_package), getString(R.string.info_watch_add), getString(R.string.watch), false, null, () -> {
                 mProgressComponentRL.setVisibility(View.VISIBLE);
                 new Thread() {
@@ -296,13 +312,16 @@ public class EntryActivity extends AddStickerPackActivity implements RewardedVid
                 mRewardedVideoAd.loadAd(ad, new AdRequest.Builder().build());
                 return null;
             });
+        } else {
+            mProgressComponentRL.setVisibility(View.VISIBLE);
+            new Thread() {
+                @Override
+                public void run() {
+                    createPackage();
+                }
+            }.start();
         }
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().hide();
-        }
-
-        initListeners();
+        return null;
     }
 
     private void initListeners() {
@@ -395,6 +414,11 @@ public class EntryActivity extends AddStickerPackActivity implements RewardedVid
                         Sentry.capture(e);
                         e.printStackTrace();
                     }
+                }
+            }
+            if (isPremium) {
+                for (int i = 0; i < stickerPack.size(); i++) {
+                    this.addStickerPackToWhatsApp(stickerPack.get(i).identifier, stickerPack.get(i).name);
                 }
             }
         }

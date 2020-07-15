@@ -26,7 +26,7 @@
     <string name="pay_with_gpay">Pay with Google Pay</string>
     <string name="i_dont_have_money">I don\'t have any cash</string>
     <string name="your_sticker_organizer">your sticker organizer</string>
-    <string name="become_premium_description">Remove all ads .\n\n You\'ll have access to futures features \n\n It\'s only $ 2,00</string>
+    <string name="become_premium_description">Remove all ads.\n\n You\'ll have access to futures features.</string>
     <string name="google_rewards">Google Rewards</string>
     <string name="google_rewards_download">Download Google Rewards and earn money by receiving surveys!</string>
     <string name="download">Download</string>
@@ -35,6 +35,7 @@
     <string name="tutorial_image_description">WhatsApp Description</string>
     <string name="error">Error</string>
     <string name="error_default">There was an error creating the package. But don\'t worry! Our team is already looking at this problem :)</string>
+    <string name="error_default_2">There was an unexpected error. But don\'t worry! Our team is already looking at this problem :)</string>
     <string name="error_watch_add">You need to watch the advertisement until the end</string>
     <string name="watch">Watch</string>
     <string name="ok">OK</string>
@@ -56,4 +57,9 @@
     <string name="choose_tiker">Choose Ticker</string>
     <string name="click_in_add_end_tutorial">Click in \"Add\"\n\n\n\nhe tutorial ended here. \nNow go back to WhatsApp and add your first stickers pack.</string>
     <string name="version">Version</string>
+    <string name="success_payment">Payment Successful</string>
+    <string name="success_payment_description">You can now enjoy its premium service</string>
+    <string name="logout">Logout</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="you_can_login_again">You can login again</string>
 </resources>
