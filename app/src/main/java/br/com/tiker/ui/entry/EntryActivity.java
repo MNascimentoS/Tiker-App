@@ -20,6 +20,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -97,6 +98,9 @@ public class EntryActivity extends AddStickerPackActivity implements RewardedVid
     private boolean stickerListEmpty = false;
     private boolean adCompleted = false;
     private String error = null;
+    private ArrayList<StickerEntity> imageByteList = new ArrayList<StickerEntity>();
+    private String name = "";
+
 
     private ArrayList<StickerPack> stickerPack = new ArrayList<>();
 
@@ -142,6 +146,35 @@ public class EntryActivity extends AddStickerPackActivity implements RewardedVid
         configureChangePage();
 
         checkPermissions();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == ADD_PACK) {
+            if (resultCode == RESULT_CANCELED) {
+                if (data != null) {
+                    final String validationError = data.getStringExtra("validation_error");
+                    if (validationError != null) {
+                        Log.e("AddStickerPackActivity", "Validation failed:" + validationError);
+                    }
+                } else {
+                    new StickerPackNotAddedMessageFragment().show(getSupportFragmentManager(), "sticker_pack_not_added");
+                }
+            } else {
+                new Thread() {
+                    @Override
+                    public void run() {
+                        stickerDb.getValue().stickerDao().addStickerListJ(name, getString(R.string.app_name), new StickerPackageEntity(), imageByteList);
+                    }
+                }.start();
+                ExtensionsKt.alert(this, getString(R.string.sticker_added), getString(R.string.back_whatsapp_see_package), getString(R.string.back), true, null, () -> {
+                    Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.whatsapp");
+                    startActivity(launchIntent);
+                    return null;
+                });
+            }
+        }
     }
 
     private void configureChangePage() {
@@ -290,7 +323,7 @@ public class EntryActivity extends AddStickerPackActivity implements RewardedVid
             ArrayList<Sticker> stickers = new ArrayList();
             Uri uri = intent.getClipData().getItemAt(0).getUri();
             String name2 = getFileName(uri);
-            String name = name2.replace(getString(R.string.whatsapp_conversation), "").replace(".txt", "");
+            name = name2.replace(getString(R.string.whatsapp_conversation), "").replace(".txt", "");
             StickerPacksManager.deleteStickerPack(name);
             for (int i = 1; i < 10; i++) {
                 StickerPacksManager.deleteStickerPack(name + " " + i);
@@ -349,8 +382,6 @@ public class EntryActivity extends AddStickerPackActivity implements RewardedVid
                     error = ex.getMessage();
                 }
 
-
-                ArrayList<StickerEntity> imageByteList = new ArrayList<StickerEntity>();
                 ContentResolver cr = getApplicationContext().getContentResolver();
                 for (int j = 0; j < dividedList.get(i).size(); j++) {
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -365,8 +396,6 @@ public class EntryActivity extends AddStickerPackActivity implements RewardedVid
                         e.printStackTrace();
                     }
                 }
-
-                stickerDb.getValue().stickerDao().addStickerListJ(name, getString(R.string.app_name), new StickerPackageEntity(), imageByteList);
             }
         }
     }
