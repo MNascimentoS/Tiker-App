@@ -3,12 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="?selectableItemBackground">
 
     <br.com.tiker.views.GridViewItem
         android:id="@+id/stickerIMG"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:padding="2dp"
         tools:src="@tools:sample/backgrounds/scenic"/>
 
     <ImageView
@@ -19,6 +21,7 @@
         android:layout_alignTop="@+id/stickerIMG"
         android:layout_alignEnd="@+id/stickerIMG"
         android:src="@drawable/ic_confirm"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:visibility="visible"/>
 
 </RelativeLayout>

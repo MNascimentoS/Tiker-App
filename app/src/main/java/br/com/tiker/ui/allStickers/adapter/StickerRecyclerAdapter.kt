@@ -12,6 +12,7 @@ import io.cubos.r2d2lib.gone
 import io.cubos.r2d2lib.inflate
 import io.cubos.r2d2lib.visible
 import kotlinx.android.synthetic.main.item_sticker.view.*
+import kotlin.random.Random
 
 
 class StickerRecyclerAdapter :

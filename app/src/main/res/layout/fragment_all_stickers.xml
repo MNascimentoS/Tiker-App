@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.allStickers.AllStickersFragment">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -16,6 +17,30 @@
         tools:orientation="vertical"
         tools:scrollbars="vertical"
         tools:spanCount="4" />
+
+<!--    <com.facebook.shimmer.ShimmerFrameLayout-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:shimmer_auto_start="true"-->
+<!--        app:shimmer_duration="800">-->
+
+<!--        <GridLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:rowCount="4"-->
+<!--            android:columnCount="4">-->
+
+<!--            <br.com.tiker.views.GridViewItem-->
+<!--                android:id="@+id/stickerIMG"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:background="#f2f3f2"-->
+<!--                android:padding="2dp"-->
+<!--                tools:src="@tools:sample/backgrounds/scenic"/>-->
+
+<!--        </GridLayout>-->
+
+<!--    </com.facebook.shimmer.ShimmerFrameLayout>-->
 
     <LinearLayout
         android:id="@+id/emptyStateView"
@@ -39,7 +64,7 @@
             android:layout_margin="@dimen/defaultMargin"
             android:textSize="@dimen/textBigSize"
             android:textColor="@color/colorTextSecondary"
-            android:fontFamily="@font/ubuntu_bold"
+            android:fontFamily="@font/muli_bold"
             android:text="@string/error_not_found_stickers" />
 
 <!--        <TextView-->
@@ -56,6 +81,8 @@
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:visibility="visible"
+        tools:visibility="visible"/>
 
 </FrameLayout>

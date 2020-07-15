@@ -14,7 +14,7 @@
     <string name="label_add_to_whatsapp">Add to WhatsApp</string>
     <string name="label_package_name">Package name</string>
     <string name="label_creator">Author</string>
-    <string name="label_remove">Remove</string>
+    <string name="label_remove">Remove from Tiker</string>
     <string name="image_description_return">Return</string>
     <string name="add_pack_fail_prompt_update_whatsapp">We could not create the sticker package. Check if you are using the latest WhatsApp version.</string>
     <string name="add_pack_fail_prompt_update_play_link">Update</string>

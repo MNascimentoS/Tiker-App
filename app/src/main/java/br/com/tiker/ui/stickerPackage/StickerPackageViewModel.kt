@@ -139,13 +139,13 @@ class StickerPackageViewModel : ViewModel(), KoinComponent {
     fun clearStickersFromFileSystem(context: Context) = viewModelScope.launch {
         try {
             saveBitmapToDevice.clearStoredFiles(context.contentResolver)
+            stickerDb.stickerDao().removeAllStickerIdentifier()
             try {
                 StickerPacksManager.deleteStickerPack(identifier)
                 stickerDb.stickerDao().getAllStickerIdentifier()?.forEach {
                     StickerPacksManager.deleteStickerPack(it?.identifier)
                 }
             } catch (ex: Exception) { }
-            stickerDb.stickerDao().removeAllStickerIdentifier()
         } catch (ex: Exception) { }
     }
 

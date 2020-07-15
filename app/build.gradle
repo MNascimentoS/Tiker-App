@@ -25,7 +25,7 @@ android {
         applicationId "br.com.tiker"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 27
+        versionCode 28
         versionName "2.0.0"
         def contentProviderAuthority = applicationId + ".stickercontentprovider"
         manifestPlaceholders = [contentProviderAuthority: contentProviderAuthority]
@@ -53,10 +53,11 @@ dependencies {
     implementation 'com.google.android.gms:play-services-wallet:18.0.0'
 
     //Firebase
-    implementation 'com.google.firebase:firebase-analytics:17.4.3'
-    implementation 'com.google.firebase:firebase-auth:19.3.1'
+    implementation 'com.google.firebase:firebase-analytics:17.4.4'
+    implementation 'com.google.firebase:firebase-auth:19.3.2'
     implementation 'com.google.firebase:firebase-database:19.3.1'
     implementation 'com.firebaseui:firebase-ui-auth:4.3.1'
+    implementation 'com.facebook.shimmer:shimmer:0.5.0'
 
     //Room
     implementation "androidx.room:room-runtime:2.3.0-alpha01"
@@ -81,6 +82,7 @@ dependencies {
 
     //Third party libraries
     implementation 'io.cubos:r2d2:0.0.81'
+    implementation 'com.airbnb.android:lottie:3.4.1'
 
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'com.google.android.material:material:1.1.0'

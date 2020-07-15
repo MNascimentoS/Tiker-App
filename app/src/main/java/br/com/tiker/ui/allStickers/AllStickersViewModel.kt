@@ -62,7 +62,7 @@ class AllStickersViewModel : ViewModel(), KoinComponent, CoroutineScope {
         val imageByteList = arrayListOf<StickerEntity>()
         stickerList.forEach {
             val stream = ByteArrayOutputStream()
-            it.image.compress(Bitmap.CompressFormat.PNG, 100, stream)
+            it.image?.compress(Bitmap.CompressFormat.PNG, 100, stream)
             imageByteList.add(StickerEntity(sticker = stream.toByteArray()))
         }
 

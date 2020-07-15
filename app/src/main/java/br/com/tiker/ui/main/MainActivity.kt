@@ -9,6 +9,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
+import br.com.tiker.BuildConfig
 import br.com.tiker.R
 import br.com.tiker.ui.allStickers.AllStickersFragment
 import br.com.tiker.ui.entry.EntryActivity
@@ -28,7 +29,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         initUi()
         initListeners()
-        Sentry.init(getString(R.string.sentry_dns))
+        if (!BuildConfig.DEBUG) {
+            Sentry.init(getString(R.string.sentry_dns))
+        }
     }
 
     private fun initUi() {
