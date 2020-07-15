@@ -29,7 +29,8 @@ class FirebaseDB {
             ref.child("users").child(auth.uid!!).addValueEventListener(
             object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    callback(dataSnapshot.child("premium").value as Boolean)
+                    val isPremium = dataSnapshot.child("premium").value as Boolean? ?: false
+                    callback(isPremium)
                 }
 
                 override fun onCancelled(databaseError: DatabaseError) {
