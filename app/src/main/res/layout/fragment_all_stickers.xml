@@ -18,30 +18,6 @@
         tools:scrollbars="vertical"
         tools:spanCount="4" />
 
-<!--    <com.facebook.shimmer.ShimmerFrameLayout-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        app:shimmer_auto_start="true"-->
-<!--        app:shimmer_duration="800">-->
-
-<!--        <GridLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:rowCount="4"-->
-<!--            android:columnCount="4">-->
-
-<!--            <br.com.tiker.views.GridViewItem-->
-<!--                android:id="@+id/stickerIMG"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:background="#f2f3f2"-->
-<!--                android:padding="2dp"-->
-<!--                tools:src="@tools:sample/backgrounds/scenic"/>-->
-
-<!--        </GridLayout>-->
-
-<!--    </com.facebook.shimmer.ShimmerFrameLayout>-->
-
     <LinearLayout
         android:id="@+id/emptyStateView"
         android:layout_width="match_parent"
@@ -53,10 +29,10 @@
         tools:visibility="visible">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
             android:layout_margin="@dimen/defaultMargin"
-            android:src="@drawable/ticker_empty" />
+            android:src="@drawable/ticker_logo" />
 
         <TextView
             android:layout_width="wrap_content"

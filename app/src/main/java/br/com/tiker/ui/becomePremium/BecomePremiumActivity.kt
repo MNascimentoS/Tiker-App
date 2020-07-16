@@ -6,8 +6,11 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import br.com.tiker.R
 import br.com.tiker.persistence.FirebaseDB
+import br.com.tiker.ui.splashScreen.SplashScreenActivity
 import br.com.tiker.utils.alert
 import com.android.billingclient.api.*
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_become_premium.*
 import java.util.*
 
@@ -26,7 +29,15 @@ class BecomePremiumActivity : AppCompatActivity(), PurchasesUpdatedListener, Sku
 
     private fun initListeners() {
         gPayButton?.setOnClickListener {
-            startBillingConnection()
+            val currentUser: FirebaseUser? = FirebaseAuth.getInstance().currentUser
+            if (currentUser != null) {
+                startBillingConnection()
+            } else {
+                alert(getString(R.string.do_login), getString(R.string.do_login_description), getString(R.string.ok), true) {
+                    startActivity(Intent(this, SplashScreenActivity::class.java))
+                    finish()
+                }
+            }
         }
         noMoneyBTN?.setOnClickListener {
             alert(

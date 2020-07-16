@@ -42,7 +42,7 @@
     <string name="error_find_stickers">Could not find any Stickers in conversation</string>
     <string name="adding_package">Adding Package</string>
     <string name="info_watch_add">Before adding the package, watch this advertisement to help the project.</string>
-    <string name="whatsapp_conversation">Conversa do WhatsApp com </string>
+    <string name="whatsapp_conversation">WhatsApp Chat with </string>
     <string name="import_from_whatsapp">Import from WhatsApp</string>
     <string name="sticker_added">Added sticker</string>
     <string name="back">Back</string>
@@ -66,4 +66,10 @@
     <string name="max_size_package_description">The package has more than 30 stickers (maximum WhatsApp quantity). If you want to add, we will create secondary packages: </string>
     <string name="one_comma"> 1, </string>
     <string name="two_comma"> 2&#8230;</string>
+    <string name="not_now">Not now</string>
+    <string name="error_login_user">There was an error when trying to login</string>
+    <string name="error_login_canceled">Login canceled</string>
+    <string name="error_login_default">There was an error when trying to login</string>
+    <string name="eror_access_read_files">We need access to write and read files in your phone</string>
+    <string name="do_login_description">Before accessing all functionality, you need to login</string>
 </resources>

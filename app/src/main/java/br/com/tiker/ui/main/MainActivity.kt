@@ -15,8 +15,10 @@ import br.com.tiker.persistence.FirebaseDB
 import br.com.tiker.ui.allStickers.AllStickersFragment
 import br.com.tiker.ui.becomePremium.BecomePremiumActivity
 import br.com.tiker.ui.entry.EntryActivity
+import br.com.tiker.ui.splashScreen.SplashScreenActivity
 import br.com.tiker.utils.alert
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import io.sentry.Sentry
 import kotlinx.android.synthetic.main.activity_entry.viewPager
 import kotlinx.android.synthetic.main.activity_main.*
@@ -27,6 +29,7 @@ class MainActivity : AppCompatActivity() {
 
     private val viewModel: MainViewModel by viewModel()
     private lateinit var adapter: MainPagerAdapter
+    private var addedOnMenu: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +53,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+        addedOnMenu = false
         invalidateOptionsMenu()
         viewModel.removeAllUnsavedStickers()
     }
@@ -57,8 +61,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
         FirebaseDB.getUserIsPremium { isPremium ->
+            if (addedOnMenu) return@getUserIsPremium
             if (!isPremium) menu?.add(Menu.NONE, BECOME_PREMIUM, Menu.NONE, getString(R.string.become_premium))
             menu?.add(Menu.NONE, LOGOUT, Menu.NONE, getString(R.string.logout))
+            addedOnMenu = true
         }
         return true
     }

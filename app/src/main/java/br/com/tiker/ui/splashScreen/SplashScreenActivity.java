@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -44,6 +45,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;// ...
 
     private Button mRetryBTN;
+    private TextView mNotNowTXT;
     private Boolean logoIsBig = false;
 
     @Override
@@ -54,6 +56,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         androidVersion.setText((BuildConfig.VERSION_NAME + " : " + BuildConfig.VERSION_CODE));
         mAuth = FirebaseAuth.getInstance();
         mRetryBTN = findViewById(R.id.retryAllowAccessBTN);
+        mNotNowTXT = findViewById(R.id.withoutLoginTXT);
 
         initUi();
     }
@@ -123,7 +126,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             finish();
             //            configureLoginButton();
         } else {
-            Toast.makeText(this, "We need access to write and read files in your phone", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.eror_access_read_files, Toast.LENGTH_SHORT).show();
             configureTryAccessButton();
         }
     }
@@ -136,6 +139,8 @@ public class SplashScreenActivity extends AppCompatActivity {
     private void configureLoginButton() {
         mRetryBTN.setText(getString(R.string.do_login));
         mRetryBTN.setOnClickListener(v -> signIn());
+        mNotNowTXT.setVisibility(View.VISIBLE);
+        mNotNowTXT.setOnClickListener(v -> notNowLogin());
         ExtensionsKt.fadeIn(mRetryBTN, AnimationConstants.DURATION_LONG, null);
     }
 
@@ -148,6 +153,11 @@ public class SplashScreenActivity extends AppCompatActivity {
         GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    private void notNowLogin() {
+        startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));
+        finish();
     }
 
     @Override
@@ -171,7 +181,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 Sentry.capture(e);
                 // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "Google sign in failed", e);
-                ExtensionsKt.alert(this, "Erro", "Houve um erro ao tentar realizar o login do usuário");
+                ExtensionsKt.alert(this, getString(R.string.error), getString(R.string.error_login_user));
                 mAuth.signOut();
                 mRetryBTN.setClickable(true);
                 // ...
@@ -198,13 +208,13 @@ public class SplashScreenActivity extends AppCompatActivity {
                     mRetryBTN.setClickable(true);
                 })
                 .addOnCanceledListener(this, () -> {
-                    ExtensionsKt.alert(this, "Erro", "O login foi cancelado");
+                    ExtensionsKt.alert(this, getString(R.string.error), getString(R.string.error_login_canceled));
                     mRetryBTN.setClickable(true);
                     mAuth.signOut();
                 })
                 .addOnFailureListener(this, error -> {
                     Sentry.capture(error);
-                    ExtensionsKt.alert(this, "Erro", "Houve um erro ao tentar realizar o login");
+                    ExtensionsKt.alert(this, getString(R.string.error), getString(R.string.error_login_default));
                     mRetryBTN.setClickable(true);
                     mAuth.signOut();
                 });

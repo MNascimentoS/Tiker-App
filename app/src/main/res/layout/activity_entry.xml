@@ -61,7 +61,7 @@
             android:fontFamily="@font/muli"
             android:text="@string/share_with_your_friends"
             android:textAllCaps="false"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/colorTextPrimary"
             tools:layout_editor_absoluteX="48dp" />
 
     </LinearLayout>

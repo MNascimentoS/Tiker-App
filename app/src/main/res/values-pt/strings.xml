@@ -66,4 +66,10 @@
     <string name="max_size_package_description">O pacote tem mais de 30 stickers (quantidade máxima do WhatsApp). Caso deseja adicionar, criaremos pacotes secundários: </string>
     <string name="one_comma"> 1, </string>
     <string name="two_comma"> 2&#8230;</string>
+    <string name="not_now">Agora não</string>
+    <string name="error_login_user">Houve um erro ao tentar realizar o login do usuário</string>
+    <string name="error_login_canceled">O login foi cancelado</string>
+    <string name="error_login_default">Houve um erro ao tentar realizar o login</string>
+    <string name="eror_access_read_files">Nós precisamos do acesso a leitura e escrita de arquivos do seu telefone para poder criar pacotes</string>
+    <string name="do_login_description">Antes de ter acesso a todas as funcionalidades, você precisa fazer o login</string>
 </resources>

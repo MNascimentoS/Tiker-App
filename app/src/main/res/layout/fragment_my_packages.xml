@@ -23,10 +23,10 @@
         tools:visibility="visible">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
             android:layout_margin="@dimen/defaultMargin"
-            android:src="@drawable/ticker_empty" />
+            android:src="@drawable/ticker_logo" />
 
         <TextView
             android:layout_width="wrap_content"
