@@ -50,6 +50,7 @@ class AllStickersFragment : Fragment() {
             if (isLoading) progressBar?.visible()
             else progressBar?.gone()
         }
+
         observe(viewModel.hasItems) { hasItems ->
             if (!hasItems) emptyStateView?.visible()
         }

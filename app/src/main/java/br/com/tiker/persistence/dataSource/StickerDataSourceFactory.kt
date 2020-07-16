@@ -20,4 +20,8 @@ class StickerDataSourceFactory : DataSource.Factory<Int, StickerModel>() {
         return stickerDataSource as StickerDataSource
     }
 
+    fun getMutableLiveData(): MutableLiveData<StickerDataSource>? {
+        return mutableLiveData
+    }
+
 }

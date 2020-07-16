@@ -64,7 +64,7 @@
         android:fontFamily="@font/muli"
         android:text="@string/allow_access"
         android:textAllCaps="false"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/colorTextPrimary"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@id/androidVersionLL"
         tools:visibility="visible" />

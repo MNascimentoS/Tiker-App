@@ -62,4 +62,8 @@
     <string name="logout">Logout</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="you_can_login_again">You can login again</string>
+    <string name="almost_there">Almost there!</string>
+    <string name="max_size_package_description">The package has more than 30 stickers (maximum WhatsApp quantity). If you want to add, we will create secondary packages: </string>
+    <string name="one_comma"> 1, </string>
+    <string name="two_comma"> 2&#8230;</string>
 </resources>

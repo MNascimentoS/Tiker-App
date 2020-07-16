@@ -21,7 +21,7 @@ abstract class StickerRoomDatabase : RoomDatabase() {
 
     companion object {
         const val NAME = "sticker-db"
-        const val VERSION = 2
+        const val VERSION = 3
 
         val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(database: SupportSQLiteDatabase) {
@@ -29,6 +29,16 @@ abstract class StickerRoomDatabase : RoomDatabase() {
                 database.execSQL("BEGIN TRANSACTION;")
                 // Alter, create, drop, whatever
                 database.execSQL("CREATE TABLE 'sticker-identifier' ('identifier' varchar(30) PRIMARY KEY NOT NULL);")
+                // Commit transaction
+                database.execSQL("COMMIT;")
+            }
+        }
+        val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                // Begin SQL transaction
+                database.execSQL("BEGIN TRANSACTION;")
+                // Alter, create, drop, whatever
+                database.execSQL("ALTER TABLE 'sticker_list' ADD COLUMN 'identifier' varchar(30) DEFAULT NULL;")
                 // Commit transaction
                 database.execSQL("COMMIT;")
             }

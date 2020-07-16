@@ -75,8 +75,8 @@ interface StickerDao {
 
     /* UPDATE */
 
-    @Query("UPDATE sticker_list SET name = :name, author = :author WHERE id = :id")
-    suspend fun saveLastUnsavedStickerList(id: Int, name: String, author: String)
+    @Query("UPDATE sticker_list SET identifier = :identifier, name = :name, author = :author WHERE id = :id")
+    suspend fun saveLastUnsavedStickerList(id: Int, identifier: String, name: String, author: String)
 
     /* DELETE */
 

@@ -8,11 +8,12 @@ import androidx.recyclerview.widget.RecyclerView
 import br.com.tiker.R
 import br.com.tiker.model.StickerModel
 import br.com.tiker.utils.StickerPackValidator.STICKER_SIZE_MAX
+import com.bumptech.glide.Glide
 import io.cubos.r2d2lib.gone
 import io.cubos.r2d2lib.inflate
 import io.cubos.r2d2lib.visible
 import kotlinx.android.synthetic.main.item_sticker.view.*
-import kotlin.random.Random
+import java.io.File
 
 
 class StickerRecyclerAdapter :
@@ -27,7 +28,7 @@ class StickerRecyclerAdapter :
         val currentItem = getItem(position)
         with(holder.itemView) {
             currentItem?.let {
-                stickerIMG?.setImageBitmap(currentItem.image)
+                Glide.with(context).load(File(currentItem.filePath)).into(stickerIMG)
                 if (currentItem.selected) {
                     selectedIMG?.visible()
                 } else {
@@ -36,10 +37,10 @@ class StickerRecyclerAdapter :
             }
             setOnClickListener {
                 currentItem?.let {
-                    if (selectedStickers.size >= STICKER_SIZE_MAX && !currentItem.selected) {
-                        Toast.makeText(context, R.string.error_max_stickers, Toast.LENGTH_LONG).show()
-                        return@setOnClickListener
-                    }
+//                    if (selectedStickers.size >= STICKER_SIZE_MAX && !currentItem.selected) {
+//                        Toast.makeText(context, R.string.error_max_stickers, Toast.LENGTH_LONG).show()
+//                        return@setOnClickListener
+//                    }
                     currentItem.selected = !currentItem.selected
                     if (currentItem.selected) {
                         selectedStickers.add(currentItem)

@@ -17,6 +17,7 @@ import br.com.tiker.ui.stickerPackage.StickerPackageViewModel.Companion.ADD_PACK
 import br.com.tiker.ui.stickerPackage.StickerPackageViewModel.Companion.EXTRA_STICKER_PACK_AUTHORITY
 import br.com.tiker.ui.stickerPackage.StickerPackageViewModel.Companion.EXTRA_STICKER_PACK_ID
 import br.com.tiker.ui.stickerPackage.StickerPackageViewModel.Companion.EXTRA_STICKER_PACK_NAME
+import br.com.tiker.utils.StickerPackValidator.STICKER_SIZE_MAX
 import br.com.tiker.utils.alert
 import br.com.tiker.utils.gone
 import br.com.tiker.utils.observe
@@ -36,7 +37,7 @@ class StickerPackageActivity : CubosActivity() {
     private var stickerPackageId: Int = 0
 
     private var adCompleted = false
-    private var calledWhatsapp = false
+    private var calledWhatsApp = false
     private val rewardedVideoAd by lazy { MobileAds.getRewardedVideoAdInstance(this) }
 
     companion object {
@@ -67,19 +68,31 @@ class StickerPackageActivity : CubosActivity() {
             else progressBar?.gone()
         }
         observe(viewModel.stickerList) {
+            if (it.size > STICKER_SIZE_MAX) {
+                alert(getString(R.string.almost_there),
+                        getString(R.string.max_size_package_description) +
+                                viewModel.namePackage.value +
+                                getString(R.string.one_comma) +
+                                viewModel.namePackage.value +
+                                getString(R.string.two_comma),
+                        getString(R.string.ok),
+                        true) {}
+            }
             adapter.updateList(it)
             adapter.notifyDataSetChanged()
         }
 
         observe(viewModel.createdPackage) {
-            if (adCompleted && !calledWhatsapp) {
+            if (adCompleted && !calledWhatsApp) {
                 progressBar?.gone()
-                addStickerPackToWhatsApp(viewModel.stickerPack.identifier, viewModel.stickerPack.name)
-                calledWhatsapp = true
+                viewModel.stickerPack.forEach { stickerPack ->
+                    addStickerPackToWhatsApp(stickerPack.identifier, stickerPack.name)
+                }
+                calledWhatsApp = true
             }
         }
 
-       observe(viewModel.uiEventLiveData) {
+        observe(viewModel.uiEventLiveData) {
             when (it?.first) {
                 1 -> startActivityForResult(Intent.createChooser(it.second as Intent, getString(R.string.add_to_whatsapp)), ADD_PACK)
                 2 -> startActivityForResult(it.second as Intent, ADD_PACK)
@@ -120,7 +133,9 @@ class StickerPackageActivity : CubosActivity() {
                 viewModel.createPackageToWhatsApp(this@StickerPackageActivity)
             }
 
-            override fun onRewardedVideoCompleted() { adCompleted = true }
+            override fun onRewardedVideoCompleted() {
+                adCompleted = true
+            }
 
             override fun onRewardedVideoAdClosed() {
                 if (!adCompleted) {
@@ -129,8 +144,10 @@ class StickerPackageActivity : CubosActivity() {
                     }) { sharePackageBTN?.callOnClick() }
                 } else {
                     if (viewModel.createdPackage.value == true) {
-                        addStickerPackToWhatsApp(viewModel.stickerPack.identifier, viewModel.stickerPack.name)
-                        calledWhatsapp = true
+                        viewModel.stickerPack.forEach { stickerPack ->
+                            addStickerPackToWhatsApp(stickerPack.identifier, stickerPack.name)
+                        }
+                        calledWhatsApp = true
                     }
                 }
             }
@@ -138,8 +155,10 @@ class StickerPackageActivity : CubosActivity() {
             override fun onRewardedVideoAdFailedToLoad(p0: Int) {
                 adCompleted = true
                 if (viewModel.createdPackage.value == true) {
-                    addStickerPackToWhatsApp(viewModel.stickerPack.identifier, viewModel.stickerPack.name)
-                    calledWhatsapp = true
+                    viewModel.stickerPack.forEach { stickerPack ->
+                        addStickerPackToWhatsApp(stickerPack.identifier, stickerPack.name)
+                    }
+                    calledWhatsApp = true
                 } else {
                     viewModel.createPackageToWhatsApp(this@StickerPackageActivity)
                 }
@@ -181,7 +200,7 @@ class StickerPackageActivity : CubosActivity() {
         }
         if (requestCode == AddStickerPackActivity.ADD_PACK) {
             adCompleted = false
-            calledWhatsapp = false
+            calledWhatsApp = false
             viewModel.clearStickersFromFileSystem(this)
             if (resultCode == Activity.RESULT_CANCELED) {
                 if (data != null) {

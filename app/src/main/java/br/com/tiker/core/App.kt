@@ -6,6 +6,7 @@ import br.com.tiker.persistence.SaveBitmapToDevice
 import br.com.tiker.persistence.StickerExternalDatabase
 import br.com.tiker.persistence.StickerRoomDatabase
 import br.com.tiker.persistence.StickerRoomDatabase.Companion.MIGRATION_1_2
+import br.com.tiker.persistence.StickerRoomDatabase.Companion.MIGRATION_2_3
 import br.com.tiker.ui.allStickers.AllStickersViewModel
 import br.com.tiker.ui.create.CreateViewModel
 import br.com.tiker.ui.main.MainViewModel
@@ -27,7 +28,7 @@ class App : Application() {
                         single {
                             Room
                                     .databaseBuilder(applicationContext, StickerRoomDatabase::class.java, StickerRoomDatabase.NAME)
-                                    .addMigrations(MIGRATION_1_2)
+                                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                                     .build()
                         }
                         single { SaveBitmapToDevice() }
