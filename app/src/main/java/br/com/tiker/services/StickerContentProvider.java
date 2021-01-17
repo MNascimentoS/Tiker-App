@@ -75,8 +75,8 @@ public class StickerContentProvider extends ContentProvider {
     public boolean onCreate() {
 
         final String authority = BuildConfig.CONTENT_PROVIDER_AUTHORITY;
-        if (!authority.startsWith(Objects.requireNonNull(getContext()).getPackageName())) {
-            throw new IllegalStateException("your authority (" + authority + ") for the content provider should start with your package name: " + getContext().getPackageName());
+        if (!authority.startsWith(getPackageName())) {
+            throw new IllegalStateException("your authority (" + authority + ") for the content provider should start with your package name: " + getPackageName());
         }
 
         //the call to get the metadata for the sticker packs.
@@ -156,6 +156,13 @@ public class StickerContentProvider extends ContentProvider {
     public List<StickerPack> getStickerPackList() {
         readContentFile(Objects.requireNonNull(getContext()));
         return stickerPackList;
+    }
+
+    private String getPackageName() {
+        String packageName = Objects.requireNonNull(getContext()).getPackageName();
+        packageName = packageName.replace(".debug", "");
+        packageName = packageName.replace(".beta", "");
+        return packageName;
     }
 
     private Cursor getPackForAllStickerPacks(@NonNull Uri uri) {
@@ -262,8 +269,8 @@ public class StickerContentProvider extends ContentProvider {
     @Override
     public Uri insert(@NonNull Uri uri, ContentValues values) {
         final String authority = BuildConfig.CONTENT_PROVIDER_AUTHORITY;
-        if (!authority.startsWith(Objects.requireNonNull(getContext()).getPackageName())) {
-            throw new IllegalStateException("your authority (" + authority + ") for the content provider should start with your package name: " + getContext().getPackageName());
+        if (!authority.startsWith(getPackageName())) {
+            throw new IllegalStateException("your authority (" + authority + ") for the content provider should start with your package name: " + getPackageName());
         }
         StickerPack stickerPack = new Gson().fromJson((String) values.get("stickerPack"), StickerPack.class);
         MATCHER.addURI(authority, STICKERS_ASSET + "/" + stickerPack.identifier + "/" + stickerPack.trayImageFile, STICKER_PACK_TRAY_ICON_CODE);

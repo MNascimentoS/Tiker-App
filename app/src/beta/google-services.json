@@ -1,0 +1,108 @@
+{
+  "project_info": {
+    "project_number": "680865836419",
+    "project_id": "tiker-dev",
+    "storage_bucket": "tiker-dev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:680865836419:android:965f0b5f16a229df989ab6",
+        "android_client_info": {
+          "package_name": "br.com.tiker.beta"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "680865836419-6asc7e9ek2c9261peafulespslv5vr7n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.tiker.beta",
+            "certificate_hash": "7af86c508e4887c7cb29afeacae81c0ef48d1ab1"
+          }
+        },
+        {
+          "client_id": "680865836419-962g9c72ji22urq3g96gov92i4ncamr0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.tiker.beta",
+            "certificate_hash": "67ec71f0e860c7c11071cb68ce84220761d8ec5e"
+          }
+        },
+        {
+          "client_id": "680865836419-ki128j6ppa5f27hdosoctqclfgh1mef4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.tiker.beta",
+            "certificate_hash": "db2e658b1e9e371e2ad1af847909ffb7043a6970"
+          }
+        },
+        {
+          "client_id": "680865836419-vdo3c5s15mg9190sut424uraa9cro6g2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.tiker.beta",
+            "certificate_hash": "8d02cc7f0a95bf10828d0e646edf19609bc94c61"
+          }
+        },
+        {
+          "client_id": "680865836419-l1t2kvea0554j2k3fci3047keggujlcd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCI_4HImzMOM6QtikE7QVzVsH9IUH0xgBo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "680865836419-l1t2kvea0554j2k3fci3047keggujlcd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:680865836419:android:35249a51c32ace10989ab6",
+        "android_client_info": {
+          "package_name": "br.com.tiker.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "680865836419-el0v8olb0j1e7004g5ha6oe34ue7l5r5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.tiker.debug",
+            "certificate_hash": "db2e658b1e9e371e2ad1af847909ffb7043a6970"
+          }
+        },
+        {
+          "client_id": "680865836419-l1t2kvea0554j2k3fci3047keggujlcd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCI_4HImzMOM6QtikE7QVzVsH9IUH0xgBo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "680865836419-l1t2kvea0554j2k3fci3047keggujlcd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

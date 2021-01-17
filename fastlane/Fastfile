@@ -1,15 +1,49 @@
+# load variables from .env file in the root if it exists
+if File.exist?('.env')
+    open('.env', 'r').readlines.each do |l|
+        kv = l.split('=')
+        ENV[kv[0]] = kv[1].chomp
+    end
+end
+
 default_platform(:android)
 
 platform :android do
-  desc "Runs all the tests"
-  lane :test do
-    gradle(task: "test")
-  end
+    desc "Runs all the tests"
+    lane :test do
+        gradle(task: "test")
+    end
 
-  desc "Deploy a new bundle version to the Google Play in internal track"
-  lane :google_play_internal_bundle do |options|
-    upload_to_play_store(track: 'internal', aab: 'app/build/outputs/bundle/release/app-release.aab')
-  end
+    desc "Deploy a new bundle version to the Google Play in internal track"
+    lane :google_play_internal_bundle do |options|
+        upload_to_play_store(track: 'internal', aab: 'app/build/outputs/bundle/release/app-release.aab')
+    end
+
+    desc "Deploy a new version to the AppCenter"
+    lane :appcenter do
+        appcenter_upload(
+            api_token: ENV["APP_CENTER_API_TOKEN"],
+            owner_type: "organization",
+            owner_name: ENV["APPCENTER_OWNER_NAME"],
+            app_os: 'Android',
+            app_platform: "Java",
+            app_name: ENV["APPCENTER_APP_NAME"],
+            app_display_name: ENV["APPCENTER_DISPLAY_NAME"],
+            file: ENV["APPCENTER_DISTRIBUTE_APK"],
+            destinations: ENV["APP_CENTER_DESTINATIONS"],
+            notify_testers: ENV["APPCENTER_ALERT"]
+        )
+    end
+
+    desc "Build and Deploy a new version to the AppCenter"
+    lane :appcenter_build do |options|
+        gradle(
+            task: "app:assemble",
+            build_type: "Beta",
+            print_command: false
+        )
+        appcenter
+    end
 
 end
 

@@ -31,7 +31,7 @@
 
         <provider
             android:name="br.com.tiker.services.StickerContentProvider"
-            android:authorities="${contentProviderAuthority}"
+            android:authorities="${applicationId}.stickercontentprovider"
             android:enabled="true"
             android:exported="true"
             android:grantUriPermissions="true"
