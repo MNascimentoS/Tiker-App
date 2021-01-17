@@ -5,9 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.os.PersistableBundle
 import android.view.View
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import br.com.tiker.BuildConfig
@@ -24,6 +22,10 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.microsoft.appcenter.AppCenter
+import com.microsoft.appcenter.analytics.Analytics
+import com.microsoft.appcenter.crashes.Crashes
+import com.microsoft.appcenter.distribute.Distribute
 import io.sentry.Sentry
 import kotlinx.android.synthetic.main.activity_splash_screen.*
 
@@ -35,6 +37,8 @@ class SplashScreenActivity : AppCompatActivity(R.layout.activity_splash_screen) 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AppCenter.start(application, getString(R.string.appcenter_key),
+                Analytics::class.java, Crashes::class.java, Distribute::class.java)
         androidVersionTXT.text = (BuildConfig.VERSION_NAME + " : " + BuildConfig.VERSION_CODE)
         firebaseAuth = FirebaseAuth.getInstance()
         initUi()

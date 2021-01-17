@@ -104,6 +104,11 @@ dependencies {
     implementation 'io.cubos:r2d2:0.0.81'
     implementation 'com.airbnb.android:lottie:3.4.2'
 
+    //Appcenter
+    implementation "com.microsoft.appcenter:appcenter-analytics:4.1.0"
+    implementation "com.microsoft.appcenter:appcenter-crashes:4.1.0"
+    implementation "com.microsoft.appcenter:appcenter-distribute:4.1.0"
+
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'

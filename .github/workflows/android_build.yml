@@ -20,5 +20,12 @@ jobs:
       - name: Install Dependencies
         run: gem install bundler && bundle install
 
+      - name: Increment version code
+          uses: chkfung/android-version-actions@v1.1
+          with:
+            gradlePath: app/build.gradle
+            versionCode: ${{github.run_number}}
+            versionName: 2.0.0
+
       - name: Build and Deploy Project
         run: fastlane appcenter_build
