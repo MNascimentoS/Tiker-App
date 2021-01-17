@@ -19,9 +19,9 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import br.com.tiker.BuildConfig;
-import br.com.tiker.old.constants.Constants;
-import br.com.tiker.old.whatsapp_api.Sticker;
-import br.com.tiker.old.whatsapp_api.StickerPack;
+import br.com.tiker.model.Constants;
+import br.com.tiker.model.Sticker;
+import br.com.tiker.model.StickerPack;
 import br.com.tiker.utils.StickerPacksManager;
 
 import java.io.*;

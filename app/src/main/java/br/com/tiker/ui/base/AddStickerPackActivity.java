@@ -1,0 +1,89 @@
+/*
+ * Copyright (c) WhatsApp Inc. and its affiliates.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+package br.com.tiker.ui.base;
+
+import android.app.Dialog;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Bundle;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
+import androidx.appcompat.app.AlertDialog;
+import android.util.Log;
+import android.widget.Toast;
+
+import br.com.tiker.BuildConfig;
+import br.com.tiker.R;
+import br.com.tiker.utils.ExtensionsKt;
+import br.com.tiker.utils.WhitelistCheck;
+
+import static br.com.tiker.ui.stickerPackage.StickerPackageViewModel.EXTRA_STICKER_PACK_AUTHORITY;
+import static br.com.tiker.ui.stickerPackage.StickerPackageViewModel.EXTRA_STICKER_PACK_ID;
+import static br.com.tiker.ui.stickerPackage.StickerPackageViewModel.EXTRA_STICKER_PACK_NAME;
+
+public abstract class AddStickerPackActivity extends AppCompatActivity {
+    public static final int ADD_PACK = 200;
+
+    public void addStickerPackToWhatsApp(String identifier, String stickerPackName) {
+        Intent intent = new Intent();
+        intent.setAction("com.whatsapp.intent.action.ENABLE_STICKER_PACK");
+        intent.putExtra(EXTRA_STICKER_PACK_ID, identifier);
+        intent.putExtra(EXTRA_STICKER_PACK_AUTHORITY, BuildConfig.CONTENT_PROVIDER_AUTHORITY);
+        intent.putExtra(EXTRA_STICKER_PACK_NAME, stickerPackName);
+        try {
+            startActivityForResult(intent, ADD_PACK);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(this, R.string.add_pack_fail_prompt_update_whatsapp, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public static final class StickerPackNotAddedMessageFragment extends DialogFragment {
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity())
+                    .setMessage(R.string.add_pack_fail_prompt_update_whatsapp)
+                    .setCancelable(true)
+                    .setPositiveButton(android.R.string.ok, (dialog, which) -> dismiss())
+                    .setNeutralButton(R.string.add_pack_fail_prompt_update_play_link, (dialog, which) -> launchWhatsAppPlayStorePage());
+
+            return dialogBuilder.create();
+        }
+
+        private void launchWhatsAppPlayStorePage() {
+            if (getActivity() != null) {
+                final PackageManager packageManager = getActivity().getPackageManager();
+                final boolean whatsAppInstalled = WhitelistCheck.isPackageInstalled(WhitelistCheck.CONSUMER_WHATSAPP_PACKAGE_NAME, packageManager);
+                final boolean smbAppInstalled = WhitelistCheck.isPackageInstalled(WhitelistCheck.SMB_WHATSAPP_PACKAGE_NAME, packageManager);
+                final String playPackageLinkPrefix = "http://play.google.com/store/apps/details?id=";
+                if (whatsAppInstalled && smbAppInstalled) {
+                    launchPlayStoreWithUri("https://play.google.com/store/apps/developer?id=WhatsApp+Inc.");
+                } else if (whatsAppInstalled) {
+                    launchPlayStoreWithUri(playPackageLinkPrefix + WhitelistCheck.CONSUMER_WHATSAPP_PACKAGE_NAME);
+                } else if (smbAppInstalled) {
+                    launchPlayStoreWithUri(playPackageLinkPrefix + WhitelistCheck.SMB_WHATSAPP_PACKAGE_NAME);
+                }
+            }
+        }
+
+        private void launchPlayStoreWithUri(String uriString) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(uriString));
+            intent.setPackage("com.android.vending");
+            try {
+                startActivity(intent);
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(getActivity(), R.string.cannot_find_play_store, Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+}

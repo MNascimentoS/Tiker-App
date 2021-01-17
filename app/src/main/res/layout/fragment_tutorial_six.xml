@@ -37,7 +37,7 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="24dp"
         android:gravity="center"
-        android:text="Clique em “Adicionar”\n\n\n\nO tutorial acabou por aqui. \nAgora volte ao Whatsapp e adicione o seu primeiro pacote de Stickers."
+        android:text="@string/click_in_add_end_tutorial"
         app:layout_constraintEnd_toEndOf="@+id/tikerImageIMG"
         app:layout_constraintStart_toStartOf="@+id/tikerImageIMG"
         app:layout_constraintTop_toBottomOf="@+id/viewSeparator" />

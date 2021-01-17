@@ -5,6 +5,8 @@ import android.animation.AnimatorListenerAdapter
 import android.app.Activity
 import android.app.AlertDialog
 import android.view.View
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
 
 fun View.gone() {
     this.visibility = View.GONE
@@ -35,6 +37,10 @@ fun <T> chopped(list: List<T>, L: Int): ArrayList<List<T>>? {
         i += L
     }
     return parts
+}
+
+inline fun <T> LifecycleOwner.observe(liveData: LiveData<T>, crossinline onChanged: (T) -> Unit) {
+    liveData.observe(this, androidx.lifecycle.Observer { onChanged(it) })
 }
 
 /**
@@ -82,7 +88,7 @@ fun View.fadeOut(duration: Int = AnimationConstants.DURATION_SHORT, finishCallba
             .start()
 }
 
-fun Activity.alert(title: String, message: String, positive: String, allowDismiss: Boolean, onPositiveClick: () -> Unit) {
+fun Activity.alert(title: String, message: String, positive: String, allowDismiss: Boolean, onDismissClick: (() -> Unit)? = null, onPositiveClick: () -> Unit) {
     var dismiss = allowDismiss
     AlertDialog.Builder(this)
             .setTitle(title)
@@ -92,7 +98,10 @@ fun Activity.alert(title: String, message: String, positive: String, allowDismis
                 dismiss = true
                 onPositiveClick()
             }
-            .setOnDismissListener { if (!dismiss) alert(title, message, positive, dismiss, onPositiveClick) }
+            .setOnDismissListener {
+                if (!dismiss) alert(title, message, positive, dismiss, onDismissClick, onPositiveClick)
+                else onDismissClick?.invoke()
+            }
             .show()
 
 }
@@ -102,4 +111,27 @@ fun Activity.alert(title: String, message: String) {
             .setTitle(title)
             .setMessage(message)
             .show()
+}
+
+fun random(): String? {
+    val generator = java.util.Random()
+    val randomStringBuilder = StringBuilder()
+    val randomLength = generator.nextInt(20)
+    var tempChar: Char
+    for (i in 0 until randomLength) {
+        tempChar = (generator.nextInt(42) + 48).toChar()
+        randomStringBuilder.append(tempChar)
+    }
+    var string = randomStringBuilder.toString()
+
+    string = string.replace("/", "")
+    string = string.replace(":", "")
+    string = string.replace("-", "")
+    string = string.replace(";", "")
+    string = string.replace(">", "")
+    string = string.replace("<", "")
+    string = string.replace("=", "")
+    string = string.replace("@", "")
+    string = string.replace("?", "")
+    return string
 }

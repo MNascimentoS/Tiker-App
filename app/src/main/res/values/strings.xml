@@ -1,83 +1,75 @@
 <resources>
-    <string name="app_name" translatable="false">Tiker</string>
-    <string name="web_client_id" translatable="false">197118949774-s5sn76sfti3h4khr2814l52os6k3mtit.apps.googleusercontent.com</string>
-    <string name="tray_image_content_description">Sticker Pack Tray Image</string>
-    <string name="more_info_button">More info about sticker pack</string>
+    <string name="label_all_stickers">All stickers</string>
+    <string name="label_my_packages">My packages</string>
+    <string name="create_package">Create packages</string>
     <string name="add_to_whatsapp">Add to WhatsApp</string>
-    <string name="add_button_content_description">Add sticker pack to WhatsApp</string>
-    <string name="title_activity_sticker_packs_list">Sticker Packs</string>
-    <string name="dot">•</string>
-    <string name="title_activity_sticker_pack_details_single_pack">Sticker Pack</string>
-    <string name="title_activity_sticker_pack_details_multiple_pack">Sticker details</string>
-    <string name="title_activity_sticker_pack_info">Info</string>
-    <string name="view_webpage">View webpage</string>
-    <string name="send_email">Send email</string>
-    <string name="privacy_policy">Privacy policy</string>
-    <string name="error_adding_sticker_pack">Could not add this sticker pack. Please install the latest version of
-        WhatsApp before adding sticker pack
-    </string>
-    <string name="error_message">Error: %s \nSee logcat for stack trace.</string>
-    <string name="title_validation_error">Erro com o pack</string>
-    <string name="info_screen_tray_icon">Tray icon</string>
-    <string name="details_pack_already_added">Pack de Sticker adicionado ao Whatsapp</string>
-    <string name="info_send_email_to_prompt">Send email with</string>
-    <string name="add_pack_fail_prompt_update_whatsapp">Não foi possível adicionar o pacote de Sticker. Cheque se você está utilizando a última versão do Whatsapp</string>
+    <string name="error_min_stickers">You need to select at least three stickers</string>
+    <string name="error_max_stickers">The WhatsApp not allows to create sticker package with more than 30 stickers</string>
+    <string name="error_not_found_stickers">You don\`t have any sticker</string>
+    <string name="error_not_found_packages">You don\`t have any package</string>
+    <string name="error_field_name_empty">The name field can\`t be empty</string>
+    <string name="error_field_author_empty">The field author can\`t be empty</string>
+    <string name="message_create_package">Create a package in the All stickers screen</string>
+    <string name="label_confirm">Confirm</string>
+    <string name="label_add_to_whatsapp">Add to WhatsApp</string>
+    <string name="label_package_name">Package name</string>
+    <string name="label_creator">Author</string>
+    <string name="label_remove">Remove from Tiker</string>
+    <string name="image_description_return">Return</string>
+    <string name="add_pack_fail_prompt_update_whatsapp">We could not create the sticker package. Check if you are using the latest WhatsApp version.</string>
     <string name="add_pack_fail_prompt_update_play_link">Update</string>
     <string name="cannot_find_play_store">Google Play is not installed on the device.</string>
-
-    <!-- Strings related to NewStickerPackActivity -->
-    <string name="prompt_name">Name</string>
-    <string name="prompt_author">Author</string>
-    <string name="create_sticker_pack">Select images</string>
-    <string name="create_sticker_button">Create sticker</string>
-
-    <!--Background remover -->
-    <string name="intro_magic_title">Automatic background clearing</string>
-    <string name="intro_manual_title">Manual background clearing</string>
-    <string name="intro_zoom_title">Zooming and Moving the picture</string>
-    <string name="intro_magic_description">Use the Magic Wand tool and touch parts of the background you want to erase
-    </string>
-    <string name="intro_manual_description">Use the Pencil tool to erase the background dragging your finger around the
-        screen
-    </string>
-    <string name="intro_zoom_description">Use the Magnifier tool to Zoom in/out so you can make better cuts</string>
-    <string name="intro_label">Quick look</string>
-    <string name="image_chooser_message">Choose an image to cut</string>
-    <string name="allow_access">Alow Access</string>
+    <string name="allow_access">Allow Access</string>
     <string name="do_login">Login</string>
-    <string name="share_with_your_friends">Share with firends</string>
+    <string name="share_with_your_friends">Share with friends</string>
     <string name="become_premium">Be premium</string>
     <string name="pay_with_gpay">Pay with Google Pay</string>
     <string name="i_dont_have_money">I don\'t have any cash</string>
     <string name="your_sticker_organizer">your sticker organizer</string>
-    <string name="become_premium_description">Remove all ads .\n\n You\'ll have access to futures features \n\n It\'s only $ 2,00</string>
+    <string name="become_premium_description">Remove all ads.\n\n You\'ll have access to futures features.</string>
     <string name="google_rewards">Google Rewards</string>
-    <string name="google_rewards_download">Baixe o Google Rewards e ganhe dinheiro recebendo pesquisas!</string>
-    <string name="download">Baixar</string>
-    <string name="google_rewards_app">market://details?id=com.google.android.apps.paidtasks</string>
+    <string name="google_rewards_download">Download Google Rewards and earn money by receiving surveys!</string>
+    <string name="download">Download</string>
     <string name="share_to_friends_message">Organize all your WhatsApp Stickers\n\n Download *Tiker*: https://play.google.com/store/apps/details?id=br.com.tiker</string>
     <string name="tutorial_one">1º Create a new group on WhatsApp \n(the group name should be unique and will be the package name) \n\n2º Add your Stickers \n\n3º Click in more</string>
-    <string name="tutorial_image_description">Whatsapp Description</string>
-    <string name="sentry_dns">https://b3c1228bb20f428e93c04219667aa3f3@sentry.io/3726554</string>
-    <string name="error">Erro</string>
+    <string name="tutorial_image_description">WhatsApp Description</string>
+    <string name="error">Error</string>
     <string name="error_default">There was an error creating the package. But don\'t worry! Our team is already looking at this problem :)</string>
+    <string name="error_default_2">There was an unexpected error. But don\'t worry! Our team is already looking at this problem :)</string>
     <string name="error_watch_add">You need to watch the advertisement until the end</string>
     <string name="watch">Watch</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="error_find_stickers">Could not find any Stickers in conversation</string>
     <string name="adding_package">Adding Package</string>
     <string name="info_watch_add">Before adding the package, watch this advertisement to help the project.</string>
-    <string name="sticker_pack_indentifies">sticker pack identifier is empty</string>
-    <string name="sticker_pack_identifier_cannot_exceed">\"sticker pack identifier cannot exceed \"</string>
-    <string name="characters">\" characters\"</string>
-    <string name="cod_ad_debug" translatable="false">ca-app-pub-3940256099942544/5224354917</string>
-    <string name="cod_ad_release" translatable="false">ca-app-pub-3355203749923756/1018041110</string>
-    <string name="whatsapp_conversation">\"Conversa do WhatsApp com \"</string>
-    <string name="sticker_pack_publisher_is_empty">sticker pack publisher is empty, sticker pack identifier:</string>
-    <string name="sticker_pack_exceed">\"sticker pack publisher cannot exceed \"</string>
-    <string name="characters_sticker_pack_identifier">\" characters, sticker pack identifier:\"</string>
-    <string name="sticker_pack_is_empty">sticker pack name is empty, sticker pack identifier:</string>
-    <string name="sticker_pack_name_is_empty">\"sticker pack name cannot exceed \"</string>
-
-
+    <string name="whatsapp_conversation">WhatsApp Chat with </string>
+    <string name="import_from_whatsapp">Import from WhatsApp</string>
+    <string name="sticker_added">Added sticker</string>
+    <string name="back">Back</string>
+    <string name="more">More</string>
+    <string name="buy_with_googlepay_button_content_description">Pay with Google Pay</string>
+    <string name="googlepay_button_content_description">Pay with Google Pay</string>
+    <string name="back_whatsapp_see_package">Return to WhatsApp to see the package</string>
+    <string name="rate_us">Rate the APP</string>
+    <string name="click_in_more">Click in \"More\"</string>
+    <string name="click_in_export_chat">Click in \"Export chat\"</string>
+    <string name="click_in_include_media">Click in \"Include Media\"</string>
+    <string name="choose_tiker">Choose Ticker</string>
+    <string name="click_in_add_end_tutorial">Click in \"Add\"\n\n\n\nhe tutorial ended here. \nNow go back to WhatsApp and add your first stickers pack.</string>
+    <string name="version">Version</string>
+    <string name="success_payment">Payment Successful</string>
+    <string name="success_payment_description">You can now enjoy its premium service</string>
+    <string name="logout">Logout</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="you_can_login_again">You can login again</string>
+    <string name="almost_there">Almost there!</string>
+    <string name="max_size_package_description">The package has more than 30 stickers (maximum WhatsApp quantity). If you want to add, we will create secondary packages: </string>
+    <string name="one_comma"> 1, </string>
+    <string name="two_comma"> 2&#8230;</string>
+    <string name="not_now">Not now</string>
+    <string name="error_login_user">There was an error when trying to login</string>
+    <string name="error_login_canceled">Login canceled</string>
+    <string name="error_login_default">There was an error when trying to login</string>
+    <string name="eror_access_read_files">We need access to write and read files in your phone</string>
+    <string name="do_login_description">Before accessing all functionality, you need to login</string>
 </resources>

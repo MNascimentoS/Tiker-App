@@ -5,18 +5,15 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.MediaStore;
-import androidx.annotation.RequiresApi;
 import android.util.Log;
-
-import br.com.tiker.old.constants.Constants;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+
+import br.com.tiker.model.Constants;
 
 public class ImageUtils {
 

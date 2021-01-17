@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    tools:context=".ui.splashScreen.SplashScreenActivity">
+
+    <ImageView
+        android:id="@+id/logoTickerContainer"
+        android:layout_width="@dimen/tikerLogoSmall"
+        android:layout_height="@dimen/tikerLogoSmall"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/ticker_logo"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+    <Button
+        android:id="@+id/retryAllowAccessBTN"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
+        android:layout_marginEnd="36dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/button_acent_background"
+        android:fontFamily="@font/muli"
+        android:text="@string/allow_access"
+        android:textAllCaps="false"
+        android:textColor="@color/colorTextPrimary"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@id/withoutLoginTXT"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/withoutLoginTXT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/muli"
+        android:textColor="@android:color/black"
+        android:textSize="12sp"
+        android:layout_margin="36dp"
+        android:visibility="gone"
+        tools:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/androidVersionLL"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="@string/not_now" />
+
+    <LinearLayout
+        android:id="@+id/androidVersionLL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="36dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/versionTXT"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:fontFamily="@font/muli_light"
+            android:textColor="@android:color/black"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text="@string/version" />
+
+        <TextView
+            android:id="@+id/androidVersionTXT"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/muli_bold"
+            android:textColor="@android:color/black"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="Android Version" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

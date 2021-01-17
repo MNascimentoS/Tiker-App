@@ -19,3 +19,9 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keep class br.com.tiker.utils.StickerPacksContainer { *; }
+-keep class br.com.tiker.persistence.** { *; }
+-keep class br.com.tiker.model.** { *; }
+
+-keep class com.facebook.animated.webp.WebPImage { *; }

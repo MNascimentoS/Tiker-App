@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name" translatable="false">Tiker</string>
+    <string name="cod_ad_debug" translatable="false">ca-app-pub-3940256099942544/5224354917</string>
+    <string name="cod_ad_release" translatable="false">ca-app-pub-3355203749923756/1018041110</string>
+    <string name="sentry_dns" translatable="false">https://b3c1228bb20f428e93c04219667aa3f3@sentry.io/3726554</string>
+    <string name="google_rewards_app" translatable="false">market://details?id=com.google.android.apps.paidtasks</string>
+
+</resources>

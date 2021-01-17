@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Cubos-ticker-android.iml" filepath="$PROJECT_DIR$/.idea/modules/Cubos-ticker-android.iml" group="ticker-android" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="ticker-android/app" />
-      <module fileurl="file://$PROJECT_DIR$/ticker-android.iml" filepath="$PROJECT_DIR$/ticker-android.iml" group="ticker-android" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ticker-android-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ticker-android-app.iml" group="ticker-android/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ticker-android.iml" filepath="$PROJECT_DIR$/.idea/modules/ticker-android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ticker-android.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ticker-android.app.iml" />
     </modules>
   </component>
 </project>

@@ -3,16 +3,12 @@ package br.com.tiker.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
-import androidx.annotation.RequiresApi;
 import android.util.Log;
 
 import com.google.gson.Gson;
-import br.com.tiker.old.constants.Constants;
-import br.com.tiker.old.identities.StickerPacksContainer;
-import br.com.tiker.old.whatsapp_api.ContentFileParser;
-import br.com.tiker.old.whatsapp_api.Sticker;
-import br.com.tiker.old.whatsapp_api.StickerPack;
+import br.com.tiker.model.Constants;
+import br.com.tiker.model.Sticker;
+import br.com.tiker.model.StickerPack;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -119,7 +115,7 @@ public class StickerPacksManager {
     }
 
     public static void deleteStickerPack(String name) {
-        int index = stickerPacksContainer.getIntexByName(name);
+        int index = stickerPacksContainer.getIntexByIdentifier(name);
         if (index < 1000) {
             deleteStickerPack(index);
         }
