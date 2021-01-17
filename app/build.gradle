@@ -76,8 +76,7 @@ dependencies {
     //Koin
     implementation 'org.koin:koin-core:2.1.5'
     implementation 'org.koin:koin-android:2.1.5'
-    implementation 'org.koin:koin-androidx-viewmodel:2.0.1'
-    implementation "org.koin:koin-java:2.0.1"
+    implementation 'org.koin:koin-androidx-viewmodel:2.1.5'
 
     //Billing
     implementation 'com.android.billingclient:billing:3.0.2'
