@@ -25,7 +25,7 @@
     <string name="add_pack_fail_prompt_update_play_link">Atualize</string>
     <string name="cannot_find_play_store">Google Play não está instalado no dispositivo.</string>
     <string name="allow_access">Permitir Acesso</string>
-    <string name="do_login">Fazer Login</string>
+    <string name="do_login">Continuar com o Google</string>
     <string name="share_with_your_friends">Compartilhe com amigos</string>
     <string name="become_premium">Seja premium</string>
     <string name="pay_with_gpay">Pague com o Google Pay</string>
@@ -72,4 +72,5 @@
     <string name="error_login_default">Houve um erro ao tentar realizar o login</string>
     <string name="eror_access_read_files">Nós precisamos do acesso a leitura e escrita de arquivos do seu telefone para poder criar pacotes</string>
     <string name="do_login_description">Antes de ter acesso a todas as funcionalidades, você precisa fazer o login</string>
+    <string name="keep_as_guest">Continuar como convidado</string>
 </resources>

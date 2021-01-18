@@ -2,6 +2,7 @@
     <string name="label_all_stickers">All stickers</string>
     <string name="label_my_packages">My packages</string>
     <string name="create_package">Create packages</string>
+    <string name="keep_as_guest">Keep as guest</string>
     <string name="add_to_whatsapp">Add to WhatsApp</string>
     <string name="error_min_stickers">You need to select at least three stickers</string>
     <string name="error_max_stickers">The WhatsApp not allows to create sticker package with more than 30 stickers</string>
@@ -20,7 +21,7 @@
     <string name="add_pack_fail_prompt_update_play_link">Update</string>
     <string name="cannot_find_play_store">Google Play is not installed on the device.</string>
     <string name="allow_access">Allow Access</string>
-    <string name="do_login">Login</string>
+    <string name="do_login">Login with Google</string>
     <string name="share_with_your_friends">Share with friends</string>
     <string name="become_premium">Be premium</string>
     <string name="pay_with_gpay">Pay with Google Pay</string>

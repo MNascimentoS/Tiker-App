@@ -104,7 +104,7 @@ class SplashScreenActivity : AppCompatActivity(R.layout.activity_splash_screen) 
     private fun animButton(fromSize: Int, toSize: Int) {
         val anim = ValueAnimator.ofInt(fromSize, toSize)
         anim.addUpdateListener { animation: ValueAnimator ->
-            val layoutParams = logoTickerContainer.layoutParams
+            val layoutParams = logoTickerContainer?.layoutParams
             val animationValue = animation.animatedValue as Int
             if (animationValue == toSize) {
                 anim.cancel()
@@ -113,9 +113,9 @@ class SplashScreenActivity : AppCompatActivity(R.layout.activity_splash_screen) 
                 animButton(animationValue, dimen)
                 return@addUpdateListener
             }
-            layoutParams.width = animationValue
-            layoutParams.height = animationValue
-            logoTickerContainer.requestLayout()
+            layoutParams?.width = animationValue
+            layoutParams?.height = animationValue
+            logoTickerContainer?.requestLayout()
         }
         anim.duration = 1500
         anim.start()
@@ -128,20 +128,26 @@ class SplashScreenActivity : AppCompatActivity(R.layout.activity_splash_screen) 
     }
 
     private fun configureLoginButton() {
-        retryAllowAccessBTN.text = getString(R.string.do_login)
-        retryAllowAccessBTN.setOnClickListener { signIn() }
-        withoutLoginTXT.visibility = View.VISIBLE
-        withoutLoginTXT.setOnClickListener { notNowLogin() }
-        retryAllowAccessBTN.fadeIn(AnimationConstants.DURATION_LONG, null)
+        retryAllowAccessBTN?.apply {
+            text = getString(R.string.do_login)
+            setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.ic_google_icon, 0, 0, 0)
+            setPadding(40, 0, 100, 0)
+            setOnClickListener { signIn() }
+            fadeIn(AnimationConstants.DURATION_LONG, null)
+        }
+        withoutLoginBTN?.apply {
+            visible()
+            setOnClickListener { notNowLogin() }
+        }
     }
 
     private fun configureTryAccessButton() {
-        retryAllowAccessBTN.setOnClickListener { RequestPermissionsHelper.requestPermissions(this) }
-        retryAllowAccessBTN.fadeIn(AnimationConstants.DURATION_LONG, null)
+        retryAllowAccessBTN?.setOnClickListener { RequestPermissionsHelper.requestPermissions(this) }
+        retryAllowAccessBTN?.fadeIn(AnimationConstants.DURATION_LONG, null)
     }
 
     private fun signIn() {
-        retryAllowAccessBTN.isClickable = false
+        retryAllowAccessBTN?.isClickable = false
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
