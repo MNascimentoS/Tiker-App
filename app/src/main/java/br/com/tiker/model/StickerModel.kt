@@ -7,5 +7,6 @@ data class StickerModel(
     var id: Int,
     var image: Bitmap,
     var drawable: Drawable? = null,
+    var filePath: String = "",
     var selected: Boolean = false
 )

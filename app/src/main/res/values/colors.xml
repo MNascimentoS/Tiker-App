@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--<color name="colorPrimary">#ffffff</color>
-    <color name="colorPrimaryDark">#BABABA</color>
-    <color name="colorAccent">#128c7e</color>
-    -->
-    <color name="colorPrimary">#00897C</color>
-    <color name="colorPrimaryDark">#00897C</color>
-    <color name="colorAccent">#00897C</color>
+    <color name="vikingGreen">#59E0C2</color>
+    <color name="scooterGreen">#2FB3C6</color>
+
+    <color name="colorPrimary">@color/vikingGreen</color>
+    <color name="colorPrimaryDark">@color/vikingGreen</color>
+    <color name="colorAccent">@color/vikingGreen</color>
+
+
     <color name="colorTextPrimary">#474a4d</color>
     <color name="colorTextSecondary">#8d9193</color>
-    <color name="colorTextDelete">#ff5205</color>
+    <color name="colorTextDelete">#FDB29B</color>
     <color name="colorDetails">#a4abb1</color>
     <color name="colorDetails2">#e3e7e6</color>
 
-    <!--Background remover -->
     <color name="backgroundSecondary">#E5E5E5</color>
 </resources>

@@ -33,6 +33,15 @@ public class StickerPacksContainer {
         return 1000;
     }
 
+    public int getIntexByIdentifier(String identifier) {
+        for (StickerPack stickerPack : this.stickerPacks ) {
+            if (stickerPack.identifier.equals(identifier)) {
+                return this.stickerPacks.indexOf(stickerPack);
+            }
+        }
+        return 1000;
+    }
+
     public StickerPack removeStickerPack(int index) {
         return this.stickerPacks.remove(index);
     }

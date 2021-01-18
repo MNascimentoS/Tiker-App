@@ -46,29 +46,6 @@ public abstract class AddStickerPackActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == ADD_PACK) {
-            if (resultCode == RESULT_CANCELED) {
-                if (data != null) {
-                    final String validationError = data.getStringExtra("validation_error");
-                    if (validationError != null) {
-                        Log.e("AddStickerPackActivity", "Validation failed:" + validationError);
-                    }
-                } else {
-                    new StickerPackNotAddedMessageFragment().show(getSupportFragmentManager(), "sticker_pack_not_added");
-                }
-            } else {
-                ExtensionsKt.alert(this, getString(R.string.sticker_added), getString(R.string.back_whatsapp_see_package), getString(R.string.back), true, null, () -> {
-                    Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.whatsapp");
-                    startActivity(launchIntent);
-                    return null;
-                });
-            }
-        }
-    }
-
     public static final class StickerPackNotAddedMessageFragment extends DialogFragment {
         @NonNull
         @Override

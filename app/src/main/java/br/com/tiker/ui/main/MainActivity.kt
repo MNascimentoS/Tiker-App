@@ -9,9 +9,16 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
+import br.com.tiker.BuildConfig
 import br.com.tiker.R
+import br.com.tiker.persistence.FirebaseDB
 import br.com.tiker.ui.allStickers.AllStickersFragment
+import br.com.tiker.ui.becomePremium.BecomePremiumActivity
 import br.com.tiker.ui.entry.EntryActivity
+import br.com.tiker.ui.splashScreen.SplashScreenActivity
+import br.com.tiker.utils.alert
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import io.sentry.Sentry
 import kotlinx.android.synthetic.main.activity_entry.viewPager
 import kotlinx.android.synthetic.main.activity_main.*
@@ -22,16 +29,16 @@ class MainActivity : AppCompatActivity() {
 
     private val viewModel: MainViewModel by viewModel()
     private lateinit var adapter: MainPagerAdapter
+    private var addedOnMenu: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initUi()
         initListeners()
-        Sentry.init(getString(R.string.sentry_dns))
-
-        viewModel.removeAllUnsavedStickers()
-        viewModel.retriveIntentData(this, intent, contentResolver)
+        if (!BuildConfig.DEBUG) {
+            Sentry.init(getString(R.string.sentry_dns))
+        }
     }
 
     private fun initUi() {
@@ -44,8 +51,21 @@ class MainActivity : AppCompatActivity() {
         viewPager?.adapter = adapter
     }
 
+    override fun onStart() {
+        super.onStart()
+        addedOnMenu = false
+        invalidateOptionsMenu()
+        viewModel.removeAllUnsavedStickers()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
+        FirebaseDB.getUserIsPremium { isPremium ->
+            if (addedOnMenu) return@getUserIsPremium
+            if (!isPremium) menu?.add(Menu.NONE, BECOME_PREMIUM, Menu.NONE, getString(R.string.become_premium))
+            menu?.add(Menu.NONE, LOGOUT, Menu.NONE, getString(R.string.logout))
+            addedOnMenu = true
+        }
         return true
     }
 
@@ -58,6 +78,15 @@ class MainActivity : AppCompatActivity() {
                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$appPackageName")))
                 } catch (ex: ActivityNotFoundException) {
                     startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName")))
+                }
+            }
+            BECOME_PREMIUM -> {
+                startActivity(Intent(this, BecomePremiumActivity::class.java))
+            }
+            LOGOUT -> {
+                alert(getString(R.string.are_you_sure), getString(R.string.you_can_login_again), getString(R.string.yes), true) {
+                    FirebaseAuth.getInstance().signOut()
+                    finish()
                 }
             }
         }
@@ -118,5 +147,10 @@ class MainActivity : AppCompatActivity() {
         sendIntent.type = "text/plain"
         val shareIntent = Intent.createChooser(sendIntent, null)
         startActivity(shareIntent)
+    }
+
+    companion object {
+        private const val BECOME_PREMIUM = 75623
+        private const val LOGOUT = 23245
     }
 }

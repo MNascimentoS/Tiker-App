@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import br.com.tiker.R
 import br.com.tiker.ui.allStickers.adapter.StickerRecyclerAdapter
 import br.com.tiker.ui.create.CreateActivity
+import br.com.tiker.utils.gone
 import br.com.tiker.utils.observe
-import io.cubos.r2d2lib.gone
 import io.cubos.r2d2lib.visible
 import kotlinx.android.synthetic.main.fragment_all_stickers.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -50,6 +50,7 @@ class AllStickersFragment : Fragment() {
             if (isLoading) progressBar?.visible()
             else progressBar?.gone()
         }
+
         observe(viewModel.hasItems) { hasItems ->
             if (!hasItems) emptyStateView?.visible()
         }

@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
 import br.com.tiker.persistence.model.StickerEntity
+import br.com.tiker.persistence.model.StickerIdentifierEntity
 import br.com.tiker.persistence.model.StickerPackageEntity
 
 
@@ -14,6 +15,9 @@ interface StickerDao {
     /* INSERT */
     @Insert
     suspend fun addSticker(stickerEntity: List<StickerEntity>) : List<Long>
+
+    @Insert
+    suspend fun addStickerIdentifier(stickerIdentifierEntity: StickerIdentifierEntity)
 
     @Insert
     suspend fun addStickerPackage(stickerPackageEntity: StickerPackageEntity)
@@ -26,6 +30,9 @@ interface StickerDao {
     }
 
     /* SELECT */
+
+    @Query("SELECT * FROM `sticker-identifier` WHERE 1")
+    suspend fun getAllStickerIdentifier() : List<StickerIdentifierEntity?>?
 
     @Query("SELECT * FROM sticker WHERE id = :id")
     suspend fun getSavedSticker(id: Int) : StickerEntity?
@@ -68,8 +75,8 @@ interface StickerDao {
 
     /* UPDATE */
 
-    @Query("UPDATE sticker_list SET name = :name, author = :author WHERE id = :id")
-    suspend fun saveLastUnsavedStickerList(id: Int, name: String, author: String)
+    @Query("UPDATE sticker_list SET identifier = :identifier, name = :name, author = :author WHERE id = :id")
+    suspend fun saveLastUnsavedStickerList(id: Int, identifier: String, name: String, author: String)
 
     /* DELETE */
 
@@ -81,6 +88,20 @@ interface StickerDao {
 
     @Query("DELETE FROM sticker WHERE id = :id")
     suspend fun removeSticker(id: Int)
+
+    @Query("DELETE FROM `sticker-identifier` WHERE identifier = :identifier")
+    suspend fun removeStickerIdentifier(identifier: String)
+
+    @Transaction
+    suspend fun removeAllStickerIdentifier() {
+        val stickerIdentifierList = getAllStickerIdentifier()
+        stickerIdentifierList?.forEach {
+            it?.let { value ->
+                removeStickerIdentifier(value.identifier)
+            }
+        }
+        removeUnsavedStickersPackageList()
+    }
 
     @Transaction
     suspend fun removeAllUnsavedStickersPackageList() {
@@ -101,5 +122,23 @@ interface StickerDao {
         }
         removeStickerPackage(id)
     }
+
+    /* Java */
+
+    @Insert
+    fun addStickerJ(stickerEntity: List<StickerEntity>) : List<Long>
+
+    @Insert
+    fun addStickerPackageJ(stickerPackageEntity: StickerPackageEntity)
+
+    @Transaction
+    fun addStickerListJ(name: String, author: String, stickerPackageEntity: StickerPackageEntity, stickerEntity: List<StickerEntity>) {
+        val stickerList = addStickerJ(stickerEntity)
+        stickerPackageEntity.stickerList = stickerList
+        stickerPackageEntity.name = name
+        stickerPackageEntity.author = author
+        addStickerPackageJ(stickerPackageEntity)
+    }
+
 
 }

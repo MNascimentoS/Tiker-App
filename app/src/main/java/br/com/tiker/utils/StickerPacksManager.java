@@ -115,7 +115,7 @@ public class StickerPacksManager {
     }
 
     public static void deleteStickerPack(String name) {
-        int index = stickerPacksContainer.getIntexByName(name);
+        int index = stickerPacksContainer.getIntexByIdentifier(name);
         if (index < 1000) {
             deleteStickerPack(index);
         }

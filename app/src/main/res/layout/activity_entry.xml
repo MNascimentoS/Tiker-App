@@ -58,10 +58,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/button_acent_background"
-            android:fontFamily="@font/ubuntu"
+            android:fontFamily="@font/muli"
             android:text="@string/share_with_your_friends"
             android:textAllCaps="false"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@color/colorTextPrimary"
             tools:layout_editor_absoluteX="48dp" />
 
     </LinearLayout>
@@ -80,7 +80,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:fontFamily="@font/ubuntu_bold"
+            android:fontFamily="@font/muli_bold"
             android:textColor="@color/colorPrimary"
             android:textSize="22sp" />
 

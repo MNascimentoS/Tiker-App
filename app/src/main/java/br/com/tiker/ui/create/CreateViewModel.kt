@@ -12,6 +12,8 @@ import org.koin.core.inject
 import kotlin.coroutines.CoroutineContext
 import android.graphics.BitmapFactory
 import br.com.tiker.persistence.StickerRoomDatabase
+import br.com.tiker.utils.random
+import kotlin.random.Random
 
 
 class CreateViewModel : ViewModel(), KoinComponent, CoroutineScope {
@@ -45,7 +47,8 @@ class CreateViewModel : ViewModel(), KoinComponent, CoroutineScope {
     }
 
     fun saveStickerPackage(name: String, author: String) = launch {
-        stickerDb.stickerDao().saveLastUnsavedStickerList(stickerPackageId, name, author)
+        val identifier = random() + Random.nextInt()
+        stickerDb.stickerDao().saveLastUnsavedStickerList(stickerPackageId, identifier, name, author)
         callShareActivity.value = true
     }
 

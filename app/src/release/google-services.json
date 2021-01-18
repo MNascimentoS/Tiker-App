@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "197118949774-s4fd195hu2b766ndsqfdqrtrapvbtflu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.tiker",
+            "certificate_hash": "67ec71f0e860c7c11071cb68ce84220761d8ec5e"
+          }
+        },
+        {
           "client_id": "197118949774-6gg7oseapmg8sm9ctuhp7hbsed519oul.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

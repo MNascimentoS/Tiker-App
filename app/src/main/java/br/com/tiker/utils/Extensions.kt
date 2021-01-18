@@ -112,3 +112,26 @@ fun Activity.alert(title: String, message: String) {
             .setMessage(message)
             .show()
 }
+
+fun random(): String? {
+    val generator = java.util.Random()
+    val randomStringBuilder = StringBuilder()
+    val randomLength = generator.nextInt(20)
+    var tempChar: Char
+    for (i in 0 until randomLength) {
+        tempChar = (generator.nextInt(42) + 48).toChar()
+        randomStringBuilder.append(tempChar)
+    }
+    var string = randomStringBuilder.toString()
+
+    string = string.replace("/", "")
+    string = string.replace(":", "")
+    string = string.replace("-", "")
+    string = string.replace(";", "")
+    string = string.replace(">", "")
+    string = string.replace("<", "")
+    string = string.replace("=", "")
+    string = string.replace("@", "")
+    string = string.replace("?", "")
+    return string
+}

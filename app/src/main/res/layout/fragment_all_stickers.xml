@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.allStickers.AllStickersFragment">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -28,10 +29,10 @@
         tools:visibility="visible">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
             android:layout_margin="@dimen/defaultMargin"
-            android:src="@drawable/ticker_empty" />
+            android:src="@drawable/ticker_logo" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -39,7 +40,7 @@
             android:layout_margin="@dimen/defaultMargin"
             android:textSize="@dimen/textBigSize"
             android:textColor="@color/colorTextSecondary"
-            android:fontFamily="@font/ubuntu_bold"
+            android:fontFamily="@font/muli_bold"
             android:text="@string/error_not_found_stickers" />
 
 <!--        <TextView-->
@@ -56,6 +57,8 @@
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:visibility="visible"
+        tools:visibility="visible"/>
 
 </FrameLayout>

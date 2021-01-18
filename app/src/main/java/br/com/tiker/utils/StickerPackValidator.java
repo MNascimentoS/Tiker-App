@@ -11,21 +11,15 @@ package br.com.tiker.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import androidx.annotation.NonNull;
-
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
 import android.webkit.URLUtil;
 
-import com.facebook.animated.webp.WebPImage;
+import androidx.annotation.NonNull;
 
-import br.com.tiker.R;
-import br.com.tiker.model.Sticker;
-import br.com.tiker.model.StickerPack;
-import br.com.tiker.utils.FileUtils;
-import br.com.tiker.utils.ImageUtils;
+import com.facebook.animated.webp.WebPImage;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,6 +27,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Objects;
+
+import br.com.tiker.model.Sticker;
+import br.com.tiker.model.StickerPack;
 
 public class StickerPackValidator {
     public static final int STICKER_SIZE_MAX = 30;
@@ -121,7 +118,11 @@ public class StickerPackValidator {
             throw new IllegalStateException("sticker pack sticker count should be between 3 to 30 inclusive, it currently has " + stickers.size() + ", sticker pack identifier:" + stickerPack.identifier);
         }
         for (final Sticker sticker : stickers) {
-            validateSticker(context, stickerPack.identifier, sticker);
+            try {
+                validateSticker(context, stickerPack.identifier, sticker);
+            } catch (IllegalStateException e) {
+                throw e;
+            }
         }
     }
 

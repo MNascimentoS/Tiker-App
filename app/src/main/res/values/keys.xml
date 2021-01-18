@@ -6,5 +6,6 @@
     <string name="cod_ad_release" translatable="false">ca-app-pub-3355203749923756/1018041110</string>
     <string name="sentry_dns" translatable="false">https://b3c1228bb20f428e93c04219667aa3f3@sentry.io/3726554</string>
     <string name="google_rewards_app" translatable="false">market://details?id=com.google.android.apps.paidtasks</string>
+    <string name="appcenter_key" translatable="false">f4962101-309f-4472-864d-770dded43170</string>
 
 </resources>

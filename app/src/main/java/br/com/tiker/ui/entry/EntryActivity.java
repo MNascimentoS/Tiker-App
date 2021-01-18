@@ -1,10 +1,13 @@
 package br.com.tiker.ui.entry;
 
 import android.Manifest;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +20,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -37,6 +41,10 @@ import com.tbuonomo.viewpagerdotsindicator.DotsIndicator;
 import br.com.tiker.BuildConfig;
 import br.com.tiker.R;
 import br.com.tiker.model.Constants;
+import br.com.tiker.persistence.FirebaseDB;
+import br.com.tiker.persistence.StickerRoomDatabase;
+import br.com.tiker.persistence.model.StickerEntity;
+import br.com.tiker.persistence.model.StickerPackageEntity;
 import br.com.tiker.ui.base.AddStickerPackActivity;
 import br.com.tiker.model.Sticker;
 import br.com.tiker.model.StickerPack;
@@ -48,12 +56,19 @@ import br.com.tiker.utils.FileUtils;
 import br.com.tiker.utils.StickerPacksManager;
 import br.com.tiker.services.StickerContentProvider;
 import io.sentry.Sentry;
+import kotlin.Lazy;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+
 import static br.com.tiker.utils.StickerPackValidator.STICKER_SIZE_MAX;
+import static org.koin.java.KoinJavaComponent.inject;
 
 
 public class EntryActivity extends AddStickerPackActivity implements RewardedVideoAdListener {
@@ -70,6 +85,9 @@ public class EntryActivity extends AddStickerPackActivity implements RewardedVid
 
     private final static int MAX_ITEMS = 5;
 
+     private Lazy<StickerRoomDatabase> stickerDb = inject(StickerRoomDatabase.class);
+
+
     private RewardedVideoAd mRewardedVideoAd;
     private Button mShareWithFriend;
     private CircularProgressBar mProgress;
@@ -81,6 +99,10 @@ public class EntryActivity extends AddStickerPackActivity implements RewardedVid
     private boolean stickerListEmpty = false;
     private boolean adCompleted = false;
     private String error = null;
+    private ArrayList<StickerEntity> imageByteList = new ArrayList<StickerEntity>();
+    private String name = "";
+    private boolean isPremium = false;
+
 
     private ArrayList<StickerPack> stickerPack = new ArrayList<>();
 
@@ -126,6 +148,36 @@ public class EntryActivity extends AddStickerPackActivity implements RewardedVid
         configureChangePage();
 
         checkPermissions();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == ADD_PACK) {
+            mProgressComponentRL.setVisibility(View.GONE);
+            if (resultCode == RESULT_CANCELED) {
+                if (data != null) {
+                    final String validationError = data.getStringExtra("validation_error");
+                    if (validationError != null) {
+                        Log.e("AddStickerPackActivity", "Validation failed:" + validationError);
+                    }
+                } else {
+                    new StickerPackNotAddedMessageFragment().show(getSupportFragmentManager(), "sticker_pack_not_added");
+                }
+            } else {
+                new Thread() {
+                    @Override
+                    public void run() {
+                        stickerDb.getValue().stickerDao().addStickerListJ(name, getString(R.string.app_name), new StickerPackageEntity(), imageByteList);
+                    }
+                }.start();
+                ExtensionsKt.alert(this, getString(R.string.sticker_added), getString(R.string.back_whatsapp_see_package), getString(R.string.back), true, null, () -> {
+                    Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.whatsapp");
+                    startActivity(launchIntent);
+                    return null;
+                });
+            }
+        }
     }
 
     private void configureChangePage() {
@@ -231,6 +283,19 @@ public class EntryActivity extends AddStickerPackActivity implements RewardedVid
 
         // Figure out what to do based on the intent type
         if (intent.getType() != null) {
+            FirebaseDB.Companion.getUserIsPremium(this::checkUserIsPremium);
+        }
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+
+        initListeners();
+    }
+
+    private kotlin.Unit checkUserIsPremium(boolean isPremium) {
+        this.isPremium = isPremium;
+        if (!isPremium) {
             ExtensionsKt.alert(this, getString(R.string.adding_package), getString(R.string.info_watch_add), getString(R.string.watch), false, null, () -> {
                 mProgressComponentRL.setVisibility(View.VISIBLE);
                 new Thread() {
@@ -247,13 +312,16 @@ public class EntryActivity extends AddStickerPackActivity implements RewardedVid
                 mRewardedVideoAd.loadAd(ad, new AdRequest.Builder().build());
                 return null;
             });
+        } else {
+            mProgressComponentRL.setVisibility(View.VISIBLE);
+            new Thread() {
+                @Override
+                public void run() {
+                    createPackage();
+                }
+            }.start();
         }
-
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().hide();
-        }
-
-        initListeners();
+        return null;
     }
 
     private void initListeners() {
@@ -274,7 +342,7 @@ public class EntryActivity extends AddStickerPackActivity implements RewardedVid
             ArrayList<Sticker> stickers = new ArrayList();
             Uri uri = intent.getClipData().getItemAt(0).getUri();
             String name2 = getFileName(uri);
-            String name = name2.replace(getString(R.string.whatsapp_conversation), "").replace(".txt", "");
+            name = name2.replace(getString(R.string.whatsapp_conversation), "").replace(".txt", "");
             StickerPacksManager.deleteStickerPack(name);
             for (int i = 1; i < 10; i++) {
                 StickerPacksManager.deleteStickerPack(name + " " + i);
@@ -332,9 +400,31 @@ public class EntryActivity extends AddStickerPackActivity implements RewardedVid
                 } catch (Exception ex) {
                     error = ex.getMessage();
                 }
+
+                ContentResolver cr = getApplicationContext().getContentResolver();
+                for (int j = 0; j < dividedList.get(i).size(); j++) {
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    try {
+                        InputStream is = cr.openInputStream(dividedList.get(i).get(j));
+                        Bitmap bitmap = BitmapFactory.decodeStream(is);
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        imageByteList.add(new StickerEntity(0, stream.toByteArray()));
+                        if (is != null) is.close();
+                    } catch (IOException e) {
+                        Sentry.capture(e);
+                        e.printStackTrace();
+                    }
+                }
+            }
+            if (isPremium) {
+                for (int i = 0; i < stickerPack.size(); i++) {
+                    this.addStickerPackToWhatsApp(stickerPack.get(i).identifier, stickerPack.get(i).name);
+                }
             }
         }
     }
+
+
 
     @Override
     public void onRewardedVideoAdLoaded() {
