@@ -70,14 +70,16 @@ class StickerDataSource: PageKeyedDataSource<Int, StickerModel>() {
                             StickerModel(
                                     lastFileIndex,
                                     BitmapFactory.decodeFile(files[lastFileIndex].absolutePath),
-                                    ImageDecoder.decodeDrawable(ImageDecoder.createSource(files[lastFileIndex]))
+                                    ImageDecoder.decodeDrawable(ImageDecoder.createSource(files[lastFileIndex])),
+                                    filePath = files[lastFileIndex].absolutePath
                             )
                     )
                 } else {
                     stickers.add(
                             StickerModel(
                                     lastFileIndex,
-                                    BitmapFactory.decodeFile(files[lastFileIndex].absolutePath)
+                                    BitmapFactory.decodeFile(files[lastFileIndex].absolutePath),
+                                    filePath = files[lastFileIndex].absolutePath
                             )
                     )
                 }

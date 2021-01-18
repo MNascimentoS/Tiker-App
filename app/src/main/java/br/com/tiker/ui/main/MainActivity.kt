@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import androidx.viewpager.widget.ViewPager
 import br.com.tiker.BuildConfig
 import br.com.tiker.R
@@ -23,7 +24,6 @@ import io.sentry.Sentry
 import kotlinx.android.synthetic.main.activity_entry.viewPager
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity() {
             override fun onPageSelected(position: Int) {
                 when (position) {
                     0 -> {
-                        val img = resources.getDrawable(R.drawable.ic_add, theme)
+                        val img = ResourcesCompat.getDrawable(resources, R.drawable.ic_add, theme)
                         principalBTN?.apply {
                             text = getString(R.string.create_package)
                             setCompoundDrawablesWithIntrinsicBounds(img, null, null, null)
