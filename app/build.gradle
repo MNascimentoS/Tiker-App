@@ -127,6 +127,7 @@ dependencies {
 
     implementation 'com.sangcomz:FishBun:0.8.7'
     implementation 'com.github.bumptech.glide:glide:4.11.0'
+    implementation 'com.squareup.picasso:picasso:2.71828'
 
     //background remover
     implementation 'com.github.duanhong169:checkerboarddrawable:1.0.2'

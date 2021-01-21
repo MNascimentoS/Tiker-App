@@ -1,6 +1,8 @@
 package br.com.tiker.ui.myPackages.adapter
 
 import android.annotation.SuppressLint
+import android.graphics.drawable.AnimatedImageDrawable
+import android.os.Build
 import android.view.ViewGroup
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -9,6 +11,7 @@ import br.com.tiker.R
 import br.com.tiker.model.StickerPackageModel
 import com.bumptech.glide.Glide
 import io.cubos.r2d2lib.inflate
+import kotlinx.android.synthetic.main.item_sticker.view.*
 import kotlinx.android.synthetic.main.item_sticker_package.view.*
 
 class MyPackagesRecyclerAdapter :
@@ -34,19 +37,54 @@ class MyPackagesRecyclerAdapter :
                     onSelectPackage?.invoke(stickerPackage.id)
                 }
                 stickerPackage.stickerList.size.takeIf { size -> size > 0 }?.let {
-                    stickerIMG1.setImageBitmap(stickerPackage.stickerList[0].image)
+                    stickerPackage.stickerList[0].drawable?.let { drawable ->
+                        stickerIMG1?.setImageDrawable(drawable)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && drawable is AnimatedImageDrawable) {
+                            drawable.start()
+                        }
+                    } ?: run {
+                        stickerIMG1.setImageBitmap(stickerPackage.stickerList[0].image)
+                    }
                 }
                 stickerPackage.stickerList.size.takeIf { size -> size > 1 }?.let {
-                    stickerIMG2.setImageBitmap(stickerPackage.stickerList[1].image)
+                    stickerPackage.stickerList[1].drawable?.let { drawable ->
+                        stickerIMG2?.setImageDrawable(drawable)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && drawable is AnimatedImageDrawable) {
+                            drawable.start()
+                        }
+                    } ?: run {
+                        stickerIMG2.setImageBitmap(stickerPackage.stickerList[1].image)
+                    }
                 }
                 stickerPackage.stickerList.size.takeIf { size -> size > 2 }?.let {
-                    stickerIMG3.setImageBitmap(stickerPackage.stickerList[2].image)
+                    stickerPackage.stickerList[2].drawable?.let { drawable ->
+                        stickerIMG3?.setImageDrawable(drawable)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && drawable is AnimatedImageDrawable) {
+                            drawable.start()
+                        }
+                    } ?: run {
+                        stickerIMG3.setImageBitmap(stickerPackage.stickerList[2].image)
+                    }
                 }
                 stickerPackage.stickerList.size.takeIf { size -> size > 3 }?.let {
-                    stickerIMG4.setImageBitmap(stickerPackage.stickerList[3].image)
+                    stickerPackage.stickerList[3].drawable?.let { drawable ->
+                        stickerIMG4?.setImageDrawable(drawable)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && drawable is AnimatedImageDrawable) {
+                            drawable.start()
+                        }
+                    } ?: run {
+                        stickerIMG4.setImageBitmap(stickerPackage.stickerList[3].image)
+                    }
                 }
                 stickerPackage.stickerList.size.takeIf { size -> size > 4 }?.let {
-                    stickerIMG5.setImageBitmap(stickerPackage.stickerList[4].image)
+                    stickerPackage.stickerList[4].drawable?.let { drawable ->
+                        stickerIMG5?.setImageDrawable(drawable)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && drawable is AnimatedImageDrawable) {
+                            drawable.start()
+                        }
+                    } ?: run {
+                        stickerIMG5.setImageBitmap(stickerPackage.stickerList[4].image)
+                    }
                 }
             }
         }

@@ -1,6 +1,8 @@
 package br.com.tiker.persistence.dataSource
 
 import android.graphics.BitmapFactory
+import android.graphics.ImageDecoder
+import android.os.Build
 import androidx.paging.PageKeyedDataSource
 import br.com.tiker.model.StickerModel
 import br.com.tiker.model.StickerPackageModel
@@ -12,6 +14,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.koin.core.KoinComponent
 import org.koin.core.inject
+import java.io.File
 import kotlin.coroutines.CoroutineContext
 
 class PackageStickerDataSource : PageKeyedDataSource<Int, StickerPackageModel>(), KoinComponent, CoroutineScope {
@@ -60,14 +63,34 @@ class PackageStickerDataSource : PageKeyedDataSource<Int, StickerPackageModel>()
                         for (i in 0..4) {
                             if (stickers.size > i) {
                                 val sticker = stickers[i]
-                                val bmp = BitmapFactory.decodeByteArray(sticker.sticker, 0, sticker.sticker.size)
-                                stickerList.add(
+//                                val bmp = BitmapFactory.decodeByteArray(sticker.sticker, 0, sticker.sticker.size)
+//                                stickerList.add(
+//                                        StickerModel(
+//                                                id = sticker.id,
+//                                                selected = false,
+//                                                image = bmp
+//                                        )
+//                                )
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && !sticker.stickerFile.isNullOrEmpty()) {
+                                    stickerList.add(
                                         StickerModel(
-                                                id = sticker.id,
-                                                selected = false,
-                                                image = bmp
+                                            sticker.id,
+                                            BitmapFactory.decodeFile(sticker.stickerFile!!),
+                                            ImageDecoder.decodeDrawable(ImageDecoder.createSource(
+                                                File(sticker.stickerFile!!)
+                                            )),
+                                            filePath = sticker.stickerFile ?: ""
                                         )
-                                )
+                                    )
+                                } else {
+                                    stickerList.add(
+                                        StickerModel(
+                                            sticker.id,
+                                            BitmapFactory.decodeByteArray(sticker.sticker, 0, sticker.sticker.size),
+                                            filePath = sticker.stickerFile ?: ""
+                                        )
+                                    )
+                                }
                             }
                         }
                     }

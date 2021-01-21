@@ -12,16 +12,16 @@ import br.com.tiker.persistence.model.StickerIdentifierEntity
 import br.com.tiker.persistence.model.StickerPackageEntity
 
 @Database(
-    version = StickerRoomDatabase.VERSION,
-    exportSchema = false,
-    entities = [StickerEntity::class, StickerPackageEntity::class, StickerIdentifierEntity::class]
+        version = StickerRoomDatabase.VERSION,
+        exportSchema = false,
+        entities = [StickerEntity::class, StickerPackageEntity::class, StickerIdentifierEntity::class]
 )
 @TypeConverters(StickerListConverter::class)
 abstract class StickerRoomDatabase : RoomDatabase() {
 
     companion object {
         const val NAME = "sticker-db"
-        const val VERSION = 3
+        const val VERSION = 4
 
         val MIGRATION_1_2 = object : Migration(1, 2) {
             override fun migrate(database: SupportSQLiteDatabase) {
@@ -39,6 +39,16 @@ abstract class StickerRoomDatabase : RoomDatabase() {
                 database.execSQL("BEGIN TRANSACTION;")
                 // Alter, create, drop, whatever
                 database.execSQL("ALTER TABLE 'sticker_list' ADD COLUMN 'identifier' varchar(30) DEFAULT NULL;")
+                // Commit transaction
+                database.execSQL("COMMIT;")
+            }
+        }
+        val MIGRATION_3_4 = object : Migration(3, 4) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                // Begin SQL transaction
+                database.execSQL("BEGIN TRANSACTION;")
+                // Alter, create, drop, whatever
+                database.execSQL("ALTER TABLE 'sticker' ADD COLUMN 'sticker_file' varchar(30) DEFAULT NULL;")
                 // Commit transaction
                 database.execSQL("COMMIT;")
             }

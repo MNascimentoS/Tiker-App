@@ -5,7 +5,9 @@ import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.ImageDecoder
 import android.net.Uri
+import android.os.Build
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,6 +15,7 @@ import androidx.lifecycle.viewModelScope
 import br.com.tiker.R
 import br.com.tiker.model.Constants
 import br.com.tiker.model.Sticker
+import br.com.tiker.model.StickerModel
 import br.com.tiker.model.StickerPack
 import br.com.tiker.persistence.SaveBitmapToDevice
 import br.com.tiker.persistence.StickerRoomDatabase
@@ -24,7 +27,9 @@ import io.sentry.Sentry
 import kotlinx.coroutines.launch
 import org.koin.core.KoinComponent
 import org.koin.core.inject
+import java.io.BufferedInputStream
 import java.io.ByteArrayOutputStream
+import java.io.File
 import kotlin.random.Random
 
 
@@ -45,7 +50,9 @@ class StickerPackageViewModel : ViewModel(), KoinComponent {
     var identifier = ""
     var namePackage: MutableLiveData<String> = MutableLiveData()
     var authorPackage: MutableLiveData<String> = MutableLiveData()
-    var stickerList: MutableLiveData<List<Bitmap>> = MutableLiveData()
+    private var _stickerList: MutableLiveData<List<StickerModel>> = MutableLiveData()
+    var stickerList: LiveData<List<StickerModel>> = _stickerList
+    var fileName: ArrayList<String> = arrayListOf()
 
     var maxStickerSize = false
     val stickerPackageIdentifierList = arrayListOf<String>()
@@ -63,14 +70,30 @@ class StickerPackageViewModel : ViewModel(), KoinComponent {
             if (result.first != null && result.second != null) {
                 stickerPackageId = result.first!!.id
                 identifier = result.first!!.identifier ?: ""
-                val bitmapList = arrayListOf<Bitmap>()
-                result.second!!.forEach {
-                    val bmp = BitmapFactory.decodeByteArray(it.sticker, 0, it.sticker.size)
-                    bitmapList.add(bmp)
+                val list = arrayListOf<StickerModel>()
+                result.second!!.forEachIndexed { index, value ->
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && value.stickerFile != null) {
+                        list.add(
+                            StickerModel(
+                                index,
+                                BitmapFactory.decodeFile(value.stickerFile),
+                                ImageDecoder.decodeDrawable(ImageDecoder.createSource(File(value.stickerFile!!))),
+                                filePath = value.stickerFile ?: ""
+                            )
+                        )
+                    } else {
+                        list.add(
+                            StickerModel(
+                                index,
+                                BitmapFactory.decodeByteArray(value.sticker, 0, value.sticker.size),
+                                filePath = value.stickerFile ?: ""
+                            )
+                        )
+                    }
                 }
                 namePackage.value = result.first?.name ?: "-"
                 authorPackage.value = result.first?.author ?: "-"
-                stickerList.value = bitmapList
+                _stickerList.value = list
             }
             isLoading.value = false
         }
@@ -106,13 +129,13 @@ class StickerPackageViewModel : ViewModel(), KoinComponent {
 
                 val stickerUriList = arrayListOf<Uri>()
                 var count = 1
-                stickerList.value?.forEachIndexed { index, bitmap ->
+                stickerList.value?.forEachIndexed { index, value ->
                     if (index % StickerPackValidator.STICKER_SIZE_MAX == 0) {
                         stickerPackageIdentifierList.add(random() + Random.nextInt())
                         stickerPackageNameList.add(namePackage.value + " " + count)
                         count++
                     }
-                    getImageUri(bitmap, context.contentResolver, stickerPackageIdentifierList.last())?.let { uri ->
+                    getImageUri(value, context.contentResolver, stickerPackageIdentifierList.last())?.let { uri ->
                         stickerUriList.add(uri)
                     }
                 }
@@ -124,6 +147,7 @@ class StickerPackageViewModel : ViewModel(), KoinComponent {
                 stickerList.value?.forEach {
                     getImageUri(it, context.contentResolver, identifier)?.let { uri ->
                         stickerUriList.add(uri)
+                        fileName.add(File(it.filePath).name)
                     }
                 }
 
@@ -192,11 +216,8 @@ class StickerPackageViewModel : ViewModel(), KoinComponent {
         }
     }
 
-    private fun getImageUri(bitmap: Bitmap, contentResolver: ContentResolver, identifier: String): Uri? {
-        val bytes = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, bytes)
-
-        val path = saveBitmapToDevice.insertImageIntoGallery(contentResolver, bitmap, random() + Random.nextInt(), identifier)
+    private fun getImageUri(sticker: StickerModel, contentResolver: ContentResolver, identifier: String): Uri? {
+        val path = saveBitmapToDevice.insertImageIntoGallery(contentResolver, sticker, random() + Random.nextInt(), identifier)
         return Uri.parse(path)
     }
 

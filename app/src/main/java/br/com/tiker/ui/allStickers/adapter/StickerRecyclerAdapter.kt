@@ -1,6 +1,7 @@
 package br.com.tiker.ui.allStickers.adapter
 
 import android.graphics.drawable.AnimatedImageDrawable
+import android.graphics.drawable.AnimationDrawable
 import android.os.Build
 import android.view.ViewGroup
 import android.widget.Toast
@@ -11,6 +12,7 @@ import br.com.tiker.R
 import br.com.tiker.model.StickerModel
 import br.com.tiker.utils.StickerPackValidator.STICKER_SIZE_MAX
 import com.bumptech.glide.Glide
+import com.squareup.picasso.Picasso
 import io.cubos.r2d2lib.gone
 import io.cubos.r2d2lib.inflate
 import io.cubos.r2d2lib.visible
@@ -30,12 +32,13 @@ class StickerRecyclerAdapter :
         val currentItem = getItem(position)
         with(holder.itemView) {
             currentItem?.let {
-                //stickerIMG?.setImageBitmap(currentItem.image)
                 currentItem.drawable?.let { drawable ->
                     stickerIMG?.setImageDrawable(drawable)
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && drawable is AnimatedImageDrawable) {
                         drawable.start()
                     }
+                } ?: run {
+                    stickerIMG?.setImageBitmap(currentItem.image)
                 }
                 if (currentItem.selected) {
                     selectedIMG?.visible()
@@ -45,10 +48,6 @@ class StickerRecyclerAdapter :
             }
             setOnClickListener {
                 currentItem?.let {
-//                    if (selectedStickers.size >= STICKER_SIZE_MAX && !currentItem.selected) {
-//                        Toast.makeText(context, R.string.error_max_stickers, Toast.LENGTH_LONG).show()
-//                        return@setOnClickListener
-//                    }
                     currentItem.selected = !currentItem.selected
                     if (currentItem.selected) {
                         selectedStickers.add(currentItem)

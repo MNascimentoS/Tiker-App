@@ -8,7 +8,8 @@ import br.com.tiker.R
 import br.com.tiker.ui.allStickers.AllStickersFragment
 import br.com.tiker.ui.myPackages.MyPackagesFragment
 
-class MainPagerAdapter(context: Context, supportFragmentManager: FragmentManager) : FragmentPagerAdapter(supportFragmentManager) {
+class MainPagerAdapter(context: Context, supportFragmentManager: FragmentManager) :
+    FragmentPagerAdapter(supportFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     private val fragmentTitles = listOf(
         context.getString(R.string.label_all_stickers),

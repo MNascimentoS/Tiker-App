@@ -381,8 +381,8 @@ public class EntryActivity extends AddStickerPackActivity implements RewardedVid
                 //Save the sticker images locally and get the list of new stickers for pack
                 List<Sticker> stickerList;
                 String stickerPath = Constants.STICKERS_DIRECTORY_PATH + dividedListName.get(i);
-                stickerList = StickerPacksManager.saveStickerPackFilesLocally(dividedListName.get(i), dividedList.get(i), this);
-                stickerPack.get(i).setStickers(stickerList);
+//                stickerList = StickerPacksManager.saveStickerPackFilesLocally(dividedListName.get(i), dividedList.get(i), this);
+//                stickerPack.get(i).setStickers(stickerList);
 
                 //Generate image tray icon
                 String trayIconFile = FileUtils.generateRandomIdentifier() + ".png";
@@ -408,7 +408,7 @@ public class EntryActivity extends AddStickerPackActivity implements RewardedVid
                         InputStream is = cr.openInputStream(dividedList.get(i).get(j));
                         Bitmap bitmap = BitmapFactory.decodeStream(is);
                         bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                        imageByteList.add(new StickerEntity(0, stream.toByteArray()));
+//                        imageByteList.add(new StickerEntity(0, stream.toByteArray()));
                         if (is != null) is.close();
                     } catch (IOException e) {
                         Sentry.capture(e);

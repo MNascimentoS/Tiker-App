@@ -9,7 +9,9 @@ data class StickerEntity(
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,
     @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
-    var sticker: ByteArray
+    var sticker: ByteArray,
+    @ColumnInfo(name = "sticker_file")
+    var stickerFile: String? = null
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -19,7 +21,7 @@ data class StickerEntity(
 
         if (id != other.id) return false
         if (!sticker.contentEquals(other.sticker)) return false
-
+        if (stickerFile != other.stickerFile) return false
         return true
     }
 
