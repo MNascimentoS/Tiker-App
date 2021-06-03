@@ -3,14 +3,20 @@ package br.com.tiker.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.util.Log;
+import android.util.Pair;
+
+import androidx.annotation.RequiresApi;
 
 import com.google.gson.Gson;
+
 import br.com.tiker.model.Constants;
 import br.com.tiker.model.Sticker;
 import br.com.tiker.model.StickerPack;
 
 import java.io.*;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,17 +24,17 @@ public class StickerPacksManager {
 
     public static StickerPacksContainer stickerPacksContainer = null;
 
-    public static List<Sticker> saveStickerPackFilesLocally(String identifier, List<Uri> stickersUries, Context context) {
+    public static List<Sticker> saveStickerPackFilesLocally(String identifier, List<Pair<Boolean, Uri>> stickersUries, Context context) {
         String stickerPath = Constants.STICKERS_DIRECTORY_PATH + identifier;
         List<Sticker> stickerList = new ArrayList<>();
         File directory = new File(stickerPath);
         if (!directory.exists()) {
             directory.mkdir();
         }
-        for (Uri uri : stickersUries) {
-            Sticker sticker = new Sticker(FileUtils.generateRandomIdentifier() + ".webp", null);
+        for (Pair<Boolean, Uri> pair : stickersUries) {
+            Sticker sticker = new Sticker(FileUtils.generateRandomIdentifier() + ".webp", null, pair.first);
             stickerList.add(sticker);
-            saveStickerFilesLocally(sticker, uri, stickerPath, context);
+            saveStickerFilesLocally(sticker, pair.second, stickerPath, context);
         }
         return stickerList;
     }
@@ -66,24 +72,33 @@ public class StickerPacksManager {
 
     public static void createStickerImageFile(Uri sourceUri, Uri destinyUri, Context context, Bitmap.CompressFormat format) {
         String destinationFilename = destinyUri.getPath();
+
         try {
-            File file = new File(destinationFilename);
-            if (!file.exists()) {
-                if (!file.getParentFile().exists()) {
-                    file.getParentFile().getParentFile().mkdirs();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                copyFile(new File(sourceUri.getPath()), new File(destinationFilename));
+            } else {
+                File file = new File(destinationFilename);
+                if (!file.exists()) {
+                    if (!file.getParentFile().exists()) {
+                        file.getParentFile().getParentFile().mkdirs();
+                    }
+                    file.getParentFile().mkdirs();
                 }
-                file.getParentFile().mkdirs();
+                file.createNewFile();
+                Bitmap bitmap = ImageUtils.compressImageToBytes(sourceUri, 70, 512, 512, context, format);
+                OutputStream stream2 = new FileOutputStream(file, false);
+                bitmap.compress(Bitmap.CompressFormat.WEBP, 70, stream2);
+                stream2.flush();
+                stream2.close();
             }
-            file.createNewFile();
-            Bitmap bitmap = ImageUtils.compressImageToBytes(sourceUri, 70, 512, 512, context, format);
-            OutputStream stream = null;
-            stream = new FileOutputStream(file, false);
-            bitmap.compress(Bitmap.CompressFormat.WEBP, 70, stream);
-            stream.flush();
-            stream.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    public static void copyFile(File source, File destination) throws IOException {
+        android.os.FileUtils.copy(new FileInputStream(source), new FileOutputStream(destination, false));
     }
 
     public static void createStickerPackTrayIconFile(Uri sourceUri, Uri destinyUri, Context context) {

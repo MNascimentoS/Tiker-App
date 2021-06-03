@@ -73,4 +73,5 @@
     <string name="error_login_default">There was an error when trying to login</string>
     <string name="eror_access_read_files">We need access to write and read files in your phone</string>
     <string name="do_login_description">Before accessing all functionality, you need to login</string>
+    <string name="yes">Sim</string>
 </resources>

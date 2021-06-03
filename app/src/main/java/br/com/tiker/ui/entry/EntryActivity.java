@@ -29,9 +29,6 @@ import android.widget.Toast;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.reward.RewardItem;
-import com.google.android.gms.ads.reward.RewardedVideoAd;
-import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
@@ -71,7 +68,7 @@ import static br.com.tiker.utils.StickerPackValidator.STICKER_SIZE_MAX;
 import static org.koin.java.KoinJavaComponent.inject;
 
 
-public class EntryActivity extends AddStickerPackActivity implements RewardedVideoAdListener {
+public class EntryActivity extends AddStickerPackActivity {
     /**
      * permissions request code
      */
@@ -88,7 +85,7 @@ public class EntryActivity extends AddStickerPackActivity implements RewardedVid
      private Lazy<StickerRoomDatabase> stickerDb = inject(StickerRoomDatabase.class);
 
 
-    private RewardedVideoAd mRewardedVideoAd;
+//    private RewardedVideoAd mRewardedVideoAd;
     private Button mShareWithFriend;
     private CircularProgressBar mProgress;
     private TextView mProgressText;
@@ -307,9 +304,9 @@ public class EntryActivity extends AddStickerPackActivity implements RewardedVid
                 String ad = "";
                 if (BuildConfig.DEBUG) ad = getString(R.string.cod_ad_debug);
                 else ad = getString(R.string.cod_ad_release);
-                mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
-                mRewardedVideoAd.setRewardedVideoAdListener(this);
-                mRewardedVideoAd.loadAd(ad, new AdRequest.Builder().build());
+//                mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
+//                mRewardedVideoAd.setRewardedVideoAdListener(this);
+//                mRewardedVideoAd.loadAd(ad, new AdRequest.Builder().build());
                 return null;
             });
         } else {
@@ -374,7 +371,7 @@ public class EntryActivity extends AddStickerPackActivity implements RewardedVid
             }
 
             for (int i = 0; i < dividedList.size(); i++) {
-                stickerPack.add(new StickerPack(dividedListName.get(i), dividedListName.get(i), getString(R.string.app_name), "", "tickerapp0@gmail.com", "", "", ""));
+//                stickerPack.add(new StickerPack(dividedListName.get(i), dividedListName.get(i), getString(R.string.app_name), "", "tickerapp0@gmail.com", "", "", ""));
                 stickerPack.get(i).setAndroidPlayStoreLink("");
                 stickerPack.get(i).setIosAppStoreLink("");
 
@@ -425,70 +422,70 @@ public class EntryActivity extends AddStickerPackActivity implements RewardedVid
     }
 
 
+//
+//    @Override
+//    public void onRewardedVideoAdLoaded() {
+//        mProgressComponentRL.setVisibility(View.GONE);
+//
+////        if (mRewardedVideoAd.isLoaded()) {
+////            mRewardedVideoAd.show();
+////        }
+//    }
 
-    @Override
-    public void onRewardedVideoAdLoaded() {
-        mProgressComponentRL.setVisibility(View.GONE);
+//    @Override
+//    public void onRewardedVideoAdClosed() {
+//        if (!adCompleted) {
+//            if (error == null) {
+//                ExtensionsKt.alert(this, getString(R.string.error), getString(R.string.error_watch_add), getString(R.string.watch), false, null, () -> {
+//                    mProgressComponentRL.setVisibility(View.VISIBLE);
+//                    String ad = "";
+//                    if (BuildConfig.DEBUG) ad = getString(R.string.cod_ad_debug);
+//                    else ad = getString(R.string.cod_ad_release);
+////                    mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
+////                    mRewardedVideoAd.setRewardedVideoAdListener(this);
+////                    mRewardedVideoAd.loadAd(ad, new AdRequest.Builder().build());
+//                    return null;
+//                });
+//            } else {
+//                Sentry.capture(error);
+//                ExtensionsKt.alert(this, getString(R.string.error), getString(R.string.error_default), getString(R.string.ok), false, null, () -> null);
+//            }
+//        } else {
+//            if (stickerListEmpty) {
+//                ExtensionsKt.alert(this, getString(R.string.error), getString(R.string.error_find_stickers), getString(R.string.ok), false, null, () -> null);
+//            } else {
+//                for (int i = 0; i < stickerPack.size(); i++) {
+//                    this.addStickerPackToWhatsApp(stickerPack.get(i).identifier, stickerPack.get(i).name);
+//                }
+//            }
+//        }
+//    }
 
-        if (mRewardedVideoAd.isLoaded()) {
-            mRewardedVideoAd.show();
-        }
-    }
-
-    @Override
-    public void onRewardedVideoAdClosed() {
-        if (!adCompleted) {
-            if (error == null) {
-                ExtensionsKt.alert(this, getString(R.string.error), getString(R.string.error_watch_add), getString(R.string.watch), false, null, () -> {
-                    mProgressComponentRL.setVisibility(View.VISIBLE);
-                    String ad = "";
-                    if (BuildConfig.DEBUG) ad = getString(R.string.cod_ad_debug);
-                    else ad = getString(R.string.cod_ad_release);
-                    mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
-                    mRewardedVideoAd.setRewardedVideoAdListener(this);
-                    mRewardedVideoAd.loadAd(ad, new AdRequest.Builder().build());
-                    return null;
-                });
-            } else {
-                Sentry.capture(error);
-                ExtensionsKt.alert(this, getString(R.string.error), getString(R.string.error_default), getString(R.string.ok), false, null, () -> null);
-            }
-        } else {
-            if (stickerListEmpty) {
-                ExtensionsKt.alert(this, getString(R.string.error), getString(R.string.error_find_stickers), getString(R.string.ok), false, null, () -> null);
-            } else {
-                for (int i = 0; i < stickerPack.size(); i++) {
-                    this.addStickerPackToWhatsApp(stickerPack.get(i).identifier, stickerPack.get(i).name);
-                }
-            }
-        }
-    }
-
-    @Override
-    public void onRewardedVideoAdFailedToLoad(int value) {
-        for (int i = 0; i < stickerPack.size(); i++) {
-            this.addStickerPackToWhatsApp(stickerPack.get(i).identifier, stickerPack.get(i).name);
-        }
-    }
-
-    @Override
-    public void onRewardedVideoCompleted() {
-        adCompleted = true;
-    }
-
-    @Override
-    public void onRewarded(RewardItem rewardItem) {
-    }
-
-    @Override
-    public void onRewardedVideoAdLeftApplication() {
-    }
-
-    @Override
-    public void onRewardedVideoAdOpened() {
-    }
-
-    @Override
-    public void onRewardedVideoStarted() {
-    }
+//    @Override
+//    public void onRewardedVideoAdFailedToLoad(int value) {
+//        for (int i = 0; i < stickerPack.size(); i++) {
+//            this.addStickerPackToWhatsApp(stickerPack.get(i).identifier, stickerPack.get(i).name);
+//        }
+//    }
+//
+//    @Override
+//    public void onRewardedVideoCompleted() {
+//        adCompleted = true;
+//    }
+//
+//    @Override
+//    public void onRewarded(RewardItem rewardItem) {
+//    }
+//
+//    @Override
+//    public void onRewardedVideoAdLeftApplication() {
+//    }
+//
+//    @Override
+//    public void onRewardedVideoAdOpened() {
+//    }
+//
+//    @Override
+//    public void onRewardedVideoStarted() {
+//    }
 }

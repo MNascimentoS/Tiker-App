@@ -13,7 +13,7 @@ import br.com.tiker.ui.allStickers.adapter.StickerRecyclerAdapter
 import br.com.tiker.ui.create.CreateActivity
 import br.com.tiker.utils.gone
 import br.com.tiker.utils.observe
-import io.cubos.r2d2lib.visible
+import br.com.tiker.utils.visible
 import kotlinx.android.synthetic.main.fragment_all_stickers.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 

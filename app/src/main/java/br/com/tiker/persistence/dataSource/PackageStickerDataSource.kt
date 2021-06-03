@@ -63,15 +63,8 @@ class PackageStickerDataSource : PageKeyedDataSource<Int, StickerPackageModel>()
                         for (i in 0..4) {
                             if (stickers.size > i) {
                                 val sticker = stickers[i]
-//                                val bmp = BitmapFactory.decodeByteArray(sticker.sticker, 0, sticker.sticker.size)
-//                                stickerList.add(
-//                                        StickerModel(
-//                                                id = sticker.id,
-//                                                selected = false,
-//                                                image = bmp
-//                                        )
-//                                )
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && !sticker.stickerFile.isNullOrEmpty()) {
+                                if (sticker.stickerFile.isNullOrBlank() || !File(sticker.stickerFile!!).exists()) continue
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                                     stickerList.add(
                                         StickerModel(
                                             sticker.id,

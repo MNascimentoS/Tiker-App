@@ -2,12 +2,13 @@ package br.com.tiker.ui.adapter
 
 import android.graphics.drawable.AnimatedImageDrawable
 import android.os.Build
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import br.com.tiker.R
 import br.com.tiker.model.StickerModel
-import io.cubos.r2d2lib.inflate
+//import io.cubos.r2d2lib.inflate
 import kotlinx.android.synthetic.main.item_sticker.view.*
 
 
@@ -17,7 +18,9 @@ class StickerDefaultRecyclerAdapter :
     private var stickerList = listOf<StickerModel>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
-        ViewHolder(parent.inflate(R.layout.item_sticker))
+        ViewHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.item_sticker, parent, false)
+        )
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentItem = stickerList[position]

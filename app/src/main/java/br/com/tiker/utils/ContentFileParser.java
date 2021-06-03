@@ -77,6 +77,9 @@ public class ContentFileParser {
         String publisherWebsite = null;
         String privacyPolicyWebsite = null;
         String licenseAgreementWebsite = null;
+        String imageDataVersion = "";
+        boolean avoidCache = false;
+        boolean animatedStickerPack = true;
         List<Sticker> stickerList = null;
         while (reader.hasNext()) {
             String key = reader.nextName();
@@ -108,6 +111,15 @@ public class ContentFileParser {
                 case "stickers":
                     stickerList = readStickers(reader);
                     break;
+//                case "image_data_version":
+//                    imageDataVersion = reader.nextString();
+//                    break;
+//                case "avoid_cache":
+//                    avoidCache = reader.nextBoolean();
+//                    break;
+                case "animated_sticker_pack":
+                    animatedStickerPack = reader.nextBoolean();
+                    break;
                 default:
                     reader.skipValue();
             }
@@ -130,8 +142,11 @@ public class ContentFileParser {
         if (identifier.contains("..") || identifier.contains("/")) {
             throw new IllegalStateException("identifier should not contain .. or / to prevent directory traversal");
         }
+//        if (TextUtils.isEmpty(imageDataVersion)) {
+//            throw new IllegalStateException("image_data_version should not be empty");
+//        }
         reader.endObject();
-        final StickerPack stickerPack = new StickerPack(identifier, name, publisher, trayImageFile, publisherEmail, publisherWebsite, privacyPolicyWebsite, licenseAgreementWebsite);
+        final StickerPack stickerPack = new StickerPack(identifier, name, publisher, trayImageFile, publisherEmail, publisherWebsite, privacyPolicyWebsite, licenseAgreementWebsite, imageDataVersion, avoidCache, animatedStickerPack);
         stickerPack.setStickers(stickerList);
         return stickerPack;
     }
@@ -145,6 +160,7 @@ public class ContentFileParser {
             reader.beginObject();
             String imageFile = null;
             List<String> emojis = new ArrayList<>(LIMIT_EMOJI_COUNT);
+            Boolean isAnimated = null;
             while (reader.hasNext()) {
                 final String key = reader.nextName();
                 if ("imageFileName".equals(key)) {
@@ -156,6 +172,8 @@ public class ContentFileParser {
                         emojis.add(emoji);
                     }
                     reader.endArray();
+                } else if ("isAnimated".equals(key)) {
+                    isAnimated = reader.nextBoolean();
                 } else {
                     //throw new IllegalStateException("unknown field in json: " + key);
                     reader.skipValue();
@@ -171,7 +189,7 @@ public class ContentFileParser {
             if (imageFile.contains("..") || imageFile.contains("/")) {
                 throw new IllegalStateException("the file name should not contain .. or / to prevent directory traversal, image file is:" + imageFile);
             }
-            stickerList.add(new Sticker(imageFile, emojis));
+            stickerList.add(new Sticker(imageFile, emojis, isAnimated));
         }
         reader.endArray();
         return stickerList;

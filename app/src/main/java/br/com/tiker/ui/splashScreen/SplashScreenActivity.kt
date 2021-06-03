@@ -84,8 +84,11 @@ class SplashScreenActivity : AppCompatActivity(R.layout.activity_splash_screen) 
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 // Google Sign In was successful, authenticate with Firebase
-                val account = task.getResult(ApiException::class.java)
-                firebaseAuthWithGoogle(account)
+                task.getResult(ApiException::class.java)?.let {
+                    firebaseAuthWithGoogle(it)
+                } ?: run {
+                    this.alert(getString(R.string.error), getString(R.string.error_login_user))
+                }
             } catch (e: ApiException) {
                 Sentry.capture(e)
                 // Google Sign In failed, update UI appropriately

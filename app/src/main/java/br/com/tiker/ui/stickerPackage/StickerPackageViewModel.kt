@@ -3,9 +3,9 @@ package br.com.tiker.ui.stickerPackage
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
+import android.graphics.drawable.AnimatedImageDrawable
 import android.net.Uri
 import android.os.Build
 import androidx.lifecycle.LiveData
@@ -27,8 +27,6 @@ import io.sentry.Sentry
 import kotlinx.coroutines.launch
 import org.koin.core.KoinComponent
 import org.koin.core.inject
-import java.io.BufferedInputStream
-import java.io.ByteArrayOutputStream
 import java.io.File
 import kotlin.random.Random
 
@@ -119,15 +117,17 @@ class StickerPackageViewModel : ViewModel(), KoinComponent {
         viewModelScope.launch {
             if (identifier.isBlank()) {
                 identifier = random() + Random.nextInt()
-                stickerDb.stickerDao().saveLastUnsavedStickerList(stickerPackageId, identifier, namePackage.value
-                        ?: "", authorPackage.value ?: "")
+                stickerDb.stickerDao().saveLastUnsavedStickerList(
+                    stickerPackageId, identifier, namePackage.value
+                        ?: "", authorPackage.value ?: ""
+                )
             }
 
-            var stickerPackageUriList = arrayListOf<List<Uri>>()
+            var stickerPackageUriList = arrayListOf<List<android.util.Pair<Boolean, Uri?>>>()
             if (stickerList.value?.size ?: 0 > StickerPackValidator.STICKER_SIZE_MAX) {
                 maxStickerSize = true
 
-                val stickerUriList = arrayListOf<Uri>()
+                val stickerUriList = arrayListOf<android.util.Pair<Boolean, Uri?>>()
                 var count = 1
                 stickerList.value?.forEachIndexed { index, value ->
                     if (index % StickerPackValidator.STICKER_SIZE_MAX == 0) {
@@ -135,17 +135,22 @@ class StickerPackageViewModel : ViewModel(), KoinComponent {
                         stickerPackageNameList.add(namePackage.value + " " + count)
                         count++
                     }
-                    getImageUri(value, context.contentResolver, stickerPackageIdentifierList.last())?.let { uri ->
-                        stickerUriList.add(uri)
+                    getImageUri(
+                        value,
+                        context,
+                        stickerPackageIdentifierList.last()
+                    ).also { pair ->
+                        stickerUriList.add(pair)
                     }
                 }
                 stickerPackageNameList.reverse()
 
-                stickerPackageUriList = chopped(stickerUriList, StickerPackValidator.STICKER_SIZE_MAX) ?: arrayListOf()
+                stickerPackageUriList =
+                    chopped(stickerUriList, StickerPackValidator.STICKER_SIZE_MAX) ?: arrayListOf()
             } else {
-                val stickerUriList = arrayListOf<Uri>()
+                val stickerUriList = arrayListOf<android.util.Pair<Boolean, Uri?>>()
                 stickerList.value?.forEach {
-                    getImageUri(it, context.contentResolver, identifier)?.let { uri ->
+                    getImageUri(it, context, identifier).also { uri ->
                         stickerUriList.add(uri)
                         fileName.add(File(it.filePath).name)
                     }
@@ -157,7 +162,8 @@ class StickerPackageViewModel : ViewModel(), KoinComponent {
             }
 
             stickerPackageUriList.forEachIndexed { index, uriList ->
-                stickerPack.add(StickerPack(
+                stickerPack.add(
+                    StickerPack(
                         stickerPackageIdentifierList[index],
                         stickerPackageNameList[index],
                         context.getString(R.string.app_name),
@@ -165,20 +171,35 @@ class StickerPackageViewModel : ViewModel(), KoinComponent {
                         "tickerapp0@gmail.com",
                         "",
                         "",
-                        ""))
+                        "",
+                        "1",
+                        true,
+                        true
+                    )
+                )
 
                 //Save the sticker images locally and get the list of new stickers for pack
-                val stickerPath: String = Constants.STICKERS_DIRECTORY_PATH + stickerPackageIdentifierList[index]
-                val stickerList: List<Sticker?> = StickerPacksManager.saveStickerPackFilesLocally(stickerPackageIdentifierList[index], uriList, context)
+                val stickerPath: String =
+                    Constants.STICKERS_DIRECTORY_PATH + stickerPackageIdentifierList[index]
+                val stickerList: List<Sticker?> = StickerPacksManager.saveStickerPackFilesLocally(
+                    stickerPackageIdentifierList[index],
+                    uriList,
+                    context
+                )
                 stickerPack.last().stickers = stickerList
 
                 //Generate image tray icon
                 val trayIconFile = FileUtils.generateRandomIdentifier() + ".png"
-                StickerPacksManager.createStickerPackTrayIconFile(uriList[0], Uri.parse("$stickerPath/$trayIconFile"), context)
+                StickerPacksManager.createStickerPackTrayIconFile(
+                    uriList[0].second,
+                    Uri.parse("$stickerPath/$trayIconFile"),
+                    context
+                )
                 stickerPack.last().trayImageFile = trayIconFile
 
                 //Save stickerPack created to write in json
-                StickerPacksManager.stickerPacksContainer = StickerPacksContainer("", "", StickerPacksManager.getStickerPacks(context))
+                StickerPacksManager.stickerPacksContainer =
+                    StickerPacksContainer("", "", StickerPacksManager.getStickerPacks(context))
                 StickerPacksManager.stickerPacksContainer.addStickerPack(stickerPack.last())
                 StickerPacksManager.saveStickerPacksToJson(StickerPacksManager.stickerPacksContainer)
                 insertStickerPackInContentProvider(stickerPack.last(), context)
@@ -195,7 +216,8 @@ class StickerPackageViewModel : ViewModel(), KoinComponent {
             stickerPackageIdentifierList.forEach {
                 try {
                     stickerDb.stickerDao().addStickerIdentifier(StickerIdentifierEntity(it))
-                } catch (ex: java.lang.Exception) { }
+                } catch (ex: java.lang.Exception) {
+                }
             }
             _createdPackage.value = true
             isLoading.value = false
@@ -216,9 +238,21 @@ class StickerPackageViewModel : ViewModel(), KoinComponent {
         }
     }
 
-    private fun getImageUri(sticker: StickerModel, contentResolver: ContentResolver, identifier: String): Uri? {
-        val path = saveBitmapToDevice.insertImageIntoGallery(contentResolver, sticker, random() + Random.nextInt(), identifier)
-        return Uri.parse(path)
+    private suspend fun getImageUri(
+        sticker: StickerModel,
+        context: Context,
+        identifier: String
+    ): android.util.Pair<Boolean, Uri?> {
+        val path = saveBitmapToDevice.insertImageIntoGallery(
+            context,
+            sticker,
+            random() + Random.nextInt(),
+            identifier
+        )
+        return android.util.Pair(
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && sticker.drawable is AnimatedImageDrawable,
+            Uri.parse(path)
+        )
     }
 
     private fun insertStickerPackInContentProvider(stickerPack: StickerPack, context: Context) {

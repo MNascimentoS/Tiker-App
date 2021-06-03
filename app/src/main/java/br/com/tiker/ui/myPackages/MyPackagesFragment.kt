@@ -10,9 +10,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import br.com.tiker.R
 import br.com.tiker.ui.myPackages.adapter.MyPackagesRecyclerAdapter
 import br.com.tiker.ui.stickerPackage.StickerPackageActivity
+import br.com.tiker.utils.gone
 import br.com.tiker.utils.observe
-import io.cubos.r2d2lib.gone
-import io.cubos.r2d2lib.visible
+import br.com.tiker.utils.visible
 import kotlinx.android.synthetic.main.fragment_my_packages.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

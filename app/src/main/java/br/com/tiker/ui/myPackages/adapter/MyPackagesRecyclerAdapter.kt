@@ -3,6 +3,7 @@ package br.com.tiker.ui.myPackages.adapter
 import android.annotation.SuppressLint
 import android.graphics.drawable.AnimatedImageDrawable
 import android.os.Build
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -10,18 +11,20 @@ import androidx.recyclerview.widget.RecyclerView
 import br.com.tiker.R
 import br.com.tiker.model.StickerPackageModel
 import com.bumptech.glide.Glide
-import io.cubos.r2d2lib.inflate
 import kotlinx.android.synthetic.main.item_sticker.view.*
 import kotlinx.android.synthetic.main.item_sticker_package.view.*
 
 class MyPackagesRecyclerAdapter :
-        PagedListAdapter<StickerPackageModel, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
+    PagedListAdapter<StickerPackageModel, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
     var onSelectPackage: ((Int) -> Unit)? = null
     var onDeletePackage: ((Int) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
-            object : RecyclerView.ViewHolder(parent.inflate(R.layout.item_sticker_package)) {}
+        object : RecyclerView.ViewHolder(
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_sticker_package, parent, false)
+        ) {}
 
     @SuppressLint("SimpleDateFormat")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -92,16 +95,16 @@ class MyPackagesRecyclerAdapter :
 
     companion object {
         private val DIFF_CALLBACK = object :
-                DiffUtil.ItemCallback<StickerPackageModel>() {
+            DiffUtil.ItemCallback<StickerPackageModel>() {
             override fun areItemsTheSame(
-                    old: StickerPackageModel,
-                    new: StickerPackageModel
+                old: StickerPackageModel,
+                new: StickerPackageModel
             ) =
-                    old == new
+                old == new
 
             override fun areContentsTheSame(
-                    old: StickerPackageModel,
-                    new: StickerPackageModel
+                old: StickerPackageModel,
+                new: StickerPackageModel
             ) = old == new
         }
     }

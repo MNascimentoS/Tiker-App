@@ -31,7 +31,7 @@ class MyPackagesViewModel : ViewModel(), KoinComponent, CoroutineScope {
     var isLoading: LiveData<Boolean> = _isLoading
 
     val stickerPackageList: LiveData<PagedList<StickerPackageModel>> =
-        LivePagedListBuilder<Int, StickerPackageModel>(StickerExternalDatabase.instance.packageStickerDataSourceFactory, 10)
+        LivePagedListBuilder(StickerExternalDatabase.instance.packageStickerDataSourceFactory, 10)
             .setBoundaryCallback(object : PagedList.BoundaryCallback<StickerPackageModel>() {
                 override fun onZeroItemsLoaded() {
                     super.onZeroItemsLoaded()

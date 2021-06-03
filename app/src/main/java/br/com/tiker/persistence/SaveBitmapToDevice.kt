@@ -1,18 +1,19 @@
 package br.com.tiker.persistence
 
-import android.R
-import android.R.attr.bitmap
 import android.content.ContentResolver
 import android.content.ContentValues
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.AnimatedImageDrawable
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import androidx.annotation.RequiresApi
 import br.com.tiker.model.Constants
 import br.com.tiker.model.StickerModel
+import com.facebook.animated.webp.WebPImage
 import java.io.*
-import java.nio.ByteBuffer
+import java.nio.file.Files
 
 
 /**
@@ -32,8 +33,9 @@ class SaveBitmapToDevice {
      * that is inserted manually gets saved at the end of the gallery (because date is not populated).
      * @see android.provider.MediaStore.Images.Media.insertImage
      */
-    fun insertImageIntoGallery(
-        cr: ContentResolver,
+    @RequiresApi(Build.VERSION_CODES.O)
+    suspend fun insertImageIntoGallery(
+        context: Context,
         source: StickerModel,
         title: String,
         packageName: String?
@@ -55,12 +57,13 @@ class SaveBitmapToDevice {
         var url: Uri? = null
         var stringUrl: String? = null
         try {
-            url = cr.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+            url = context.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
             uriList.add(url)
             if (source.filePath.isNotBlank()) {
+                //val webPImage = WebPImage.create(Files.readAllBytes( File(source.filePath).toPath()))
                 return File(source.filePath).toURI().toString()
             } else {
-                val imageOut = cr.openOutputStream(url!!)
+                val imageOut = context.contentResolver.openOutputStream(url!!)
                 imageOut.use { image ->
                     source.image.compress(Bitmap.CompressFormat.PNG, 100, image)
                 }

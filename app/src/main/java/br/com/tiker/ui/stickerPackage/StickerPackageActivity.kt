@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import br.com.tiker.BuildConfig
 import br.com.tiker.R
@@ -22,15 +23,14 @@ import br.com.tiker.utils.alert
 import br.com.tiker.utils.gone
 import br.com.tiker.utils.observe
 import br.com.tiker.utils.visible
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.ads.reward.RewardItem
-import com.google.android.gms.ads.reward.RewardedVideoAdListener
-import io.cubos.r2d2lib.CubosActivity
+import com.google.android.gms.ads.*
+import com.google.android.gms.ads.rewarded.RewardedAd
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import kotlinx.android.synthetic.main.activity_sticker_package.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class StickerPackageActivity : CubosActivity() {
+
+class StickerPackageActivity : AppCompatActivity() {
 
     private val viewModel: StickerPackageViewModel by viewModel()
     private lateinit var adapter: StickerDefaultRecyclerAdapter
@@ -38,7 +38,6 @@ class StickerPackageActivity : CubosActivity() {
 
     private var adCompleted = false
     private var calledWhatsApp = false
-    private val rewardedVideoAd by lazy { MobileAds.getRewardedVideoAdInstance(this) }
 
     companion object {
         const val STICKER_PACKAGE_ID = "sticker"
@@ -69,14 +68,16 @@ class StickerPackageActivity : CubosActivity() {
         }
         observe(viewModel.stickerList) {
             if (it.size > STICKER_SIZE_MAX) {
-                alert(getString(R.string.almost_there),
-                        getString(R.string.max_size_package_description) +
-                                viewModel.namePackage.value +
-                                getString(R.string.one_comma) +
-                                viewModel.namePackage.value +
-                                getString(R.string.two_comma),
-                        getString(R.string.ok),
-                        true) {}
+                alert(
+                    getString(R.string.almost_there),
+                    getString(R.string.max_size_package_description) +
+                            viewModel.namePackage.value +
+                            getString(R.string.one_comma) +
+                            viewModel.namePackage.value +
+                            getString(R.string.two_comma),
+                    getString(R.string.ok),
+                    true
+                ) {}
             }
             adapter.updateList(it)
             adapter.notifyDataSetChanged()
@@ -94,7 +95,12 @@ class StickerPackageActivity : CubosActivity() {
 
         observe(viewModel.uiEventLiveData) {
             when (it?.first) {
-                1 -> startActivityForResult(Intent.createChooser(it.second as Intent, getString(R.string.add_to_whatsapp)), ADD_PACK)
+                1 -> startActivityForResult(
+                    Intent.createChooser(
+                        it.second as Intent,
+                        getString(R.string.add_to_whatsapp)
+                    ), ADD_PACK
+                )
                 2 -> startActivityForResult(it.second as Intent, ADD_PACK)
             }
         }
@@ -126,23 +132,31 @@ class StickerPackageActivity : CubosActivity() {
     }
 
     private fun configureAd() {
-        rewardedVideoAd.rewardedVideoAdListener = object : RewardedVideoAdListener {
-            override fun onRewardedVideoAdLoaded() {
-                if (rewardedVideoAd.isLoaded)
-                    rewardedVideoAd.show()
-                viewModel.createPackageToWhatsApp(this@StickerPackageActivity)
-            }
+        val fullScreenContentCallback: FullScreenContentCallback =
+            object : FullScreenContentCallback() {
+                override fun onAdDismissedFullScreenContent() {
+                    if (adCompleted) {
+                        if (viewModel.createdPackage.value == true) {
+                            viewModel.stickerPack.forEach { stickerPack ->
+                                addStickerPackToWhatsApp(stickerPack.identifier, stickerPack.name)
+                            }
+                            calledWhatsApp = true
+                        }
+                    } else {
+                        alert(
+                            getString(R.string.error),
+                            getString(R.string.error_watch_add),
+                            getString(R.string.watch),
+                            true,
+                            {
+                                viewModel.clearStickersFromFileSystem(this@StickerPackageActivity)
+                            }) { sharePackageBTN?.callOnClick() }
+                    }
 
-            override fun onRewardedVideoCompleted() {
-                adCompleted = true
-            }
+                }
 
-            override fun onRewardedVideoAdClosed() {
-                if (!adCompleted) {
-                    alert(getString(R.string.error), getString(R.string.error_watch_add), getString(R.string.watch), true, {
-                        viewModel.clearStickersFromFileSystem(this@StickerPackageActivity)
-                    }) { sharePackageBTN?.callOnClick() }
-                } else {
+                override fun onAdFailedToShowFullScreenContent(p0: AdError) {
+                    super.onAdFailedToShowFullScreenContent(p0)
                     if (viewModel.createdPackage.value == true) {
                         viewModel.stickerPack.forEach { stickerPack ->
                             addStickerPackToWhatsApp(stickerPack.identifier, stickerPack.name)
@@ -152,28 +166,36 @@ class StickerPackageActivity : CubosActivity() {
                 }
             }
 
-            override fun onRewardedVideoAdFailedToLoad(p0: Int) {
-                adCompleted = true
-                if (viewModel.createdPackage.value == true) {
-                    viewModel.stickerPack.forEach { stickerPack ->
-                        addStickerPackToWhatsApp(stickerPack.identifier, stickerPack.name)
-                    }
-                    calledWhatsApp = true
-                } else {
+        val ad =
+            if (BuildConfig.DEBUG) getString(R.string.cod_ad_debug) else getString(R.string.cod_ad_release)
+        RewardedAd.load(this, ad, AdRequest.Builder().build(),
+            object : RewardedAdLoadCallback() {
+                override fun onAdLoaded(ad: RewardedAd) {
+                    super.onAdLoaded(ad)
+                    ad.fullScreenContentCallback = fullScreenContentCallback
                     viewModel.createPackageToWhatsApp(this@StickerPackageActivity)
+                    showAd(ad)
                 }
-            }
 
-            override fun onRewardedVideoStarted() {}
+                override fun onAdFailedToLoad(p0: LoadAdError) {
+                    super.onAdFailedToLoad(p0)
+                    adCompleted = true
+                    if (viewModel.createdPackage.value == true) {
+                        viewModel.stickerPack.forEach { stickerPack ->
+                            addStickerPackToWhatsApp(stickerPack.identifier, stickerPack.name)
+                        }
+                        calledWhatsApp = true
+                    } else {
+                        viewModel.createPackageToWhatsApp(this@StickerPackageActivity)
+                    }
+                }
+            })
+    }
 
-            override fun onRewardedVideoAdOpened() {}
-
-            override fun onRewarded(p0: RewardItem?) {}
-
-            override fun onRewardedVideoAdLeftApplication() {}
+    private fun showAd(ad: RewardedAd) {
+        ad.show(this) {
+            adCompleted = true
         }
-        val ad = if (BuildConfig.DEBUG) getString(R.string.cod_ad_debug) else getString(R.string.cod_ad_release)
-        rewardedVideoAd.loadAd(ad, AdRequest.Builder().build())
     }
 
     fun addStickerPackToWhatsApp(identifier: String?, stickerPackName: String?) {
@@ -186,7 +208,8 @@ class StickerPackageActivity : CubosActivity() {
         try {
             startActivityForResult(intent, AddStickerPackActivity.ADD_PACK)
         } catch (e: ActivityNotFoundException) {
-            Toast.makeText(this, R.string.add_pack_fail_prompt_update_whatsapp, Toast.LENGTH_LONG).show()
+            Toast.makeText(this, R.string.add_pack_fail_prompt_update_whatsapp, Toast.LENGTH_LONG)
+                .show()
         }
     }
 
@@ -195,7 +218,10 @@ class StickerPackageActivity : CubosActivity() {
         val bundle = intent.extras
         if (bundle != null) {
             for (key in bundle.keySet()) {
-                Log.e(TAG, key + " : " + if (bundle[key] != null) bundle[key] else "NULL")
+                Log.e(
+                    StickerPackageActivity::class.simpleName,
+                    key + " : " + if (bundle[key] != null) bundle[key] else "NULL"
+                )
             }
         }
         if (requestCode == AddStickerPackActivity.ADD_PACK) {
@@ -206,13 +232,21 @@ class StickerPackageActivity : CubosActivity() {
                 if (data != null) {
                     val validationError = data.getStringExtra("validation_error")
                     if (validationError != null) {
-                        Log.e("AddStickerPackActivity", "Validation failed:$validationError")
+                        Log.e("AddStickerPackActivity", "Validation failed: $validationError")
                     }
                 } else {
-                    StickerPackNotAddedMessageFragment().show(supportFragmentManager, "sticker_pack_not_added")
+                    StickerPackNotAddedMessageFragment().show(
+                        supportFragmentManager,
+                        "sticker_pack_not_added"
+                    )
                 }
             } else {
-                alert(getString(R.string.sticker_added), getString(R.string.back_whatsapp_see_package), getString(R.string.back), true) {
+                alert(
+                    getString(R.string.sticker_added),
+                    getString(R.string.back_whatsapp_see_package),
+                    getString(R.string.back),
+                    true
+                ) {
                     val launchIntent = packageManager.getLaunchIntentForPackage("com.whatsapp")
                     startActivity(launchIntent)
                 }

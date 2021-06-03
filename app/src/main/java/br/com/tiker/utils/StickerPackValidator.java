@@ -34,14 +34,19 @@ import br.com.tiker.model.StickerPack;
 public class StickerPackValidator {
     public static final int STICKER_SIZE_MAX = 30;
     private static final int STICKER_FILE_SIZE_LIMIT_KB = 100;
+    private static final int STATIC_STICKER_FILE_LIMIT_KB = 100;
+    private static final int ANIMATED_STICKER_FILE_LIMIT_KB = 500;
     private static final int IMAGE_HEIGHT = 512;
     private static final int IMAGE_WIDTH = 512;
     private static final int STICKER_SIZE_MIN = 3;
     private static final int CHAR_COUNT_MAX = 128;
     private static final long ONE_KIBIBYTE = 8 * 1024;
+    private static final long KB_IN_BYTES = 1024;
     private static final int TRAY_IMAGE_FILE_SIZE_MAX_KB = 50;
     private static final int TRAY_IMAGE_DIMENSION_MIN = 24;
     private static final int TRAY_IMAGE_DIMENSION_MAX = 512;
+    private static final int ANIMATED_STICKER_FRAME_DURATION_MIN = 8;
+    private static final int ANIMATED_STICKER_TOTAL_DURATION_MAX = 10 * 1000; //ms
     private static final String PLAY_STORE_DOMAIN = "play.google.com";
     private static final String APPLE_STORE_DOMAIN = "itunes.apple.com";
 
@@ -119,21 +124,21 @@ public class StickerPackValidator {
         }
         for (final Sticker sticker : stickers) {
             try {
-                validateSticker(context, stickerPack.identifier, sticker);
+                validateSticker(context, stickerPack.identifier, sticker, stickerPack.isAnimatedPackage());
             } catch (IllegalStateException e) {
                 throw e;
             }
         }
     }
 
-    private static void validateSticker(@NonNull Context context, @NonNull final String identifier, @NonNull final Sticker sticker) throws IllegalStateException {
+    private static void validateSticker(@NonNull Context context, @NonNull final String identifier, @NonNull final Sticker sticker, final boolean animatedStickerPack) throws IllegalStateException {
         if (TextUtils.isEmpty(sticker.imageFileName)) {
             throw new IllegalStateException("no file path for sticker, sticker pack identifier:" + identifier);
         }
-        validateStickerFile(context, identifier, sticker.imageFileName);
+        validateStickerFile(context, identifier, sticker.imageFileName, animatedStickerPack);
     }
 
-    private static void validateStickerFile(@NonNull Context context, @NonNull String identifier, @NonNull final String fileName) throws IllegalStateException {
+    private static void validateStickerFile(@NonNull Context context, @NonNull String identifier, @NonNull final String fileName, final boolean animatedStickerPack) throws IllegalStateException {
         try {
             InputStream iStream = context.getContentResolver().openInputStream(ImageUtils.getStickerImageAsset(identifier, fileName));
             final byte[] bytes = FileUtils.getBytes(Objects.requireNonNull(iStream));

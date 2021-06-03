@@ -24,12 +24,15 @@ public class StickerPack implements Parcelable {
     public final String licenseAgreementWebsite;
     public String iosAppStoreLink;
     public String androidPlayStoreLink;
+    public final String imageDataVersion;
+    public final boolean avoidCache;
+    final boolean animatedStickerPack;
 
     private List<Sticker> stickers;
     private long totalSize;
     private boolean isWhitelisted;
 
-    public StickerPack(String identifier, String name, String publisher, String trayImageFile, String publisherEmail, String publisherWebsite, String privacyPolicyWebsite, String licenseAgreementWebsite) {
+    public StickerPack(String identifier, String name, String publisher, String trayImageFile, String publisherEmail, String publisherWebsite, String privacyPolicyWebsite, String licenseAgreementWebsite, String imageDataVersion, boolean avoidCache, boolean animatedStickerPack) {
         this.identifier = identifier;
         this.name = name;
         this.publisher = publisher;
@@ -38,6 +41,9 @@ public class StickerPack implements Parcelable {
         this.publisherWebsite = publisherWebsite;
         this.privacyPolicyWebsite = privacyPolicyWebsite;
         this.licenseAgreementWebsite = licenseAgreementWebsite;
+        this.imageDataVersion = imageDataVersion;
+        this.avoidCache = avoidCache;
+        this.animatedStickerPack = animatedStickerPack;
     }
 
     void setIsWhitelisted(boolean isWhitelisted) {
@@ -62,7 +68,9 @@ public class StickerPack implements Parcelable {
         totalSize = in.readLong();
         androidPlayStoreLink = in.readString();
         isWhitelisted = in.readByte() != 0;
-    }
+        imageDataVersion = in.readString();
+        avoidCache = in.readByte() != 0;
+        animatedStickerPack = in.readByte() != 0;    }
 
     public static final Creator<StickerPack> CREATOR = new Creator<StickerPack>() {
         @Override
@@ -82,6 +90,14 @@ public class StickerPack implements Parcelable {
         for (Sticker sticker : stickers) {
             totalSize += sticker.size;
         }
+    }
+
+    public boolean isAnimatedPackage() {
+         boolean isAnimated = false;
+         for (int i = 0; i < stickers.size(); i++) {
+             if (stickers.get(i).isAnimated) isAnimated = true;
+         }
+         return isAnimated;
     }
 
     public void setAndroidPlayStoreLink(String androidPlayStoreLink) {
@@ -120,5 +136,8 @@ public class StickerPack implements Parcelable {
         dest.writeLong(totalSize);
         dest.writeString(androidPlayStoreLink);
         dest.writeByte((byte) (isWhitelisted ? 1 : 0));
+        dest.writeString(imageDataVersion);
+        dest.writeByte((byte) (avoidCache ? 1 : 0));
+        dest.writeByte((byte) (animatedStickerPack ? 1 : 0));
     }
 }

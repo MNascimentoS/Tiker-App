@@ -73,4 +73,5 @@
     <string name="eror_access_read_files">Nós precisamos do acesso a leitura e escrita de arquivos do seu telefone para poder criar pacotes</string>
     <string name="do_login_description">Antes de ter acesso a todas as funcionalidades, você precisa fazer o login</string>
     <string name="keep_as_guest">Continuar como convidado</string>
+    <string name="yes">Sim</string>
 </resources>

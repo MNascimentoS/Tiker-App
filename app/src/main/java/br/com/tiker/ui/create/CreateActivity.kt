@@ -2,18 +2,19 @@ package br.com.tiker.ui.create
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import br.com.tiker.R
 import br.com.tiker.ui.adapter.StickerDefaultRecyclerAdapter
 import br.com.tiker.ui.stickerPackage.StickerPackageActivity
+import br.com.tiker.utils.gone
 import br.com.tiker.utils.observe
-import io.cubos.r2d2lib.CubosActivity
-import io.cubos.r2d2lib.gone
-import io.cubos.r2d2lib.visible
+import br.com.tiker.utils.toastLong
+import br.com.tiker.utils.visible
 import kotlinx.android.synthetic.main.activity_create.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class CreateActivity : CubosActivity() {
+class CreateActivity : AppCompatActivity() {
 
     private val viewModel: CreateViewModel by viewModel()
     private lateinit var adapter: StickerDefaultRecyclerAdapter
