@@ -65,23 +65,25 @@ class StickerDataSource : PageKeyedDataSource<Int, StickerModel>(), CoroutineSco
                     newPage = -1
                     return@fillStickers
                 }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    stickers.add(
-                        StickerModel(
-                            lastFileIndex,
-                            BitmapFactory.decodeFile(files[lastFileIndex].absolutePath),
-                            ImageDecoder.decodeDrawable(ImageDecoder.createSource(files[lastFileIndex])),
-                            filePath = files[lastFileIndex].absolutePath
+                kotlin.runCatching {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        stickers.add(
+                                StickerModel(
+                                        lastFileIndex,
+                                        BitmapFactory.decodeFile(files[lastFileIndex].absolutePath),
+                                        ImageDecoder.decodeDrawable(ImageDecoder.createSource(files[lastFileIndex])),
+                                        filePath = files[lastFileIndex].absolutePath
+                                )
                         )
-                    )
-                } else {
-                    stickers.add(
-                        StickerModel(
-                            lastFileIndex,
-                            BitmapFactory.decodeFile(files[lastFileIndex].absolutePath),
-                            filePath = files[lastFileIndex].absolutePath
+                    } else {
+                        stickers.add(
+                                StickerModel(
+                                        lastFileIndex,
+                                        BitmapFactory.decodeFile(files[lastFileIndex].absolutePath),
+                                        filePath = files[lastFileIndex].absolutePath
+                                )
                         )
-                    )
+                    }
                 }
                 lastFileIndex++
             }

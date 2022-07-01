@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import br.com.tiker.R
 import br.com.tiker.model.StickerModel
 import br.com.tiker.utils.StickerPackValidator.STICKER_SIZE_MAX
+import br.com.tiker.utils.alert
 import br.com.tiker.utils.gone
 import br.com.tiker.utils.visible
 import com.bumptech.glide.Glide
@@ -24,6 +25,7 @@ class StickerRecyclerAdapter :
     PagedListAdapter<StickerModel, RecyclerView.ViewHolder>(DIFF_CALLBACK) {
 
     val selectedStickers = arrayListOf<StickerModel>()
+    private var isAnimatedPack: Boolean? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         object : RecyclerView.ViewHolder(
@@ -50,11 +52,26 @@ class StickerRecyclerAdapter :
             }
             setOnClickListener {
                 currentItem?.let {
+                    isAnimatedPack = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && currentItem.drawable is AnimatedImageDrawable) {
+                        if (isAnimatedPack == false) {
+                            Toast.makeText(context, context.getString(R.string.error_animated_sticker_list), Toast.LENGTH_SHORT).show()
+                            return@setOnClickListener
+                        }
+                        true
+                    } else {
+                        if (isAnimatedPack == true && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && currentItem.drawable !is AnimatedImageDrawable) {
+                            Toast.makeText(context, context.getString(R.string.error_animated_sticker_list), Toast.LENGTH_SHORT).show()
+                            return@setOnClickListener
+                        }
+                        false
+                    }
                     currentItem.selected = !currentItem.selected
                     if (currentItem.selected) {
                         selectedStickers.add(currentItem)
                     } else {
                         selectedStickers.remove(currentItem)
+                        if (selectedStickers.isEmpty()) isAnimatedPack = null
+                        null
                     }
                 }
                 notifyDataSetChanged()

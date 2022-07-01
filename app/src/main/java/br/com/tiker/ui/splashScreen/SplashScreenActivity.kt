@@ -2,6 +2,7 @@ package br.com.tiker.ui.splashScreen
 
 import android.animation.ValueAnimator
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -46,6 +47,9 @@ class SplashScreenActivity : AppCompatActivity(R.layout.activity_splash_screen) 
 
     override fun onStart() {
         super.onStart()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            this.alert(getString(R.string.ops), getString(R.string.invalid_api_version))
+        }
         FileUtils.initializeDirectories(this)
         if (RequestPermissionsHelper.verifyPermissions(this)) {
             firebaseAuth?.currentUser?.let {

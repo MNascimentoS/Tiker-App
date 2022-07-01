@@ -74,4 +74,7 @@
     <string name="do_login_description">Antes de ter acesso a todas as funcionalidades, você precisa fazer o login</string>
     <string name="keep_as_guest">Continuar como convidado</string>
     <string name="yes">Sim</string>
+    <string name="ops">Opa! :(</string>
+    <string name="invalid_api_version">Você pode encontrar dificuldades em utilizar o aplicativo, devido as novas políticas de armazenamento da Google e Whatsapp a partir do Android 10</string>
+    <string name="error_animated_sticker_list">Desculpe, o WhatsApp nâo permite criar pacotes de Gifs e Imagens juntos</string>
 </resources>
